@@ -72,8 +72,21 @@ Karen atiende desde Estados Unidos, así que **toda la agenda vive en `America/N
 ## Identidad visual
 
 La marca es **el rostro de Karen**: `public/karen-logo.png` (círculo de 512 px, recortado y
-enmascarado desde su retrato) aparece en la cabecera, el pie y las pantallas de acceso;
-`public/karen-retrato.png` preside la portada y la página «Sobre Karen».
+enmascarado desde su retrato de marca) aparece en la cabecera, el pie y las pantallas de acceso;
+`public/karen-retrato.png` preside la portada.
+
+Las fotografías del negocio viven en `public/`:
+
+| Archivo | Dónde aparece |
+|---|---|
+| `sparkwell-marca.jpg` | «Sobre Karen» — su tarjeta de marca con credenciales y pilares |
+| `producto-tote.jpg` | Portada de Diseños y ficha del bolso |
+| `producto-renacer.jpg` | Portada de Diseños y ficha de la polera |
+| `sparkwell-caja.jpg` | Sección «Experiencias de creación» |
+
+Un diseño puede llevar **foto real** (columna `image`) o quedarse con la **portada generada**
+determinista de `design-visual.tsx`. Karen carga la ruta desde el panel; si la deja vacía, se dibuja
+la portada. Las piezas con foto encabezan la vitrina a propósito.
 
 La paleta vive sobre **ciruela y crema**, con un acento por unidad:
 
