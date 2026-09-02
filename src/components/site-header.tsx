@@ -91,6 +91,14 @@ export function SiteHeader({
             </>
           ) : (
             <>
+              {/* En el teléfono sólo cabe un botón, y el que hace falta es entrar.
+                  Crear cuenta queda en el menú y en la propia pantalla de acceso. */}
+              <Link
+                href="/ingresar"
+                className="rounded-full bg-ink px-4 py-2 text-[0.8125rem] font-semibold text-cream transition-colors hover:bg-ink-soft sm:hidden"
+              >
+                {copy.nav.ingresar}
+              </Link>
               <Link
                 href="/ingresar"
                 className="hidden rounded-full px-3 py-2 text-[0.8125rem] font-medium text-ink-soft transition-colors hover:text-ink sm:inline-flex"
@@ -99,7 +107,7 @@ export function SiteHeader({
               </Link>
               <Link
                 href="/registro"
-                className="rounded-full bg-ink px-4 py-2 text-[0.8125rem] font-semibold text-cream transition-colors hover:bg-ink-soft"
+                className="hidden rounded-full bg-ink px-4 py-2 text-[0.8125rem] font-semibold text-cream transition-colors hover:bg-ink-soft sm:inline-flex"
               >
                 {copy.nav.registro}
               </Link>
@@ -136,6 +144,42 @@ export function SiteHeader({
               {item.label}
             </Link>
           ))}
+          <div className="mt-4 flex flex-col gap-2 border-t border-line pt-4">
+            {session ? (
+              <>
+                <Link
+                  href="/mi-espacio"
+                  className="rounded-full bg-ink px-5 py-2.5 text-center text-sm font-semibold text-cream"
+                >
+                  {copy.nav.miEspacio}
+                </Link>
+                {session.role === "ADMIN" ? (
+                  <Link
+                    href="/admin"
+                    className="rounded-full border border-line px-5 py-2.5 text-center text-sm font-semibold text-ink-soft"
+                  >
+                    {copy.nav.panel}
+                  </Link>
+                ) : null}
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/ingresar"
+                  className="rounded-full bg-ink px-5 py-2.5 text-center text-sm font-semibold text-cream"
+                >
+                  {copy.nav.ingresar}
+                </Link>
+                <Link
+                  href="/registro"
+                  className="rounded-full border border-line px-5 py-2.5 text-center text-sm font-semibold text-ink-soft"
+                >
+                  {copy.nav.registro}
+                </Link>
+              </>
+            )}
+          </div>
+
           <div className="pt-4 sm:hidden">{languageToggle}</div>
         </nav>
       ) : null}
