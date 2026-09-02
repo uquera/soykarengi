@@ -49,8 +49,12 @@ export default async function AcompanamientoPage() {
           </div>
 
           <div className="rise" style={{ animationDelay: "100ms" }}>
-            <div className="mb-8 hidden justify-center lg:flex">
-              <KarenPortrait size={230} />
+            <div className="mb-8 hidden lg:block">
+              <img
+                src="/sparkwell-marca.jpg"
+                alt="Karen Ramos · SparkWell by Karengi: psicóloga, bienestar y propósito"
+                className="w-full rounded-3xl border border-line object-cover shadow-sm"
+              />
             </div>
 
             <div className="card-soft p-8">

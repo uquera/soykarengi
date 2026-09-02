@@ -18,13 +18,31 @@ export function DesignVisual({
   slug,
   palette,
   label,
+  image,
+  alt,
   className = "",
 }: {
   slug: string;
   palette: string;
   label?: string;
+  /** Foto real de la pieza; manda sobre la portada generada. */
+  image?: string | null;
+  alt?: string;
   className?: string;
 }) {
+  if (image) {
+    return (
+      <div className={`relative overflow-hidden bg-shell ${className}`}>
+        <img src={image} alt={alt ?? ""} className="h-full w-full object-cover" loading="lazy" />
+        {label ? (
+          <span className="absolute top-3 left-3 rounded-full bg-white/85 px-2.5 py-1 text-[0.625rem] font-semibold tracking-wide text-ink-soft backdrop-blur-sm">
+            {label}
+          </span>
+        ) : null}
+      </div>
+    );
+  }
+
   const p = paletteOf(palette);
   const h = hash(slug);
   const variant = h % 4;

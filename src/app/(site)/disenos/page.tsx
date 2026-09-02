@@ -48,16 +48,32 @@ export default async function DisenosPage({
   return (
     <>
       <section className="border-b border-line bg-rose-soft/40">
-        <div className="shell py-16">
-          <Eyebrow className="text-rose-deep">{t.designs.eyebrow}</Eyebrow>
-          <h1 className="mt-4 max-w-3xl font-[family-name:var(--font-display)] text-4xl leading-[1.08] text-balance sm:text-5xl">
-            {t.designs.title}
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">{t.designs.lead}</p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/configurador" tone="rose">
-              {t.designs.cta}
-            </ButtonLink>
+        <div className="shell grid gap-12 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div>
+            <Eyebrow className="text-rose-deep">{t.designs.eyebrow}</Eyebrow>
+            <h1 className="mt-4 max-w-2xl font-[family-name:var(--font-display)] text-4xl leading-[1.08] text-balance sm:text-5xl">
+              {t.designs.title}
+            </h1>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">{t.designs.lead}</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href="/configurador" tone="rose">
+                {t.designs.cta}
+              </ButtonLink>
+            </div>
+          </div>
+
+          {/* Piezas reales, no ilustraciones: es lo que de verdad se entrega. */}
+          <div className="grid grid-cols-2 gap-4">
+            <img
+              src="/producto-tote.jpg"
+              alt="Bolso de tela con la frase «Soy mi proyecto más importante»"
+              className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
+            />
+            <img
+              src="/producto-renacer.jpg"
+              alt="Polera Renacer Venezuela dentro de su caja de regalo"
+              className="mt-8 aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
+            />
           </div>
         </div>
       </section>
@@ -142,7 +158,7 @@ export default async function DisenosPage({
                 href={`/disenos/${d.slug}`}
                 className="card-soft flex flex-col overflow-hidden transition-transform hover:-translate-y-1"
               >
-                <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} className="h-52" />
+                <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} image={d.image} alt={d.name} className="h-52" />
                 <div className="flex flex-1 flex-col p-6">
                   {d.featured ? (
                     <span className="mb-3 self-start">
@@ -165,7 +181,7 @@ export default async function DisenosPage({
       </section>
 
       <section className="border-t border-line bg-shell/60 py-16">
-        <div className="shell grid gap-8 rounded-3xl md:grid-cols-[1.1fr_0.9fr] md:items-center">
+        <div className="shell grid gap-8 rounded-3xl md:grid-cols-2 md:items-center lg:grid-cols-[1fr_0.7fr_0.9fr]">
           <div>
             <Eyebrow className="text-rose-deep">{t.designs.expEyebrow}</Eyebrow>
             <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl leading-tight text-balance">
@@ -177,7 +193,15 @@ export default async function DisenosPage({
             </ButtonLink>
           </div>
 
-          <ol className="space-y-2 text-sm">
+          <div className="order-last md:order-none">
+            <img
+              src="/sparkwell-caja.jpg"
+              alt="Caja de regalo con el mensaje «Siempre es posible renacer»"
+              className="w-full rounded-3xl border border-line object-cover shadow-sm"
+            />
+          </div>
+
+          <ol className="space-y-2 text-sm md:col-span-2 lg:col-span-1">
             {t.designs.flow.map((step, i) => (
               <li key={step} className="flex items-center gap-3 rounded-xl border border-line bg-white px-4 py-2.5">
                 <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-rose-soft text-[0.6875rem] font-semibold text-rose-deep">

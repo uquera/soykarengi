@@ -107,6 +107,7 @@ const designSchema = z.object({
   customFields: z.string().trim().min(2),
   palette: z.string().min(1),
   order: z.coerce.number().int().min(0).max(999),
+  image: optionalEn,
   nameEn: optionalEn,
   taglineEn: optionalEn,
   descriptionEn: optionalEn,

@@ -126,6 +126,9 @@ model Design {
   order       Int     @default(0)
   active      Boolean @default(true)
 
+  /// Foto real de la pieza. Si falta, la vitrina dibuja una portada generada.
+  image String?
+
   nameEn         String?
   taglineEn      String?
   descriptionEn  String?

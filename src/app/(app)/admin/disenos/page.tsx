@@ -37,7 +37,7 @@ export default async function AdminDisenosPage() {
         <div className="grid gap-5 sm:grid-cols-2">
           {designs.map((d) => (
             <article key={d.id} className="card-soft overflow-hidden">
-              <DesignVisual slug={d.slug} palette={d.palette} label={d.category.name} className="h-36" />
+              <DesignVisual slug={d.slug} palette={d.palette} label={d.category.name} image={d.image} alt={d.name} className="h-36" />
               <div className="p-5">
                 <div className="flex flex-wrap items-center gap-2">
                   {d.featured ? <Badge tone="amber">Destacado</Badge> : null}

@@ -19,6 +19,7 @@ type Design = {
   order: number;
   active: boolean;
   featured: boolean;
+  image: string | null;
   nameEn: string | null;
   taglineEn: string | null;
   descriptionEn: string | null;
@@ -107,6 +108,20 @@ export function DesignForm({
             ))}
           </select>
         </Field>
+
+        <div className="sm:col-span-2">
+          <Field
+            label="Foto de la pieza"
+            hint="Ruta dentro de /public, por ejemplo /producto-tote.jpg. Si la dejas vacía se dibuja una portada generada."
+          >
+            <input
+              name="image"
+              defaultValue={design?.image ?? ""}
+              className={inputClass}
+              placeholder="/producto-tote.jpg"
+            />
+          </Field>
+        </div>
 
         <div className="sm:col-span-2">
           <Field label="Campos personalizables" hint="Separados por coma.">

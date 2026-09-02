@@ -48,7 +48,7 @@ export default async function MisFavoritosPage() {
             return (
               <div key={f.id} className="card-soft overflow-hidden">
                 <Link href={`/disenos/${d.slug}`}>
-                  <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} className="h-40" />
+                  <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} image={d.image} alt={d.name} className="h-40" />
                 </Link>
                 <div className="p-5">
                   <Link href={`/disenos/${d.slug}`}>
