@@ -95,3 +95,107 @@ body {
   .rise { animation: none; }
   html { scroll-behavior: auto; }
 }
+
+/* ── FullCalendar, vestido con la paleta de la casa ─────────────────────── */
+.agenda-calendar {
+  --fc-border-color: var(--color-line);
+  --fc-page-bg-color: white;
+  --fc-neutral-bg-color: var(--color-shell);
+  --fc-today-bg-color: color-mix(in srgb, var(--color-sage-soft) 55%, white);
+  --fc-now-indicator-color: var(--color-clay);
+  --fc-business-hours-bg-color: color-mix(in srgb, var(--color-sage-soft) 40%, white);
+  font-family: var(--font-sans);
+}
+
+.agenda-calendar .fc {
+  font-size: 0.8125rem;
+}
+
+.agenda-calendar .fc .fc-toolbar-title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.agenda-calendar .fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 1.25rem;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.agenda-calendar .fc .fc-button {
+  border-radius: 9999px;
+  border: 1px solid var(--color-line);
+  background: white;
+  color: var(--color-ink-soft);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.4rem 0.9rem;
+  box-shadow: none;
+  text-transform: capitalize;
+}
+
+.agenda-calendar .fc .fc-button:hover:not(:disabled) {
+  background: var(--color-shell);
+  border-color: color-mix(in srgb, var(--color-ink) 25%, transparent);
+  color: var(--color-ink);
+}
+
+.agenda-calendar .fc .fc-button:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--color-ink) 30%, transparent);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+
+.agenda-calendar .fc .fc-button-primary:not(:disabled).fc-button-active,
+.agenda-calendar .fc .fc-button-primary:not(:disabled):active {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-cream);
+}
+
+.agenda-calendar .fc .fc-button:disabled {
+  opacity: 0.4;
+}
+
+.agenda-calendar .fc .fc-col-header-cell-cushion,
+.agenda-calendar .fc .fc-daygrid-day-number {
+  color: var(--color-ink-soft);
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.5rem;
+  text-transform: capitalize;
+}
+
+.agenda-calendar .fc .fc-timegrid-slot-label-cushion {
+  color: var(--color-muted);
+  font-size: 0.6875rem;
+}
+
+.agenda-calendar .fc .fc-timegrid-slot {
+  height: 2.75rem;
+}
+
+.agenda-calendar .fc .fc-event {
+  border-radius: 0.5rem;
+  border-width: 1px;
+  padding: 1px 3px;
+  font-size: 0.6875rem;
+  cursor: pointer;
+}
+
+.agenda-calendar .fc .fc-event .fc-event-title {
+  font-weight: 600;
+  white-space: normal;
+}
+
+.agenda-calendar .fc .fc-highlight {
+  background: color-mix(in srgb, var(--color-clay-soft) 70%, transparent);
+}
+
+.agenda-calendar .fc-theme-standard td,
+.agenda-calendar .fc-theme-standard th,
+.agenda-calendar .fc-theme-standard .fc-scrollgrid {
+  border-color: var(--color-line);
+}

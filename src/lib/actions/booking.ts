@@ -108,3 +108,120 @@ export async function saveAppointmentNotesAction(formData: FormData) {
   });
   revalidatePath("/admin/agenda");
 }
+
+// ─────────────────── Acciones del calendario del panel ───────────────────
+
+async function adminGuard() {
+  const user = await getCurrentUser();
+  if (!user || user.role !== "ADMIN") redirect("/ingresar?next=/admin/agenda");
+  return user;
+}
+
+/** Arrastrar una cita en el calendario la mueve de hora. */
+export async function rescheduleAppointmentAction(formData: FormData) {
+  await adminGuard();
+
+  const id = String(formData.get("id") ?? "");
+  const startsAt = new Date(String(formData.get("startsAt") ?? ""));
+  if (!id || Number.isNaN(startsAt.getTime())) return;
+
+  const appointment = await db.appointment.findUnique({ where: { id } });
+  if (!appointment) return;
+
+  const clash = await db.appointment.findFirst({
+    where: { startsAt, status: { in: ["PENDIENTE", "CONFIRMADA"] }, NOT: { id } },
+  });
+  if (clash) return;
+
+  await db.appointment.update({ where: { id }, data: { startsAt } });
+  revalidatePath("/admin/agenda");
+  revalidatePath("/mi-espacio/citas");
+}
+
+/** Bloquear un rango del calendario: vacaciones, personal, lo que sea. */
+export async function createBlackoutAction(formData: FormData) {
+  await adminGuard();
+
+  const startsAt = new Date(String(formData.get("startsAt") ?? ""));
+  const endsAt = new Date(String(formData.get("endsAt") ?? ""));
+  if (Number.isNaN(startsAt.getTime()) || Number.isNaN(endsAt.getTime())) return;
+  if (endsAt <= startsAt) return;
+
+  await db.blackout.create({
+    data: {
+      startsAt,
+      endsAt,
+      allDay: formData.get("allDay") === "on",
+      reason: String(formData.get("reason") ?? "").trim() || null,
+    },
+  });
+
+  revalidatePath("/admin/agenda");
+  revalidatePath("/acompanamiento/agenda");
+}
+
+export async function deleteBlackoutAction(formData: FormData) {
+  await adminGuard();
+
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+
+  await db.blackout.delete({ where: { id } }).catch(() => null);
+  revalidatePath("/admin/agenda");
+  revalidatePath("/acompanamiento/agenda");
+}
+
+/**
+ * Karen agenda a alguien desde el calendario. Si el correo no existe todavía,
+ * le crea la cuenta: el cliente después recupera su clave y ya tiene su historial.
+ */
+export async function adminCreateAppointmentAction(formData: FormData) {
+  await adminGuard();
+
+  const startsAt = new Date(String(formData.get("startsAt") ?? ""));
+  const serviceId = String(formData.get("serviceId") ?? "");
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  const name = String(formData.get("name") ?? "").trim();
+  const reason = String(formData.get("reason") ?? "").trim();
+
+  if (Number.isNaN(startsAt.getTime()) || !serviceId || !email || name.length < 2) return;
+
+  const service = await db.service.findUnique({ where: { id: serviceId } });
+  if (!service) return;
+
+  const clash = await db.appointment.findFirst({
+    where: { startsAt, status: { in: ["PENDIENTE", "CONFIRMADA"] } },
+  });
+  if (clash) return;
+
+  let user = await db.user.findUnique({ where: { email } });
+  if (!user) {
+    const bcrypt = (await import("bcryptjs")).default;
+    user = await db.user.create({
+      data: {
+        email,
+        name,
+        phone: String(formData.get("phone") ?? "").trim() || null,
+        // Clave aleatoria: la cuenta existe, el cliente la reclama cuando quiera.
+        passwordHash: await bcrypt.hash(Math.random().toString(36).slice(2) + Date.now(), 10),
+      },
+    });
+  }
+
+  await db.appointment.create({
+    data: {
+      code: makeCode("CITA"),
+      userId: user.id,
+      serviceId: service.id,
+      startsAt,
+      modality: String(formData.get("modality") ?? "Online"),
+      status: "CONFIRMADA",
+      firstTime: false,
+      reason: reason || "Agendada por Karen desde el panel.",
+    },
+  });
+
+  revalidatePath("/admin/agenda");
+  revalidatePath("/admin");
+  revalidatePath("/mi-espacio/citas");
+}

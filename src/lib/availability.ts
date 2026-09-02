@@ -2,8 +2,8 @@ import { db } from "./db";
 
 /**
  * Agenda de Karen. Bloques de una hora, lunes a viernes 10:00–19:00 y
- * sábado 10:00–14:00. Domingo cerrado. Un bloque ocupado por una cita
- * activa deja de ofrecerse.
+ * sábado 10:00–14:00. Domingo cerrado. Un bloque deja de ofrecerse si ya
+ * tiene una cita activa o si cae dentro de un bloqueo del panel.
  */
 const WEEK = [
   [], // domingo
@@ -15,10 +15,38 @@ const WEEK = [
   [10, 11, 12, 13], // sábado
 ];
 
+/** Ventana que dibuja el calendario del panel, un poco más ancha que la de atención. */
+export const CALENDAR_WINDOW = { min: "08:00:00", max: "21:00:00" };
+
 export function businessHoursLabel(locale: "es" | "en" = "es") {
   return locale === "en"
     ? "Mon to Fri 10:00–19:00 · Sat 10:00–14:00"
     : "Lun a Vie 10:00–19:00 · Sáb 10:00–14:00";
+}
+
+/** Horario de atención en el formato que entiende FullCalendar. */
+export function businessHoursRanges() {
+  return WEEK.flatMap((hours, weekday) => {
+    if (hours.length === 0) return [];
+    // Los bloques del día pueden venir cortados (mañana y tarde); los agrupamos.
+    const ranges: { daysOfWeek: number[]; startTime: string; endTime: string }[] = [];
+    let start = hours[0];
+    let prev = hours[0];
+
+    for (const h of hours.slice(1)) {
+      if (h !== prev + 1) {
+        ranges.push({ daysOfWeek: [weekday], startTime: hh(start), endTime: hh(prev + 1) });
+        start = h;
+      }
+      prev = h;
+    }
+    ranges.push({ daysOfWeek: [weekday], startTime: hh(start), endTime: hh(prev + 1) });
+    return ranges;
+  });
+}
+
+function hh(hour: number) {
+  return `${String(hour).padStart(2, "0")}:00:00`;
 }
 
 /** "2026-09-15" → Date local a las 00:00, sin sorpresas de zona horaria. */
@@ -40,6 +68,19 @@ export function slotsForDay(day: Date) {
   return WEEK[day.getDay()] ?? [];
 }
 
+/** ¿Este bloque de una hora choca con algún bloqueo del panel? */
+export async function isBlocked(at: Date) {
+  const end = new Date(at);
+  end.setHours(end.getHours() + 1);
+
+  const clash = await db.blackout.findFirst({
+    where: { startsAt: { lt: end }, endsAt: { gt: at } },
+    select: { id: true },
+  });
+
+  return clash !== null;
+}
+
 export async function availableSlots(isoDay: string) {
   const day = parseDay(isoDay);
   if (!day) return [];
@@ -50,13 +91,16 @@ export async function availableSlots(isoDay: string) {
   const next = new Date(day);
   next.setDate(next.getDate() + 1);
 
-  const taken = await db.appointment.findMany({
-    where: {
-      startsAt: { gte: day, lt: next },
-      status: { in: ["PENDIENTE", "CONFIRMADA"] },
-    },
-    select: { startsAt: true },
-  });
+  const [taken, blackouts] = await Promise.all([
+    db.appointment.findMany({
+      where: { startsAt: { gte: day, lt: next }, status: { in: ["PENDIENTE", "CONFIRMADA"] } },
+      select: { startsAt: true },
+    }),
+    db.blackout.findMany({
+      where: { startsAt: { lt: next }, endsAt: { gt: day } },
+      select: { startsAt: true, endsAt: true },
+    }),
+  ]);
 
   const takenHours = new Set(taken.map((a) => new Date(a.startsAt).getHours()));
   const now = new Date();
@@ -65,9 +109,14 @@ export async function availableSlots(isoDay: string) {
     .map((h) => {
       const at = new Date(day);
       at.setHours(h, 0, 0, 0);
-      return { hour: h, at, label: `${String(h).padStart(2, "0")}:00` };
+      const end = new Date(at);
+      end.setHours(h + 1);
+      return { hour: h, at, end, label: `${String(h).padStart(2, "0")}:00` };
     })
-    .filter((slot) => !takenHours.has(slot.hour) && slot.at > now)
+    .filter((slot) => {
+      if (takenHours.has(slot.hour) || slot.at <= now) return false;
+      return !blackouts.some((b) => new Date(b.startsAt) < slot.end && new Date(b.endsAt) > slot.at);
+    })
     .map((slot) => ({ hour: slot.hour, label: slot.label }));
 }
 

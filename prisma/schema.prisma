@@ -80,6 +80,19 @@ model Appointment {
   @@index([status])
 }
 
+/// Horas que Karen bloquea en su agenda: vacaciones, personal, bloques reservados.
+/// Un bloqueo de día completo va de 00:00 a 00:00 del día siguiente.
+model Blackout {
+  id        String   @id @default(cuid())
+  startsAt  DateTime
+  endsAt    DateTime
+  allDay    Boolean  @default(false)
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([startsAt])
+}
+
 // ─────────────── UNIDAD 2 · DISEÑOS CON PROPÓSITO ───────────────
 
 model DesignCategory {
