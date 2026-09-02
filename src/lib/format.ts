@@ -1,3 +1,5 @@
+import { BUSINESS_TZ } from "./timezone";
+
 export type FmtLocale = "es" | "en";
 
 const intl = (locale: FmtLocale) => (locale === "en" ? "en-US" : "es-US");
@@ -18,6 +20,7 @@ export function money(value: number | null | undefined, locale: FmtLocale = "es"
 
 export function longDate(value: Date | string, locale: FmtLocale = "es") {
   return new Date(value).toLocaleDateString(intl(locale), {
+    timeZone: BUSINESS_TZ,
     weekday: "long",
     month: "long",
     day: "numeric",
@@ -27,6 +30,7 @@ export function longDate(value: Date | string, locale: FmtLocale = "es") {
 
 export function shortDate(value: Date | string, locale: FmtLocale = "es") {
   return new Date(value).toLocaleDateString(intl(locale), {
+    timeZone: BUSINESS_TZ,
     month: "short",
     day: "2-digit",
     year: "numeric",
@@ -34,7 +38,11 @@ export function shortDate(value: Date | string, locale: FmtLocale = "es") {
 }
 
 export function time(value: Date | string, locale: FmtLocale = "es") {
-  return new Date(value).toLocaleTimeString(intl(locale), { hour: "numeric", minute: "2-digit" });
+  return new Date(value).toLocaleTimeString(intl(locale), {
+    timeZone: BUSINESS_TZ,
+    hour: "numeric",
+    minute: "2-digit",
+  });
 }
 
 export function dateTime(value: Date | string, locale: FmtLocale = "es") {

@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { upcomingDays, businessHoursLabel } from "@/lib/availability";
+import { timezoneLabel } from "@/lib/timezone";
 import { getDict, getLocale } from "@/lib/i18n";
 import { serviceView } from "@/lib/content";
 import { Eyebrow, ButtonLink } from "@/components/ui";
@@ -107,6 +108,7 @@ export default async function AgendaPage({
         <div className="card-soft p-6">
           <p className="eyebrow text-muted">{t.agenda.hoursTitle}</p>
           <p className="mt-3 text-sm leading-relaxed text-ink-soft">{businessHoursLabel(locale)}</p>
+          <p className="mt-1 text-xs text-muted">{timezoneLabel(locale)}</p>
           <p className="mt-3 text-sm leading-relaxed text-ink-soft">{t.agenda.hoursNote}</p>
         </div>
 

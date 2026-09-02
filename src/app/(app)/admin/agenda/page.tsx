@@ -8,6 +8,7 @@ import { setAppointmentStatusAction, saveAppointmentNotesAction } from "@/lib/ac
 import { deleteBlackoutAction } from "@/lib/actions/booking";
 import { Badge, EmptyState, inputClass } from "@/components/ui";
 import { AgendaCalendar } from "@/components/admin/agenda-calendar";
+import { BUSINESS_TZ } from "@/lib/timezone";
 
 export const dynamic = "force-dynamic";
 
@@ -122,7 +123,7 @@ export default async function AdminAgendaPage({
                   <p className="mt-0.5 text-[0.8125rem] text-muted">
                     {b.allDay
                       ? `${shortDate(b.startsAt)} · día completo`
-                      : `${dateTime(b.startsAt)} → ${new Date(b.endsAt).toLocaleTimeString("es-US", { hour: "numeric", minute: "2-digit" })}`}
+                      : `${dateTime(b.startsAt)} → ${new Date(b.endsAt).toLocaleTimeString("es-US", { timeZone: BUSINESS_TZ, hour: "numeric", minute: "2-digit" })}`}
                   </p>
                 </div>
                 <form action={deleteBlackoutAction}>

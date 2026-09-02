@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { Eyebrow } from "@/components/ui";
 import { businessHoursLabel } from "@/lib/availability";
+import { timezoneLabel } from "@/lib/timezone";
 import { getDict, getLocale } from "@/lib/i18n";
 import { ContactForm } from "./contact-form";
 
@@ -28,6 +29,7 @@ export default async function ContactoPage() {
           <div>
             <dt className="text-muted">{t.contact.hours}</dt>
             <dd className="mt-1 font-semibold">{businessHoursLabel(locale)}</dd>
+            <dd className="mt-0.5 text-xs text-muted">{timezoneLabel(locale)}</dd>
           </div>
           <div>
             <dt className="text-muted">{t.contact.modality}</dt>

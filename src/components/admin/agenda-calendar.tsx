@@ -18,6 +18,7 @@ import {
 } from "@/lib/actions/booking";
 import { APPOINTMENT_LABEL, APPOINTMENT_STATUSES } from "@/lib/domain";
 import { inputClass } from "@/components/ui";
+import { BUSINESS_TZ } from "@/lib/timezone";
 
 export type CalendarAppointment = {
   id: string;
@@ -63,6 +64,7 @@ function toLocalInput(date: Date) {
 
 function fullDate(value: string | Date) {
   return new Date(value).toLocaleString("es-US", {
+    timeZone: BUSINESS_TZ,
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -160,7 +162,7 @@ export function AgendaCalendar({
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
           initialView="timeGridWeek"
           locale={esLocale}
-          timeZone="local"
+          timeZone={BUSINESS_TZ}
           events={events}
           eventClick={handleEventClick}
           selectable
@@ -274,8 +276,8 @@ export function AgendaCalendar({
         <Modal onClose={() => setBlocked(null)} title={blocked.reason || "Tiempo bloqueado"}>
           <p className="text-sm text-ink-soft">
             {blocked.allDay
-              ? `Día completo · ${new Date(blocked.startsAt).toLocaleDateString("es-US", { weekday: "long", day: "numeric", month: "long" })}`
-              : `${fullDate(blocked.startsAt)} → ${new Date(blocked.endsAt).toLocaleTimeString("es-US", { hour: "numeric", minute: "2-digit" })}`}
+              ? `Día completo · ${new Date(blocked.startsAt).toLocaleDateString("es-US", { timeZone: BUSINESS_TZ, weekday: "long", day: "numeric", month: "long" })}`
+              : `${fullDate(blocked.startsAt)} → ${new Date(blocked.endsAt).toLocaleTimeString("es-US", { timeZone: BUSINESS_TZ, hour: "numeric", minute: "2-digit" })}`}
           </p>
           <p className="mt-3 text-sm text-muted">
             Mientras exista este bloqueo, esos horarios no se ofrecen en la agenda pública.
