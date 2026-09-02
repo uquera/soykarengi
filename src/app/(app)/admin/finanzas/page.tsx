@@ -32,19 +32,22 @@ function Kpi({
   value,
   hint,
   tone = "ink",
+  amount,
 }: {
   label: string;
   value: string;
   hint?: string;
   tone?: "ink" | "income" | "expense" | "balance";
+  /** Para el balance: el signo decide el color, que es la lectura que importa. */
+  amount?: number;
 }) {
   const color =
     tone === "income"
       ? "text-orchid-deep"
       : tone === "expense"
         ? "text-rose-deep"
-        : tone === "balance"
-          ? "text-ink"
+        : tone === "balance" && amount !== undefined && amount < 0
+          ? "text-rose-deep"
           : "text-ink";
 
   return (
@@ -161,9 +164,20 @@ export default async function AdminFinanzasPage({
           label="Balance"
           value={usd(summary.kpis.balance)}
           tone="balance"
-          hint={summary.kpis.income > 0 ? `Margen del ${margin}%` : "Sin ingresos en el rango"}
+          amount={summary.kpis.balance}
+          hint={
+            summary.kpis.income > 0
+              ? `Margen del ${margin}%${summary.kpis.balance < 0 ? " · en pérdida" : ""}`
+              : "Sin ingresos en el rango"
+          }
         />
-        <Kpi label="Balance histórico" value={usd(summary.kpis.balanceAll)} hint="Desde el primer registro" />
+        <Kpi
+          label="Balance histórico"
+          value={usd(summary.kpis.balanceAll)}
+          tone="balance"
+          amount={summary.kpis.balanceAll}
+          hint="Desde el primer registro"
+        />
       </div>
 
       {/* Evolución */}
