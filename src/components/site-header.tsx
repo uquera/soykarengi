@@ -139,7 +139,7 @@ export function SiteHeader({
             <Link
               key={item.href}
               href={item.href}
-              className="block border-b border-line/60 py-3 text-sm font-medium text-ink-soft"
+              className="block border-b border-line/60 py-3 text-sm font-medium text-ink-soft last:border-0"
             >
               {item.label}
             </Link>
