@@ -109,3 +109,24 @@ otros profesionales que combinan servicios con productos.
 ---
 
 Desarrollado por **HYPNOS** · hypnosapps@gmail.com
+
+## Producción
+
+| Dato | Valor |
+|---|---|
+| URL | https://karengi.srv1485601.hstgr.cloud |
+| Servidor | VPS Hostinger `31.97.86.247` |
+| Carpeta | `/root/soykarengi` |
+| Proceso PM2 | `soykarengi` (puerto 3023) |
+| Base de datos | SQLite en `/root/soykarengi/prisma/prod.db` |
+| SSL | Let's Encrypt vía certbot, renovación automática |
+
+Para desplegar cambios:
+
+```bash
+ssh -i "C:/Users/Usuario/.ssh/id_ed25519" root@31.97.86.247 "cd /root/soykarengi && git pull origin main && npm run build && cp -r .next/static .next/standalone/.next/static && cp -r public .next/standalone/public && pm2 restart soykarengi"
+```
+
+Si cambia `prisma/schema.prisma`, corre además `npx prisma db push` antes del build.
+El `.env` de producción vive en dos lugares: `/root/soykarengi/.env` (para Prisma CLI) y
+`/root/soykarengi/.next/standalone/.env` (para el server de PM2, con la ruta absoluta de la BD).
