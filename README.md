@@ -19,6 +19,10 @@ terracota para diseños) y **una sola base de clientes**.
 
 ## Piezas transversales
 
+La agenda del panel es un **calendario por horas** (mes / semana / día) sobre el listado: arrastra una
+cita para reagendarla, o selecciona un rango libre para agendar a alguien o **bloquear** ese horario.
+Lo bloqueado deja de ofrecerse en la agenda pública.
+
 - **Mi espacio** (`/mi-espacio`) — citas, diseños, pedidos, archivos entregados, favoritos y datos del
   cliente, en una única cuenta.
 - **Panel administrativo** (`/admin`) — dashboard, servicios, agenda, categorías, diseños, solicitudes,
@@ -53,6 +57,17 @@ panel de acceso). El idioma se guarda en una cookie por un año.
   en la base de datos. Karen escribe la versión en inglés desde el panel, en un bloque plegable al
   final de cada formulario; lo que deje vacío se muestra en español.
 - El panel administrativo está solo en español, por decisión: lo usa Karen.
+
+## Zona horaria
+
+Karen atiende desde Estados Unidos, así que **toda la agenda vive en `America/New_York`**
+(`src/lib/timezone.ts`), sin importar dónde esté el servidor ni desde dónde mire el cliente:
+
+- El proceso de Node arranca con `TZ=America/New_York`, de modo que el cálculo de bloques en el
+  servidor usa el reloj de Karen.
+- Los formateadores de fecha y el calendario reciben `timeZone` explícito. FullCalendar necesita el
+  plugin `@fullcalendar/luxon3` para entender una zona con nombre: sin él cae a UTC en silencio.
+- La agenda pública y la página de contacto muestran la zona bajo el horario de atención.
 
 ## Stack
 
