@@ -25,6 +25,7 @@ Lo bloqueado deja de ofrecerse en la agenda pública.
 
 - **Mi espacio** (`/mi-espacio`) — citas, diseños, pedidos, archivos entregados, favoritos y datos del
   cliente, en una única cuenta.
+- **Finanzas** (`/admin/finanzas`) — ingresos, egresos y balance con gráficos.
 - **Panel administrativo** (`/admin`) — dashboard, servicios, agenda, categorías, diseños, solicitudes,
   pedidos, clientes segmentados, contenido, mensajes y estadísticas.
 - **Contenido** — blog y recursos (`/blog`, `/recursos`), editables desde el panel.
@@ -37,6 +38,22 @@ SOLICITUD → COTIZADA → APROBADA → PAGADA → EN DISEÑO → REVISIÓN → 
 
 El cliente lo ve como una línea de tiempo en Mi espacio; Karen lo mueve desde el panel. Una solicitud
 que ya pasó por caja aparece además como **pedido**.
+
+### Finanzas: el ingreso no se escribe dos veces
+
+Los ingresos **no** viven en una tabla aparte: salen de los datos que ya existen. Una cita
+`COMPLETADA` vale el precio de su servicio y un pedido con `paidAt` vale su cotización. Así el
+balance no puede divergir de la operación, y de paso el módulo responde la pregunta comercial del
+proyecto: **cuánto aporta cada unidad de negocio**.
+
+El modelo `Movement` (`kind: INGRESO | EGRESO`) guarda sólo lo que no pasa por la plataforma: los
+egresos y las ventas de fuera del sitio (ferias, encargos por WhatsApp). Un solo modelo, un solo
+formulario, una sola tabla.
+
+La página trae presets de semana / mes / año más rango libre, cuatro KPIs con margen, barras de
+ingresos contra egresos —por día si el rango es corto, por mes si es largo—, dos donas (de dónde
+viene el dinero, en qué se va) y exportación a CSV. Los gráficos van dibujados a mano con SVG y
+divs: no vale traer una librería de charts entera por dos formas.
 
 ### La segmentación que importa
 
