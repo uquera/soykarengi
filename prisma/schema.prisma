@@ -1,0 +1,227 @@
+// SoyKarengi — Karen Ramos
+// Una plataforma, dos unidades de negocio, una sola base de clientes.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────── CORE: CLIENTES ───────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  city         String?
+  role         String   @default("CLIENT") // CLIENT | ADMIN
+  createdAt    DateTime @default(now())
+
+  appointments   Appointment[]
+  designRequests DesignRequest[]
+  favorites      Favorite[]
+
+  @@index([role])
+}
+
+// ──────────────────── UNIDAD 1 · ACOMPAÑAMIENTO ────────────────────
+
+model Service {
+  id            String  @id @default(cuid())
+  slug          String  @unique
+  name          String
+  summary       String
+  description   String
+  forWho        String // ¿Para quién es?
+  whatToExpect  String // ¿Qué puedes esperar?
+  modality      String // Online | Presencial | Ambas
+  durationMin   Int
+  price         Int
+  specialty     String  @default("Acompañamiento")
+  accentEmoji   String  @default("✦")
+  order         Int     @default(0)
+  active        Boolean @default(true)
+
+  // Versión en inglés. Si está vacía, la web cae al español.
+  nameEn         String?
+  summaryEn      String?
+  descriptionEn  String?
+  forWhoEn       String?
+  whatToExpectEn String?
+  specialtyEn    String?
+  modalityEn     String?
+
+  appointments Appointment[]
+}
+
+model Appointment {
+  id        String   @id @default(cuid())
+  code      String   @unique
+  userId    String
+  serviceId String
+  startsAt  DateTime
+  modality  String
+  status    String   @default("PENDIENTE") // PENDIENTE | CONFIRMADA | COMPLETADA | CANCELADA
+  reason    String // motivo de consulta (formulario previo)
+  firstTime Boolean  @default(true)
+  notes     String? // notas internas de Karen
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id])
+
+  @@index([startsAt])
+  @@index([userId])
+  @@index([status])
+}
+
+// ─────────────── UNIDAD 2 · DISEÑOS CON PROPÓSITO ───────────────
+
+model DesignCategory {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String
+  group       String // EVENTOS | PERSONAL | PROPOSITO
+  description String
+  order       Int     @default(0)
+  active      Boolean @default(true)
+
+  nameEn        String?
+  descriptionEn String?
+
+  designs Design[]
+}
+
+model Design {
+  id          String  @id @default(cuid())
+  slug        String  @unique
+  name        String
+  tagline     String
+  description String
+  categoryId  String
+  basePrice   Int
+  delivery    String  @default("Digital / Impresa / Ambas")
+  // Campos personalizables, separados por coma: Nombre,Fecha,Frase,Fotografía,Colores,Formato
+  customFields String @default("Nombre,Fecha,Frase,Fotografía,Colores,Formato")
+  palette     String  @default("rose") // rose | gold | sage | clay | plum
+  featured    Boolean @default(false)
+  order       Int     @default(0)
+  active      Boolean @default(true)
+
+  nameEn         String?
+  taglineEn      String?
+  descriptionEn  String?
+  deliveryEn     String?
+  customFieldsEn String?
+
+  category  DesignCategory  @relation(fields: [categoryId], references: [id])
+  requests  DesignRequest[]
+  favorites Favorite[]
+}
+
+// Solicitud de diseño = configurador + cotización + pedido + entrega
+model DesignRequest {
+  id       String  @id @default(cuid())
+  code     String  @unique
+  userId   String
+  designId String?
+
+  // Configurador
+  purpose   String // Evento | Regalo | Recuerdo | Homenaje | Diseño personal | Otro
+  recipient String // ¿Para quién es?
+  emotions  String // Amor,Gratitud,Alegría,...
+  eventDate DateTime?
+  format    String // Digital | Impresa | Ambas
+  quantity  Int      @default(1)
+  details   String   @default("") // preferencias, textos
+  idea      String // "Cuéntanos tu idea"
+
+  // Pipeline: SOLICITUD → COTIZADA → APROBADA → PAGADA → EN_DISENO → REVISION → APROBACION_FINAL → ENTREGADA
+  status      String    @default("SOLICITUD")
+  quoteAmount Int?
+  quoteNotes  String?
+  quotedAt    DateTime?
+  paidAt      DateTime?
+  deliveredAt DateTime?
+  adminNotes  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  design       Design?       @relation(fields: [designId], references: [id])
+  attachments  Attachment[]
+  deliverables Deliverable[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  requestId String
+  name      String
+  note      String   @default("")
+  createdAt DateTime @default(now())
+
+  request DesignRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+}
+
+model Deliverable {
+  id        String   @id @default(cuid())
+  requestId String
+  name      String
+  url       String
+  createdAt DateTime @default(now())
+
+  request DesignRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+}
+
+model Favorite {
+  id       String @id @default(cuid())
+  userId   String
+  designId String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  design Design @relation(fields: [designId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, designId])
+}
+
+// ───────────────────────── CONTENIDO ─────────────────────────
+
+model Post {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  excerpt     String
+  content     String
+  kind        String    @default("BLOG") // BLOG | RECURSO
+  tag         String    @default("")
+  readMinutes Int       @default(4)
+  published   Boolean   @default(true)
+  publishedAt DateTime  @default(now())
+
+  titleEn   String?
+  excerptEn String?
+  contentEn String?
+  tagEn     String?
+
+  @@index([kind])
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String?
+  unit      String   @default("General") // Acompañamiento | Diseños | General
+  message   String
+  handled   Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

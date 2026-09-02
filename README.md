@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SoyKarengi · Karen Ramos
 
-## Getting Started
+Plataforma digital de **Karen Ramos**: una marca paraguas con dos unidades de negocio que comparten
+tecnología, clientes, pagos y administración.
 
-First, run the development server:
+> Acompañamiento · Creación · Propósito
+>
+> *Porque hay momentos que necesitan ser acompañados… y otros que merecen ser recordados.*
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Las dos unidades
+
+| Unidad | Qué resuelve | Rutas |
+|---|---|---|
+| **01 · Bienestar y acompañamiento** | Perfil de Karen, servicios (psicología, Life Coaching, mentoría), especialidades, agenda con reserva y formulario previo | `/acompanamiento`, `/acompanamiento/servicios/[slug]`, `/acompanamiento/agenda` |
+| **02 · Diseños con Propósito** | Vitrina por categorías (Eventos · Personal · Con propósito), ficha de cada pieza, configurador de 5 pasos y solicitudes a medida | `/disenos`, `/disenos/[slug]`, `/configurador` |
+
+Ambas viven en el mismo aplicativo, con acentos visuales distintos (salvia para acompañamiento,
+terracota para diseños) y **una sola base de clientes**.
+
+## Piezas transversales
+
+- **Mi espacio** (`/mi-espacio`) — citas, diseños, pedidos, archivos entregados, favoritos y datos del
+  cliente, en una única cuenta.
+- **Panel administrativo** (`/admin`) — dashboard, servicios, agenda, categorías, diseños, solicitudes,
+  pedidos, clientes segmentados, contenido, mensajes y estadísticas.
+- **Contenido** — blog y recursos (`/blog`, `/recursos`), editables desde el panel.
+
+### El flujo de una solicitud de diseño
+
+```
+SOLICITUD → COTIZADA → APROBADA → PAGADA → EN DISEÑO → REVISIÓN → APROBACIÓN FINAL → ENTREGADA
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+El cliente lo ve como una línea de tiempo en Mi espacio; Karen lo mueve desde el panel. Una solicitud
+que ya pasó por caja aparece además como **pedido**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### La segmentación que importa
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Un cliente puede llegar por los diseños y quedarse por los servicios, o al revés. El panel clasifica a
+cada persona en *usa ambas unidades* / *solo acompañamiento* / *solo diseños* / *registrado sin
+actividad*: ahí está la oportunidad comercial.
 
-## Learn More
+## Bilingüe y en dólares
 
-To learn more about Next.js, take a look at the following resources:
+Karen atiende desde Estados Unidos, así que **todos los precios se muestran y se cotizan en USD**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+La plataforma es **bilingüe español/inglés** con un botón discreto `ES · EN` en la cabecera (y en el
+panel de acceso). El idioma se guarda en una cookie por un año.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- La **interfaz** vive en `src/lib/dictionaries/es.ts` y `en.ts`. El español es el idioma de origen:
+  el diccionario inglés se tipa contra él, así que una clave nueva sin traducir no compila.
+- El **contenido** (servicios, categorías, diseños, blog y recursos) tiene columnas `…En` opcionales
+  en la base de datos. Karen escribe la versión en inglés desde el panel, en un bloque plegable al
+  final de cada formulario; lo que deje vacío se muestra en español.
+- El panel administrativo está solo en español, por decisión: lo usa Karen.
 
-## Deploy on Vercel
+## Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Next.js 16** (App Router, Server Components, Server Actions) + **React 19**
+- **TypeScript** y **Tailwind CSS v4**
+- **Prisma 6** sobre **SQLite**
+- Sesiones propias con **JWT** (`jose`) en cookie httpOnly y **bcrypt**
+- Build `standalone`, desplegado con **PM2** detrás de Nginx
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Las portadas de la vitrina se generan de forma determinista a partir del slug de cada pieza
+(`src/components/design-visual.tsx`), así que la vitrina se ve completa desde el primer día y cada
+diseño conserva siempre la misma composición.
+
+## Correr en local
+
+```bash
+npm install
+cp .env.example .env      # ajusta AUTH_SECRET
+npm run db:push
+npm run db:seed
+npm run dev
+```
+
+### Cuentas del seed
+
+| Rol | Correo | Contraseña |
+|---|---|---|
+| Administradora | `karen@soykarengi.com` | `karengi2026` |
+| Cliente demo | `demo@soykarengi.com` | `demo1234` |
+
+> Cambia ambas contraseñas antes de usar la plataforma con datos reales.
+
+## Variables de entorno
+
+| Variable | Para qué |
+|---|---|
+| `DATABASE_URL` | Ruta del archivo SQLite, relativa a `prisma/` |
+| `AUTH_SECRET` | Firma de las sesiones. Debe ser largo y aleatorio en producción |
+| `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` | Credenciales del admin que crea el seed |
+
+## Roadmap
+
+Fase 1 (esta entrega) cubre home, las dos unidades, agenda, vitrina, configurador, registro de
+clientes, Mi espacio y panel administrativo completo.
+
+- **Fase 2** — pasarela de pago, carrito para piezas prediseñadas, subida real de archivos,
+  notificaciones por correo y WhatsApp.
+- **Fase 3** — configurador avanzado con IA para conceptualizar diseños, recomendaciones,
+  cotización automática, analytics, CRM y programa de clientes recurrentes.
+
+El núcleo es modular a propósito: el mismo core (clientes, agenda, catálogo, pedidos) sirve para
+otros profesionales que combinan servicios con productos.
+
+---
+
+Desarrollado por **HYPNOS** · hypnosapps@gmail.com

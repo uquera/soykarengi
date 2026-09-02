@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // El VPS corre la app con PM2 desde .next/standalone
+  output: "standalone",
 };
 
 export default nextConfig;
