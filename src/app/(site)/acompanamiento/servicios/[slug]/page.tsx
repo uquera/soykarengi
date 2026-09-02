@@ -37,7 +37,7 @@ export default async function ServicioPage({ params }: Props) {
 
   return (
     <>
-      <div className="border-b border-line bg-sage-soft/40">
+      <div className="border-b border-line bg-orchid-soft/40">
         <div className="shell py-14">
           <Link href="/acompanamiento/servicios" className="text-[0.8125rem] text-muted hover:text-ink">
             {t.services.allServices}
@@ -45,7 +45,7 @@ export default async function ServicioPage({ params }: Props) {
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <span className="text-2xl">{service.accentEmoji}</span>
-            <Badge tone="sage">{service.specialty}</Badge>
+            <Badge tone="orchid">{service.specialty}</Badge>
           </div>
 
           <h1 className="mt-5 max-w-3xl font-[family-name:var(--font-display)] text-4xl leading-[1.1] text-balance sm:text-5xl">
@@ -59,7 +59,7 @@ export default async function ServicioPage({ params }: Props) {
         {/* Ficha de servicio, tal como se definió en la propuesta */}
         <article className="space-y-10">
           <section>
-            <Eyebrow className="text-sage-deep">{t.services.description}</Eyebrow>
+            <Eyebrow className="text-orchid-deep">{t.services.description}</Eyebrow>
             <div className="mt-3 space-y-3 text-[1.0625rem] leading-relaxed text-ink-soft">
               {service.description.split("\n").map((p, i) => (
                 <p key={i}>{p}</p>
@@ -68,11 +68,11 @@ export default async function ServicioPage({ params }: Props) {
           </section>
 
           <section className="card-soft p-7">
-            <Eyebrow className="text-sage-deep">{t.services.forWho}</Eyebrow>
+            <Eyebrow className="text-orchid-deep">{t.services.forWho}</Eyebrow>
             <ul className="mt-4 space-y-2.5">
               {service.forWho.split("\n").map((item, i) => (
                 <li key={i} className="flex gap-3 text-[0.9375rem] leading-relaxed text-ink-soft">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-sage" />
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orchid" />
                   {item}
                 </li>
               ))}
@@ -80,11 +80,11 @@ export default async function ServicioPage({ params }: Props) {
           </section>
 
           <section className="card-soft p-7">
-            <Eyebrow className="text-sage-deep">{t.services.whatToExpect}</Eyebrow>
+            <Eyebrow className="text-orchid-deep">{t.services.whatToExpect}</Eyebrow>
             <ul className="mt-4 space-y-2.5">
               {service.whatToExpect.split("\n").map((item, i) => (
                 <li key={i} className="flex gap-3 text-[0.9375rem] leading-relaxed text-ink-soft">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-amber" />
                   {item}
                 </li>
               ))}
@@ -95,7 +95,7 @@ export default async function ServicioPage({ params }: Props) {
         {/* Panel de reserva */}
         <aside className="lg:sticky lg:top-28">
           <div className="card-soft overflow-hidden">
-            <div className="bg-sage px-7 py-6 text-white">
+            <div className="bg-orchid px-7 py-6 text-white">
               <p className="text-[0.6875rem] font-semibold tracking-[0.18em] uppercase opacity-80">
                 {t.services.sessionPrice}
               </p>
@@ -122,7 +122,7 @@ export default async function ServicioPage({ params }: Props) {
             <div className="px-7 pb-7">
               <ButtonLink
                 href={`/acompanamiento/agenda?servicio=${service.slug}`}
-                tone="sage"
+                tone="orchid"
                 className="w-full"
               >
                 {t.services.book}

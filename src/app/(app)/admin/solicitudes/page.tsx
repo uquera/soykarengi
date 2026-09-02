@@ -49,7 +49,7 @@ export default async function AdminSolicitudesPage({
   return (
     <div className="space-y-7">
       <header>
-        <p className="eyebrow text-clay-deep">Unidad Diseños</p>
+        <p className="eyebrow text-rose-deep">Unidad Diseños</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">Solicitudes</h1>
         <p className="mt-2 text-ink-soft">Del configurador a la entrega, sin salir de esta pantalla.</p>
       </header>
@@ -171,7 +171,7 @@ export default async function AdminSolicitudesPage({
                 />
                 <button
                   type="submit"
-                  className="rounded-full bg-clay px-5 py-2.5 text-[0.8125rem] font-semibold text-white transition-colors hover:bg-clay-deep"
+                  className="rounded-full bg-rose px-5 py-2.5 text-[0.8125rem] font-semibold text-white transition-colors hover:bg-rose-deep"
                 >
                   {r.quoteAmount ? "Actualizar cotización" : "Enviar cotización"}
                 </button>
@@ -208,7 +208,7 @@ export default async function AdminSolicitudesPage({
                           href={d.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex rounded-full border border-sage/30 bg-sage-soft px-3.5 py-1.5 text-[0.75rem] font-semibold text-sage-deep"
+                          className="inline-flex rounded-full border border-orchid/30 bg-orchid-soft px-3.5 py-1.5 text-[0.75rem] font-semibold text-orchid-deep"
                         >
                           {d.name}
                         </a>

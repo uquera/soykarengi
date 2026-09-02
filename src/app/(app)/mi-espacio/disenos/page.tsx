@@ -34,20 +34,20 @@ export default async function MisDisenosPage({
     <div className="space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow text-clay-deep">{t.home.unit02}</p>
+          <p className="eyebrow text-rose-deep">{t.home.unit02}</p>
           <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
             {t.space.designs.title}
           </h1>
           <p className="mt-2 text-ink-soft">{t.space.designs.lead}</p>
         </div>
-        <ButtonLink href="/configurador" tone="clay">
+        <ButtonLink href="/configurador" tone="rose">
           {t.space.designs.newRequest}
         </ButtonLink>
       </header>
 
       {nueva ? (
-        <div className="rounded-2xl border border-clay/40 bg-clay-soft px-6 py-5">
-          <p className="font-semibold text-clay-deep">{t.space.designs.received}</p>
+        <div className="rounded-2xl border border-rose/40 bg-rose-soft px-6 py-5">
+          <p className="font-semibold text-rose-deep">{t.space.designs.received}</p>
           <p className="mt-1 text-sm text-ink-soft">
             {t.space.code} {nueva}. {t.space.designs.receivedLead}
           </p>
@@ -59,7 +59,7 @@ export default async function MisDisenosPage({
           title={t.space.designs.emptyTitle}
           lead={t.space.designs.emptyLead}
           action={
-            <ButtonLink href="/configurador" tone="clay" className="mt-2">
+            <ButtonLink href="/configurador" tone="rose" className="mt-2">
               {t.space.designs.emptyCta}
             </ButtonLink>
           }
@@ -136,8 +136,8 @@ export default async function MisDisenosPage({
               </div>
 
               {r.status === "COTIZADA" ? (
-                <div className="mt-6 rounded-2xl border border-gold/40 bg-gold/10 p-5">
-                  <p className="font-semibold text-[#8A6C1D]">{t.space.designs.quoteSent}</p>
+                <div className="mt-6 rounded-2xl border border-amber/40 bg-amber/10 p-5">
+                  <p className="font-semibold text-amber-ink">{t.space.designs.quoteSent}</p>
                   {r.quoteNotes ? (
                     <p className="mt-2 text-sm leading-relaxed text-ink-soft">{r.quoteNotes}</p>
                   ) : null}
@@ -155,7 +155,7 @@ export default async function MisDisenosPage({
                       <input type="hidden" name="id" value={r.id} />
                       <button
                         type="submit"
-                        className="rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold text-muted transition-colors hover:border-clay/50 hover:text-clay-deep"
+                        className="rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold text-muted transition-colors hover:border-rose/50 hover:text-rose-deep"
                       >
                         {t.space.designs.decline}
                       </button>
@@ -165,8 +165,8 @@ export default async function MisDisenosPage({
               ) : null}
 
               {r.deliverables.length > 0 ? (
-                <div className="mt-6 rounded-2xl border border-sage/30 bg-sage-soft/60 p-5">
-                  <p className="font-semibold text-sage-deep">{t.space.designs.deliveredFiles}</p>
+                <div className="mt-6 rounded-2xl border border-orchid/30 bg-orchid-soft/60 p-5">
+                  <p className="font-semibold text-orchid-deep">{t.space.designs.deliveredFiles}</p>
                   <ul className="mt-3 space-y-2">
                     {r.deliverables.map((d) => (
                       <li key={d.id}>
@@ -174,7 +174,7 @@ export default async function MisDisenosPage({
                           href={d.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-sm font-medium text-sage-deep underline underline-offset-2"
+                          className="text-sm font-medium text-orchid-deep underline underline-offset-2"
                         >
                           {d.name}
                         </a>

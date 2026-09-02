@@ -31,7 +31,7 @@ export default async function AdminMensajesPage() {
               <div className="flex flex-wrap items-start justify-between gap-4">
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Badge tone={m.unit === "Acompañamiento" ? "sage" : m.unit === "Diseños" ? "clay" : "neutral"}>
+                    <Badge tone={m.unit === "Acompañamiento" ? "orchid" : m.unit === "Diseños" ? "rose" : "neutral"}>
                       {m.unit}
                     </Badge>
                     {m.handled ? <Badge tone="muted">Atendido</Badge> : null}

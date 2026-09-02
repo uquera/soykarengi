@@ -49,7 +49,7 @@ function Submit({ label, pendingLabel }: { label: string; pendingLabel: string }
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex w-full items-center justify-center rounded-full bg-sage px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-sage-deep disabled:opacity-50"
+      className="inline-flex w-full items-center justify-center rounded-full bg-orchid-deep px-6 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-orchid disabled:opacity-50"
     >
       {pending ? pendingLabel : label}
     </button>
@@ -110,7 +110,7 @@ export function BookingForm({
       <input type="hidden" name="hour" value={hour ?? ""} />
 
       <section>
-        <p className="eyebrow text-sage-deep">
+        <p className="eyebrow text-orchid-deep">
           {copy.step} 01
         </p>
         <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl">{copy.stepService}</h2>
@@ -123,7 +123,7 @@ export function BookingForm({
                 type="button"
                 onClick={() => setServiceId(s.id)}
                 className={`rounded-2xl border px-5 py-4 text-left transition-colors ${
-                  active ? "border-sage bg-sage-soft" : "border-line bg-white hover:border-sage/40"
+                  active ? "border-orchid bg-orchid-soft" : "border-line bg-white hover:border-orchid/40"
                 }`}
               >
                 <span className="text-lg">{s.accentEmoji}</span>
@@ -138,7 +138,7 @@ export function BookingForm({
       </section>
 
       <section>
-        <p className="eyebrow text-sage-deep">{copy.step} 02</p>
+        <p className="eyebrow text-orchid-deep">{copy.step} 02</p>
         <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl">{copy.stepWhen}</h2>
 
         <div className="mt-5 flex gap-2 overflow-x-auto pb-2">
@@ -152,9 +152,9 @@ export function BookingForm({
                 onClick={() => setDay(d.iso)}
                 className={`min-w-[4.5rem] shrink-0 rounded-2xl border px-3 py-3 text-center transition-colors ${
                   active
-                    ? "border-sage bg-sage text-white"
+                    ? "border-orchid bg-orchid text-white"
                     : d.open
-                      ? "border-line bg-white hover:border-sage/40"
+                      ? "border-line bg-white hover:border-orchid/40"
                       : "border-line/60 bg-shell/50 text-muted/50"
                 }`}
               >
@@ -181,8 +181,8 @@ export function BookingForm({
                   onClick={() => setHour(s.hour)}
                   className={`rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors ${
                     hour === s.hour
-                      ? "border-sage bg-sage text-white"
-                      : "border-line bg-white hover:border-sage/40"
+                      ? "border-orchid bg-orchid text-white"
+                      : "border-line bg-white hover:border-orchid/40"
                   }`}
                 >
                   {s.label}
@@ -194,7 +194,7 @@ export function BookingForm({
       </section>
 
       <section>
-        <p className="eyebrow text-sage-deep">{copy.step} 03</p>
+        <p className="eyebrow text-orchid-deep">{copy.step} 03</p>
         <h2 className="mt-2 font-[family-name:var(--font-display)] text-2xl">{copy.stepBefore}</h2>
         <p className="mt-2 max-w-xl text-sm text-ink-soft">{copy.beforeLead}</p>
 
@@ -204,7 +204,7 @@ export function BookingForm({
               {modalities.map((m, i) => (
                 <label
                   key={m.value}
-                  className="flex-1 cursor-pointer rounded-xl border border-line bg-white px-4 py-3 text-sm has-checked:border-sage has-checked:bg-sage-soft"
+                  className="flex-1 cursor-pointer rounded-xl border border-line bg-white px-4 py-3 text-sm has-checked:border-orchid has-checked:bg-orchid-soft"
                 >
                   <input
                     type="radio"
@@ -227,7 +227,7 @@ export function BookingForm({
               ].map(([value, label]) => (
                 <label
                   key={value}
-                  className="flex-1 cursor-pointer rounded-xl border border-line bg-white px-4 py-3 text-sm has-checked:border-sage has-checked:bg-sage-soft"
+                  className="flex-1 cursor-pointer rounded-xl border border-line bg-white px-4 py-3 text-sm has-checked:border-orchid has-checked:bg-orchid-soft"
                 >
                   <input
                     type="radio"
@@ -256,7 +256,7 @@ export function BookingForm({
       </section>
 
       {state.error ? (
-        <p className="rounded-xl border border-clay/40 bg-clay-soft px-4 py-3 text-sm text-clay-deep">
+        <p className="rounded-xl border border-rose/40 bg-rose-soft px-4 py-3 text-sm text-rose-deep">
           {state.error}
         </p>
       ) : null}

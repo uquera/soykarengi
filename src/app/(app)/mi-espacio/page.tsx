@@ -43,7 +43,7 @@ export default async function MiEspacioPage() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-clay">
+        <p className="eyebrow text-rose">
           {t.space.hi}, {user.name.split(" ")[0]}
         </p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">{t.space.title}</h1>
@@ -64,8 +64,8 @@ export default async function MiEspacioPage() {
       </div>
 
       {pendingQuote ? (
-        <div className="rounded-2xl border border-gold/40 bg-gold/10 p-6">
-          <p className="eyebrow text-[#8A6C1D]">{t.space.quoteWaiting}</p>
+        <div className="rounded-2xl border border-amber/40 bg-amber/10 p-6">
+          <p className="eyebrow text-amber-ink">{t.space.quoteWaiting}</p>
           <p className="mt-3 font-[family-name:var(--font-display)] text-xl">
             {designName(pendingQuote.design, locale, t.vocab.purposes[pendingQuote.purpose] ?? pendingQuote.purpose)}{" "}
             · {money(pendingQuote.quoteAmount, locale)}
@@ -82,7 +82,7 @@ export default async function MiEspacioPage() {
       <section className="grid gap-5 lg:grid-cols-2">
         <div className="card-soft p-6">
           <div className="flex items-center justify-between">
-            <p className="eyebrow text-sage-deep">{t.space.nextAppointment}</p>
+            <p className="eyebrow text-orchid-deep">{t.space.nextAppointment}</p>
             <Link href="/mi-espacio/citas" className="text-[0.8125rem] text-muted hover:text-ink">
               {t.space.seeAll}
             </Link>
@@ -105,7 +105,7 @@ export default async function MiEspacioPage() {
           ) : (
             <div className="mt-5">
               <p className="text-sm text-ink-soft">{t.space.noAppointments}</p>
-              <ButtonLink href="/acompanamiento/agenda" tone="sage" className="mt-5">
+              <ButtonLink href="/acompanamiento/agenda" tone="orchid" className="mt-5">
                 {t.space.bookOne}
               </ButtonLink>
             </div>
@@ -114,7 +114,7 @@ export default async function MiEspacioPage() {
 
         <div className="card-soft p-6">
           <div className="flex items-center justify-between">
-            <p className="eyebrow text-clay-deep">{t.space.openDesigns}</p>
+            <p className="eyebrow text-rose-deep">{t.space.openDesigns}</p>
             <Link href="/mi-espacio/disenos" className="text-[0.8125rem] text-muted hover:text-ink">
               {t.space.seeAll}
             </Link>
@@ -139,7 +139,7 @@ export default async function MiEspacioPage() {
           ) : (
             <div className="mt-5">
               <p className="text-sm text-ink-soft">{t.space.noOpenDesigns}</p>
-              <ButtonLink href="/configurador" tone="clay" className="mt-5">
+              <ButtonLink href="/configurador" tone="rose" className="mt-5">
                 {t.space.createDesign}
               </ButtonLink>
             </div>
@@ -169,10 +169,10 @@ export default async function MiEspacioPage() {
           lead={t.space.emptyLead}
           action={
             <div className="mt-3 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/acompanamiento/agenda" tone="sage">
+              <ButtonLink href="/acompanamiento/agenda" tone="orchid">
                 {t.space.bookOne}
               </ButtonLink>
-              <ButtonLink href="/configurador" tone="clay">
+              <ButtonLink href="/configurador" tone="rose">
                 {t.space.createDesign}
               </ButtonLink>
             </div>

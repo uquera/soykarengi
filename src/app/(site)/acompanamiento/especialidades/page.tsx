@@ -29,7 +29,7 @@ export default async function EspecialidadesPage() {
               {area.items.map((item) => (
                 <li
                   key={item}
-                  className="rounded-full border border-sage/25 bg-sage-soft/70 px-3 py-1.5 text-[0.8125rem] text-sage-deep"
+                  className="rounded-full border border-orchid/25 bg-orchid-soft/70 px-3 py-1.5 text-[0.8125rem] text-orchid-deep"
                 >
                   {item}
                 </li>
@@ -44,7 +44,7 @@ export default async function EspecialidadesPage() {
           {t.specialties.ctaTitle}
         </p>
         <p className="mx-auto mt-3 max-w-lg text-cream/70">{t.specialties.ctaLead}</p>
-        <ButtonLink href="/acompanamiento/agenda" tone="sage" className="mt-8">
+        <ButtonLink href="/acompanamiento/agenda" tone="orchid" className="mt-8">
           {t.specialties.cta}
         </ButtonLink>
       </div>

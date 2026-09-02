@@ -1,12 +1,12 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
-type Tone = "ink" | "sage" | "clay" | "ghost";
+type Tone = "ink" | "orchid" | "rose" | "ghost";
 
 const TONE: Record<Tone, string> = {
   ink: "bg-ink text-cream hover:bg-ink-soft",
-  sage: "bg-sage text-white hover:bg-sage-deep",
-  clay: "bg-clay text-white hover:bg-clay-deep",
+  orchid: "bg-orchid-deep text-cream hover:bg-orchid",
+  rose: "bg-rose text-white hover:bg-rose-deep",
   ghost: "border border-line bg-white/70 text-ink hover:border-ink/40 hover:bg-white",
 };
 
@@ -60,13 +60,13 @@ export function Badge({
   tone = "neutral",
 }: {
   children: ReactNode;
-  tone?: "neutral" | "sage" | "clay" | "gold" | "muted";
+  tone?: "neutral" | "orchid" | "rose" | "amber" | "muted";
 }) {
   const tones = {
     neutral: "border-line bg-shell text-ink-soft",
-    sage: "border-sage/30 bg-sage-soft text-sage-deep",
-    clay: "border-clay/30 bg-clay-soft text-clay-deep",
-    gold: "border-gold/30 bg-gold/10 text-[#8A6C1D]",
+    orchid: "border-orchid/30 bg-orchid-soft text-orchid-deep",
+    rose: "border-rose/30 bg-rose-soft text-rose-deep",
+    amber: "border-amber/30 bg-amber/10 text-amber-ink",
     muted: "border-line bg-white text-muted",
   };
   return (

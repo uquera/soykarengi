@@ -1,29 +1,33 @@
 @import "tailwindcss";
 
 /* ───────────────────────── SoyKarengi · Sistema visual ─────────────────────────
-   Marca paraguas cálida y editorial. Dos unidades con acentos propios:
-   · Acompañamiento → salvia, sereno, respirable
-   · Diseños con Propósito → terracota y oro, cálido, celebratorio            */
+   Marca paraguas sobre ciruela y crema. Dos unidades con acentos propios:
+   · Acompañamiento → morado, sereno, profesional
+   · Diseños con Propósito → rosa y durazno, cálido, celebratorio             */
 
 @theme {
-  --color-ink: #221D19;
-  --color-ink-soft: #4E463F;
-  --color-muted: #8A7E73;
-  --color-cream: #FBF7F2;
-  --color-shell: #F3ECE3;
-  --color-line: #E4D9CB;
+  /* Tinta y fondos: la marca vive sobre ciruela oscura y crema cálido. */
+  --color-ink: #2B1730;
+  --color-ink-soft: #574063;
+  --color-muted: #8C7A96;
+  --color-cream: #FDF7F2;
+  --color-shell: #F6EEF7;
+  --color-line: #E8DCEA;
 
-  --color-sage: #6E8B74;
-  --color-sage-deep: #4E6A55;
-  --color-sage-soft: #E4EDE4;
+  /* Unidad 01 · Acompañamiento — familia morada */
+  --color-orchid: #8257A0;
+  --color-orchid-deep: #4A1E55;
+  --color-orchid-soft: #F4EBF9;
 
-  --color-clay: #BC7A52;
-  --color-clay-deep: #96593A;
-  --color-clay-soft: #F7E7DC;
+  /* Unidad 02 · Diseños con Propósito — familia rosa */
+  --color-rose: #C9506B;
+  --color-rose-deep: #9E3350;
+  --color-rose-soft: #FCEBEE;
 
-  --color-gold: #C0972F;
-  --color-rose: #D9A0A0;
-  --color-plum: #7C5A73;
+  /* Lavado cálido de apoyo y color de estados */
+  --color-peach: #FDF1E8;
+  --color-amber: #C08A2E;
+  --color-amber-ink: #8A6420;
 
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -45,8 +49,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-clay-soft);
-  color: var(--color-clay-deep);
+  background: var(--color-orchid-soft);
+  color: var(--color-orchid-deep);
 }
 
 /* Utilidades de composición reutilizadas en toda la plataforma */
@@ -68,7 +72,7 @@ body {
   border-radius: 1.25rem;
   border: 1px solid var(--color-line);
   background: white;
-  box-shadow: 0 1px 2px rgb(34 29 25 / 0.04), 0 12px 32px -24px rgb(34 29 25 / 0.35);
+  box-shadow: 0 1px 2px rgb(43 23 48 / 0.04), 0 12px 32px -24px rgb(43 23 48 / 0.30);
 }
 
 /* Grano sutil para que el crema no se vea plano */
@@ -78,7 +82,7 @@ body {
   inset: 0;
   pointer-events: none;
   opacity: 0.35;
-  background-image: radial-gradient(circle at 1px 1px, rgb(34 29 25 / 0.06) 1px, transparent 0);
+  background-image: radial-gradient(circle at 1px 1px, rgb(43 23 48 / 0.07) 1px, transparent 0);
   background-size: 22px 22px;
 }
 
@@ -101,9 +105,9 @@ body {
   --fc-border-color: var(--color-line);
   --fc-page-bg-color: white;
   --fc-neutral-bg-color: var(--color-shell);
-  --fc-today-bg-color: color-mix(in srgb, var(--color-sage-soft) 55%, white);
-  --fc-now-indicator-color: var(--color-clay);
-  --fc-business-hours-bg-color: color-mix(in srgb, var(--color-sage-soft) 40%, white);
+  --fc-today-bg-color: color-mix(in srgb, var(--color-orchid-soft) 60%, white);
+  --fc-now-indicator-color: var(--color-rose);
+  --fc-business-hours-bg-color: color-mix(in srgb, var(--color-orchid-soft) 45%, white);
   font-family: var(--font-sans);
 }
 
@@ -191,7 +195,7 @@ body {
 }
 
 .agenda-calendar .fc .fc-highlight {
-  background: color-mix(in srgb, var(--color-clay-soft) 70%, transparent);
+  background: color-mix(in srgb, var(--color-rose-soft) 75%, transparent);
 }
 
 .agenda-calendar .fc-theme-standard td,

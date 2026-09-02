@@ -85,7 +85,7 @@ export default async function AdminAgendaPage({
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-sage-deep">Unidad Servicios</p>
+        <p className="eyebrow text-orchid-deep">Unidad Servicios</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">Agenda y citas</h1>
         <p className="mt-2 text-ink-soft">
           Tu semana completa hora por hora. Arrastra una cita para moverla, o selecciona un rango libre
@@ -130,7 +130,7 @@ export default async function AdminAgendaPage({
                   <input type="hidden" name="id" value={b.id} />
                   <button
                     type="submit"
-                    className="rounded-full border border-line px-4 py-1.5 text-[0.75rem] font-semibold text-muted transition-colors hover:border-clay/50 hover:text-clay-deep"
+                    className="rounded-full border border-line px-4 py-1.5 text-[0.75rem] font-semibold text-muted transition-colors hover:border-rose/50 hover:text-rose-deep"
                   >
                     Liberar
                   </button>
@@ -170,9 +170,9 @@ export default async function AdminAgendaPage({
                       <Badge
                         tone={
                           a.status === "CONFIRMADA"
-                            ? "sage"
+                            ? "orchid"
                             : a.status === "PENDIENTE"
-                              ? "gold"
+                              ? "amber"
                               : a.status === "CANCELADA"
                                 ? "muted"
                                 : "neutral"
@@ -181,7 +181,7 @@ export default async function AdminAgendaPage({
                         {APPOINTMENT_LABEL[a.status]}
                       </Badge>
                       <Badge tone="muted">{a.modality}</Badge>
-                      {a.firstTime ? <Badge tone="clay">Primera vez</Badge> : null}
+                      {a.firstTime ? <Badge tone="rose">Primera vez</Badge> : null}
                     </div>
 
                     <p className="mt-3 font-[family-name:var(--font-display)] text-2xl leading-snug">

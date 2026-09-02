@@ -27,7 +27,7 @@ export default async function AdminPedidosPage() {
   return (
     <div className="space-y-7">
       <header>
-        <p className="eyebrow text-clay-deep">Unidad Diseños</p>
+        <p className="eyebrow text-rose-deep">Unidad Diseños</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">Pedidos</h1>
         <p className="mt-2 text-ink-soft">Solicitudes que ya pasaron por caja.</p>
       </header>

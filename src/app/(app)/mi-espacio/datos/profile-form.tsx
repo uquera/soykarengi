@@ -70,12 +70,12 @@ export function ProfileForm({
       </div>
 
       {state.error ? (
-        <p className="rounded-xl border border-clay/40 bg-clay-soft px-4 py-3 text-sm text-clay-deep">
+        <p className="rounded-xl border border-rose/40 bg-rose-soft px-4 py-3 text-sm text-rose-deep">
           {state.error}
         </p>
       ) : null}
       {state.ok ? (
-        <p className="rounded-xl border border-sage/40 bg-sage-soft px-4 py-3 text-sm text-sage-deep">
+        <p className="rounded-xl border border-orchid/40 bg-orchid-soft px-4 py-3 text-sm text-orchid-deep">
           {copy.saved}
         </p>
       ) : null}

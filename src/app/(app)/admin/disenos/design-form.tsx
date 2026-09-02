@@ -99,7 +99,7 @@ export function DesignForm({
         </Field>
 
         <Field label="Paleta de la portada">
-          <select name="palette" defaultValue={design?.palette ?? "clay"} className={inputClass}>
+          <select name="palette" defaultValue={design?.palette ?? "rose"} className={inputClass}>
             {Object.keys(PALETTES).map((p) => (
               <option key={p} value={p}>
                 {p}
@@ -129,7 +129,7 @@ export function DesignForm({
               type="checkbox"
               name="active"
               defaultChecked={design?.active ?? true}
-              className="h-4 w-4 accent-[#BC7A52]"
+              className="h-4 w-4 accent-[#C9506B]"
             />
             Visible en la vitrina
           </label>
@@ -138,7 +138,7 @@ export function DesignForm({
               type="checkbox"
               name="featured"
               defaultChecked={design?.featured ?? false}
-              className="h-4 w-4 accent-[#BC7A52]"
+              className="h-4 w-4 accent-[#C9506B]"
             />
             Destacado en la home
           </label>
@@ -185,7 +185,7 @@ export function DesignForm({
       </details>
 
       {state.error ? (
-        <p className="rounded-xl border border-clay/40 bg-clay-soft px-4 py-3 text-sm text-clay-deep">
+        <p className="rounded-xl border border-rose/40 bg-rose-soft px-4 py-3 text-sm text-rose-deep">
           {state.error}
         </p>
       ) : null}

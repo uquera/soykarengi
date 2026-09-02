@@ -3,6 +3,7 @@ import { logoutAction } from "@/lib/actions/auth";
 import { requireUser } from "@/lib/auth";
 import { getDict, getLocale } from "@/lib/i18n";
 import { LanguageToggle } from "@/components/language-toggle";
+import { BrandLockup } from "@/components/brand";
 
 export const dynamic = "force-dynamic";
 
@@ -13,9 +14,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <div className="min-h-dvh">
       <header className="sticky top-0 z-40 border-b border-line bg-cream/90 backdrop-blur-md">
         <div className="shell flex h-16 items-center justify-between gap-4">
-          <Link href="/" className="font-[family-name:var(--font-display)] text-lg">
-            {t.brand.name}
-          </Link>
+          <BrandLockup name={t.brand.name} size={34} />
 
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-ink-soft sm:inline">{user.name}</span>

@@ -25,7 +25,7 @@ export default async function MisPedidosPage() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-clay-deep">{t.home.unit02}</p>
+        <p className="eyebrow text-rose-deep">{t.home.unit02}</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
           {t.space.orders.title}
         </h1>
@@ -37,7 +37,7 @@ export default async function MisPedidosPage() {
           title={t.space.orders.emptyTitle}
           lead={t.space.orders.emptyLead}
           action={
-            <ButtonLink href="/mi-espacio/disenos" tone="clay" className="mt-2">
+            <ButtonLink href="/mi-espacio/disenos" tone="rose" className="mt-2">
               {t.space.orders.emptyCta}
             </ButtonLink>
           }
@@ -89,7 +89,7 @@ export default async function MisPedidosPage() {
                         href={d.url}
                         target="_blank"
                         rel="noreferrer"
-                        className="inline-flex rounded-full border border-sage/30 bg-sage-soft px-4 py-2 text-[0.8125rem] font-semibold text-sage-deep"
+                        className="inline-flex rounded-full border border-orchid/30 bg-orchid-soft px-4 py-2 text-[0.8125rem] font-semibold text-orchid-deep"
                       >
                         ↓ {d.name}
                       </a>

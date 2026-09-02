@@ -89,15 +89,15 @@ export function CategoryForm({ category }: { category?: Category }) {
             type="checkbox"
             name="active"
             defaultChecked={category?.active ?? true}
-            className="h-4 w-4 accent-[#BC7A52]"
+            className="h-4 w-4 accent-[#C9506B]"
           />
           Visible
         </label>
         <Submit label={category ? "Guardar" : "Crear categoría"} />
       </div>
 
-      {state.error ? <p className="text-sm text-clay-deep">{state.error}</p> : null}
-      {state.ok ? <p className="text-sm text-sage-deep">Guardado.</p> : null}
+      {state.error ? <p className="text-sm text-rose-deep">{state.error}</p> : null}
+      {state.ok ? <p className="text-sm text-orchid-deep">Guardado.</p> : null}
     </form>
   );
 }

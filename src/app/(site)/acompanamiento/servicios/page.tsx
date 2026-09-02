@@ -29,12 +29,12 @@ export default async function ServiciosPage() {
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <span className="text-xl">{s.accentEmoji}</span>
-                <Badge tone="sage">{s.specialty}</Badge>
+                <Badge tone="orchid">{s.specialty}</Badge>
                 <Badge tone="muted">{s.modalityLabel}</Badge>
                 <Badge tone="muted">{duration(s.durationMin, locale)}</Badge>
               </div>
               <h2 className="mt-4 font-[family-name:var(--font-display)] text-2xl leading-snug">
-                <Link href={`/acompanamiento/servicios/${s.slug}`} className="hover:text-sage-deep">
+                <Link href={`/acompanamiento/servicios/${s.slug}`} className="hover:text-orchid-deep">
                   {s.name}
                 </Link>
               </h2>
@@ -43,7 +43,7 @@ export default async function ServiciosPage() {
 
             <div className="flex items-center gap-5 sm:flex-col sm:items-end">
               <p className="font-[family-name:var(--font-display)] text-2xl">{money(s.price, locale)}</p>
-              <ButtonLink href={`/acompanamiento/servicios/${s.slug}`} tone="sage" className="px-5 py-2.5">
+              <ButtonLink href={`/acompanamiento/servicios/${s.slug}`} tone="orchid" className="px-5 py-2.5">
                 {t.services.seeSheet}
               </ButtonLink>
             </div>

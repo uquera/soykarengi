@@ -39,7 +39,7 @@ export default async function RecursosPage() {
               className="card-soft flex flex-col p-7 transition-transform hover:-translate-y-1"
             >
               <span className="self-start">
-                <Badge tone="sage">{r.tag || t.resources.fallbackTag}</Badge>
+                <Badge tone="orchid">{r.tag || t.resources.fallbackTag}</Badge>
               </span>
               <h2 className="mt-4 font-[family-name:var(--font-display)] text-2xl leading-snug">{r.title}</h2>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-soft">{r.excerpt}</p>

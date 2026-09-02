@@ -35,7 +35,7 @@ export default async function PostPage({ params }: Props) {
         ← {isResource ? t.resources.title : t.blog.title}
       </Link>
 
-      <p className="eyebrow mt-8 text-clay">{post.tag}</p>
+      <p className="eyebrow mt-8 text-rose">{post.tag}</p>
       <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl leading-[1.12] text-balance sm:text-5xl">
         {post.title}
       </h1>
@@ -64,7 +64,7 @@ export default async function PostPage({ params }: Props) {
         <p className="font-[family-name:var(--font-display)] text-2xl text-balance">{t.blog.ctaTitle}</p>
         <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-ink-soft">{t.blog.ctaLead}</p>
         <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-          <ButtonLink href="/acompanamiento/agenda" tone="sage">
+          <ButtonLink href="/acompanamiento/agenda" tone="orchid">
             {t.blog.ctaA}
           </ButtonLink>
           <ButtonLink href="/configurador" tone="ghost">

@@ -22,7 +22,7 @@ export default async function AdminServiciosPage() {
     <div className="space-y-7">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow text-sage-deep">Unidad Servicios</p>
+          <p className="eyebrow text-orchid-deep">Unidad Servicios</p>
           <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">Servicios</h1>
         </div>
         <ButtonLink href="/admin/servicios/nuevo" tone="ink">
@@ -39,7 +39,7 @@ export default async function AdminServiciosPage() {
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span>{s.accentEmoji}</span>
-                  <Badge tone="sage">{s.specialty}</Badge>
+                  <Badge tone="orchid">{s.specialty}</Badge>
                   {!s.active ? <Badge tone="muted">Archivado</Badge> : null}
                 </div>
                 <p className="mt-2 font-[family-name:var(--font-display)] text-xl">{s.name}</p>
@@ -65,7 +65,7 @@ export default async function AdminServiciosPage() {
                   <input type="hidden" name="id" value={s.id} />
                   <button
                     type="submit"
-                    className="rounded-full border border-line px-4 py-2 text-[0.8125rem] text-muted transition-colors hover:border-clay/50 hover:text-clay-deep"
+                    className="rounded-full border border-line px-4 py-2 text-[0.8125rem] text-muted transition-colors hover:border-rose/50 hover:text-rose-deep"
                   >
                     {s._count.appointments > 0 ? "Archivar" : "Eliminar"}
                   </button>

@@ -71,7 +71,7 @@ export function RegisterForm({ next, copy }: { next: string; copy: RegisterCopy 
       </Field>
 
       {state.error ? (
-        <p className="rounded-xl border border-clay/40 bg-clay-soft px-4 py-3 text-sm text-clay-deep">
+        <p className="rounded-xl border border-rose/40 bg-rose-soft px-4 py-3 text-sm text-rose-deep">
           {state.error}
         </p>
       ) : null}

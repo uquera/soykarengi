@@ -76,7 +76,7 @@ export default async function AdminContenidoPage() {
                         <input type="hidden" name="id" value={p.id} />
                         <button
                           type="submit"
-                          className="rounded-full border border-line px-4 py-2 text-[0.8125rem] text-muted transition-colors hover:border-clay/50 hover:text-clay-deep"
+                          className="rounded-full border border-line px-4 py-2 text-[0.8125rem] text-muted transition-colors hover:border-rose/50 hover:text-rose-deep"
                         >
                           Eliminar
                         </button>

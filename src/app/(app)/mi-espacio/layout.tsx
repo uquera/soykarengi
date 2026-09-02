@@ -20,7 +20,7 @@ export default async function MiEspacioLayout({ children }: { children: React.Re
   return (
     <div className="shell grid gap-10 py-10 lg:grid-cols-[15rem_1fr] lg:items-start">
       <aside className="lg:sticky lg:top-24">
-        <p className="eyebrow mb-5 px-3 text-clay">{t.space.label}</p>
+        <p className="eyebrow mb-5 px-3 text-rose">{t.space.label}</p>
         <PanelNav
           groups={[
             {

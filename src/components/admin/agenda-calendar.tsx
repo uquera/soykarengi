@@ -52,10 +52,10 @@ type BusinessHours = { daysOfWeek: number[]; startTime: string; endTime: string 
 type ServiceOption = { id: string; name: string; durationMin: number; modality: string };
 
 const STATUS_COLOR: Record<string, string> = {
-  PENDIENTE: "#C0972F",
-  CONFIRMADA: "#6E8B74",
-  COMPLETADA: "#8A7E73",
-  CANCELADA: "#C9BEB1",
+  PENDIENTE: "#C08A2E",
+  CONFIRMADA: "#8257A0",
+  COMPLETADA: "#8C7A96",
+  CANCELADA: "#CFC2D4",
 };
 
 const LOCKED = ["COMPLETADA", "CANCELADA"];
@@ -104,8 +104,8 @@ export function AgendaCalendar({
       title: `${a.clientName} · ${a.serviceName}`,
       start: a.startsAt,
       end: a.endsAt,
-      backgroundColor: STATUS_COLOR[a.status] ?? "#8A7E73",
-      borderColor: STATUS_COLOR[a.status] ?? "#8A7E73",
+      backgroundColor: STATUS_COLOR[a.status] ?? "#8C7A96",
+      borderColor: STATUS_COLOR[a.status] ?? "#8C7A96",
       textColor: "#ffffff",
       editable: !LOCKED.includes(a.status),
       extendedProps: { kind: "cita" as const, data: a },
@@ -116,9 +116,9 @@ export function AgendaCalendar({
       start: b.startsAt,
       end: b.endsAt,
       allDay: b.allDay,
-      backgroundColor: "#E4D9CB",
-      borderColor: "#C9BEB1",
-      textColor: "#4E463F",
+      backgroundColor: "#EDE3EF",
+      borderColor: "#CFC2D4",
+      textColor: "#574063",
       editable: false,
       extendedProps: { kind: "bloqueo" as const, data: b },
     })),
@@ -294,7 +294,7 @@ export function AgendaCalendar({
             <button
               type="submit"
               disabled={pending}
-              className="rounded-full border border-line px-5 py-2.5 text-[0.8125rem] font-semibold text-muted transition-colors hover:border-clay/50 hover:text-clay-deep disabled:opacity-50"
+              className="rounded-full border border-line px-5 py-2.5 text-[0.8125rem] font-semibold text-muted transition-colors hover:border-rose/50 hover:text-rose-deep disabled:opacity-50"
             >
               Liberar este horario
             </button>
@@ -378,7 +378,7 @@ export function AgendaCalendar({
               <button
                 type="submit"
                 disabled={pending}
-                className="w-full rounded-full bg-sage px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-sage-deep disabled:opacity-50"
+                className="w-full rounded-full bg-orchid-deep px-6 py-3 text-sm font-semibold text-cream transition-colors hover:bg-orchid disabled:opacity-50"
               >
                 {pending ? "Agendando…" : "Agendar cita"}
               </button>
@@ -417,7 +417,7 @@ export function AgendaCalendar({
               </label>
 
               <label className="flex items-center gap-3 text-sm">
-                <input type="checkbox" name="allDay" className="h-4 w-4 accent-[#6E8B74]" />
+                <input type="checkbox" name="allDay" className="h-4 w-4 accent-[#8257A0]" />
                 Marcar como día completo en el calendario
               </label>
 

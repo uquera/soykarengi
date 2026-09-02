@@ -5,6 +5,7 @@ import { money, duration } from "@/lib/format";
 import { getDict, getLocale } from "@/lib/i18n";
 import { serviceView } from "@/lib/content";
 import { ButtonLink, Eyebrow, SectionHeading, Badge } from "@/components/ui";
+import { KarenPortrait } from "@/components/brand";
 
 export const dynamic = "force-dynamic";
 
@@ -21,10 +22,13 @@ export default async function AcompanamientoPage() {
 
   return (
     <>
-      <section className="border-b border-line bg-sage-soft/40">
+      <section className="border-b border-line bg-orchid-soft/40">
         <div className="shell grid gap-12 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="rise">
-            <Eyebrow className="text-sage-deep">{t.unit1.eyebrow}</Eyebrow>
+            <div className="mb-8 lg:hidden">
+              <KarenPortrait size={160} />
+            </div>
+            <Eyebrow className="text-orchid-deep">{t.unit1.eyebrow}</Eyebrow>
             <h1 className="mt-5 font-[family-name:var(--font-display)] text-4xl leading-[1.1] text-balance sm:text-5xl">
               {t.unit1.aboutTitle}
             </h1>
@@ -35,7 +39,7 @@ export default async function AcompanamientoPage() {
             </div>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/acompanamiento/agenda" tone="sage">
+              <ButtonLink href="/acompanamiento/agenda" tone="orchid">
                 {t.unit1.bookSession}
               </ButtonLink>
               <ButtonLink href="/acompanamiento/servicios" tone="ghost">
@@ -44,18 +48,24 @@ export default async function AcompanamientoPage() {
             </div>
           </div>
 
-          <div className="rise card-soft p-8" style={{ animationDelay: "100ms" }}>
+          <div className="rise" style={{ animationDelay: "100ms" }}>
+            <div className="mb-8 hidden justify-center lg:flex">
+              <KarenPortrait size={230} />
+            </div>
+
+            <div className="card-soft p-8">
             <p className="eyebrow text-muted">{t.unit1.howIWork}</p>
             <ul className="mt-6 space-y-6">
               {t.unit1.pillars.map((p) => (
-                <li key={p.title} className="border-l-2 border-sage/40 pl-5">
-                  <p className="font-[family-name:var(--font-display)] text-lg text-sage-deep">{p.title}</p>
+                <li key={p.title} className="border-l-2 border-orchid/40 pl-5">
+                  <p className="font-[family-name:var(--font-display)] text-lg text-orchid-deep">{p.title}</p>
                   <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{p.body}</p>
                 </li>
               ))}
             </ul>
             <div className="mt-8 rounded-2xl bg-shell px-5 py-4 text-[0.8125rem] leading-relaxed text-ink-soft">
               {t.unit1.formNote}
+            </div>
             </div>
           </div>
         </div>
@@ -77,7 +87,7 @@ export default async function AcompanamientoPage() {
             >
               <div className="flex items-start justify-between gap-4">
                 <span className="text-2xl">{s.accentEmoji}</span>
-                <Badge tone="sage">{s.specialty}</Badge>
+                <Badge tone="orchid">{s.specialty}</Badge>
               </div>
               <p className="mt-5 font-[family-name:var(--font-display)] text-2xl leading-snug">{s.name}</p>
               <p className="mt-3 flex-1 text-sm leading-relaxed text-ink-soft">{s.summary}</p>

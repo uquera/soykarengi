@@ -69,6 +69,24 @@ Karen atiende desde Estados Unidos, así que **toda la agenda vive en `America/N
   plugin `@fullcalendar/luxon3` para entender una zona con nombre: sin él cae a UTC en silencio.
 - La agenda pública y la página de contacto muestran la zona bajo el horario de atención.
 
+## Identidad visual
+
+La marca es **el rostro de Karen**: `public/karen-logo.png` (círculo de 512 px, recortado y
+enmascarado desde su retrato) aparece en la cabecera, el pie y las pantallas de acceso;
+`public/karen-retrato.png` preside la portada y la página «Sobre Karen».
+
+La paleta vive sobre **ciruela y crema**, con un acento por unidad:
+
+| Familia | Uso | Tokens |
+|---|---|---|
+| Morado | Marca y Unidad 01 · Acompañamiento | `orchid`, `orchid-deep`, `orchid-soft` |
+| Rosa | Unidad 02 · Diseños con Propósito | `rose`, `rose-deep`, `rose-soft` |
+| Ámbar | Estados: cotización pendiente | `amber`, `amber-ink` |
+
+Todo se define una sola vez en el bloque `@theme` de `src/app/globals.css`; ningún componente
+inventa un color propio. Las claves de `PALETTES` (`src/lib/domain.ts`) son datos guardados en la
+base para las portadas de la vitrina: **cambia sus valores, nunca sus nombres.**
+
 ## Stack
 
 - **Next.js 16** (App Router, Server Components, Server Actions) + **React 19**

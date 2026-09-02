@@ -99,14 +99,14 @@ export default async function AdminEstadisticasPage() {
         </p>
 
         <div className="mt-7 space-y-5">
-          <Bar label={SEGMENT_LABEL.AMBAS} value={tally.AMBAS} total={users.length} tone="#C0972F" />
-          <Bar label={SEGMENT_LABEL.SERVICIOS} value={tally.SERVICIOS} total={users.length} tone="#6E8B74" />
-          <Bar label={SEGMENT_LABEL.DISENOS} value={tally.DISENOS} total={users.length} tone="#BC7A52" />
+          <Bar label={SEGMENT_LABEL.AMBAS} value={tally.AMBAS} total={users.length} tone="#C08A2E" />
+          <Bar label={SEGMENT_LABEL.SERVICIOS} value={tally.SERVICIOS} total={users.length} tone="#8257A0" />
+          <Bar label={SEGMENT_LABEL.DISENOS} value={tally.DISENOS} total={users.length} tone="#C9506B" />
           <Bar
             label={SEGMENT_LABEL.SIN_ACTIVIDAD}
             value={tally.SIN_ACTIVIDAD}
             total={users.length}
-            tone="#C9BEB1"
+            tone="#CFC2D4"
           />
         </div>
       </section>
@@ -159,7 +159,7 @@ export default async function AdminEstadisticasPage() {
                   label={REQUEST_LABEL[status] ?? status}
                   value={count}
                   total={requests.length}
-                  tone="#BC7A52"
+                  tone="#C9506B"
                 />
               ))}
           </div>

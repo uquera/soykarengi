@@ -35,7 +35,7 @@ export default async function AgendaPage({
   return (
     <div className="shell grid gap-14 py-16 lg:grid-cols-[1fr_20rem] lg:items-start">
       <div className="min-w-0">
-        <Eyebrow className="text-sage-deep">{t.home.servicesEyebrow}</Eyebrow>
+        <Eyebrow className="text-orchid-deep">{t.home.servicesEyebrow}</Eyebrow>
         <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl leading-[1.1] sm:text-5xl">
           {t.agenda.title}
         </h1>
@@ -92,7 +92,7 @@ export default async function AgendaPage({
                 {t.agenda.gateLead}
               </p>
               <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-                <ButtonLink href="/registro?next=/acompanamiento/agenda" tone="sage">
+                <ButtonLink href="/registro?next=/acompanamiento/agenda" tone="orchid">
                   {t.agenda.gateCreate}
                 </ButtonLink>
                 <ButtonLink href="/ingresar?next=/acompanamiento/agenda" tone="ghost">

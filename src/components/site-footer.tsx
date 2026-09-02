@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getDict } from "@/lib/i18n";
+import { BrandMark } from "@/components/brand";
 
 export async function SiteFooter() {
   const t = await getDict();
@@ -38,8 +39,9 @@ export async function SiteFooter() {
     <footer className="mt-24 border-t border-line bg-shell">
       <div className="shell grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <p className="font-[family-name:var(--font-display)] text-xl">{t.brand.name}</p>
-          <p className="mt-2 text-[0.6875rem] font-medium tracking-[0.2em] text-muted uppercase">
+          <BrandMark size={56} />
+          <p className="mt-4 font-[family-name:var(--font-display)] text-xl">{t.brand.name}</p>
+          <p className="mt-1 font-[family-name:var(--font-display)] text-sm text-muted italic">
             {t.brand.tagline}
           </p>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-ink-soft">{t.brand.quote}</p>

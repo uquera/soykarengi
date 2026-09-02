@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { BrandLockup } from "@/components/brand";
 import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 
@@ -49,14 +50,7 @@ export function SiteHeader({
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-cream/85 backdrop-blur-md">
       <div className="shell flex h-[4.5rem] items-center justify-between gap-6">
-        <Link href="/" className="shrink-0 leading-none">
-          <span className="block font-[family-name:var(--font-display)] text-lg tracking-tight sm:text-xl">
-            {copy.brand}
-          </span>
-          <span className="mt-1 block text-[0.625rem] font-medium tracking-[0.22em] text-muted uppercase">
-            {copy.tagline}
-          </span>
-        </Link>
+        <BrandLockup name={copy.brand} tagline={copy.tagline} size={40} taglineClassName="hidden xl:block" />
 
         <nav className="hidden items-center gap-1 lg:flex">
           {nav.map((item) => {

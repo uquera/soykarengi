@@ -39,7 +39,7 @@ export default async function BlogPage() {
             href={`/blog/${featured.slug}`}
             className="card-soft mt-12 block p-8 transition-transform hover:-translate-y-1 sm:p-12"
           >
-            <p className="eyebrow text-clay">{featured.tag}</p>
+            <p className="eyebrow text-rose">{featured.tag}</p>
             <h2 className="mt-4 max-w-3xl font-[family-name:var(--font-display)] text-3xl leading-tight text-balance sm:text-4xl">
               {featured.title}
             </h2>
@@ -57,7 +57,7 @@ export default async function BlogPage() {
                   href={`/blog/${p.slug}`}
                   className="card-soft flex flex-col p-6 transition-transform hover:-translate-y-1"
                 >
-                  <p className="eyebrow text-clay">{p.tag}</p>
+                  <p className="eyebrow text-rose">{p.tag}</p>
                   <h3 className="mt-3 font-[family-name:var(--font-display)] text-xl leading-snug">
                     {p.title}
                   </h3>

@@ -79,15 +79,15 @@ export const FORMATS = ["Digital", "Impresa", "Ambas"];
 export const MODALITIES = ["Online", "Presencial"];
 
 export const PALETTES: Record<string, { from: string; to: string; ink: string }> = {
-  rose: { from: "#F6E3E3", to: "#E9C4C4", ink: "#8C5A5A" },
-  gold: { from: "#F7EBCE", to: "#EBD49A", ink: "#8A6C1D" },
-  sage: { from: "#E4EDE4", to: "#C4D8C6", ink: "#4E6A55" },
-  clay: { from: "#F7E7DC", to: "#EACAB2", ink: "#96593A" },
-  plum: { from: "#EDE3EC", to: "#D6C0D3", ink: "#7C5A73" },
+  rose: { from: "#FBE6EB", to: "#F0C2CE", ink: "#9E3350" },
+  gold: { from: "#FBF0DF", to: "#F0D8B4", ink: "#8A6420" },
+  sage: { from: "#F1E8F8", to: "#DCC9EC", ink: "#6B3F80" },
+  clay: { from: "#FDEEE2", to: "#F5D6BF", ink: "#A85A3C" },
+  plum: { from: "#EEE3F3", to: "#D5BEE2", ink: "#4A1E55" },
 };
 
 export function paletteOf(key: string) {
-  return PALETTES[key] ?? PALETTES.clay;
+  return PALETTES[key] ?? PALETTES.plum;
 }
 
 /** Segmentación comercial: el cruce entre las dos unidades es la oportunidad. */

@@ -95,7 +95,7 @@ export default async function AdminPage() {
       <section className="grid gap-5 lg:grid-cols-2">
         <div className="card-soft p-6">
           <div className="flex items-center justify-between">
-            <p className="eyebrow text-sage-deep">Próximas citas</p>
+            <p className="eyebrow text-orchid-deep">Próximas citas</p>
             <Link href="/admin/agenda" className="text-[0.8125rem] text-muted hover:text-ink">
               Ver agenda →
             </Link>
@@ -113,7 +113,7 @@ export default async function AdminPage() {
                       {a.service.name} · {dateTime(a.startsAt)}
                     </p>
                   </div>
-                  <Badge tone={a.status === "CONFIRMADA" ? "sage" : "gold"}>
+                  <Badge tone={a.status === "CONFIRMADA" ? "orchid" : "amber"}>
                     {APPOINTMENT_LABEL[a.status]}
                   </Badge>
                 </li>
@@ -124,7 +124,7 @@ export default async function AdminPage() {
 
         <div className="card-soft p-6">
           <div className="flex items-center justify-between">
-            <p className="eyebrow text-clay-deep">Solicitudes que te esperan</p>
+            <p className="eyebrow text-rose-deep">Solicitudes que te esperan</p>
             <Link href="/admin/solicitudes" className="text-[0.8125rem] text-muted hover:text-ink">
               Ver todas →
             </Link>

@@ -10,9 +10,9 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Clientes" };
 
 const SEGMENT_TONE = {
-  AMBAS: "gold",
-  SERVICIOS: "sage",
-  DISENOS: "clay",
+  AMBAS: "amber",
+  SERVICIOS: "orchid",
+  DISENOS: "rose",
   SIN_ACTIVIDAD: "muted",
 } as const;
 

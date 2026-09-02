@@ -82,7 +82,7 @@ export function PostForm({ post }: { post?: Post }) {
             type="checkbox"
             name="published"
             defaultChecked={post?.published ?? true}
-            className="h-4 w-4 accent-[#6E8B74]"
+            className="h-4 w-4 accent-[#8257A0]"
           />
           Publicado
         </label>
@@ -115,7 +115,7 @@ export function PostForm({ post }: { post?: Post }) {
       </details>
 
       {state.error ? (
-        <p className="rounded-xl border border-clay/40 bg-clay-soft px-4 py-3 text-sm text-clay-deep">
+        <p className="rounded-xl border border-rose/40 bg-rose-soft px-4 py-3 text-sm text-rose-deep">
           {state.error}
         </p>
       ) : null}

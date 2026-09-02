@@ -62,7 +62,7 @@ function Submit({ label, pendingLabel }: { label: string; pendingLabel: string }
     <button
       type="submit"
       disabled={pending}
-      className="inline-flex items-center justify-center rounded-full bg-clay px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-clay-deep disabled:opacity-50"
+      className="inline-flex items-center justify-center rounded-full bg-rose px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-rose-deep disabled:opacity-50"
     >
       {pending ? pendingLabel : label}
     </button>
@@ -110,7 +110,7 @@ export function Configurator({
               type="button"
               onClick={() => setStep(i)}
               className={`w-full rounded-full px-3 py-2 text-left text-[0.6875rem] font-semibold tracking-wide transition-colors ${
-                i === step ? "bg-clay text-white" : i < step ? "bg-clay-soft text-clay-deep" : "bg-shell text-muted"
+                i === step ? "bg-rose text-white" : i < step ? "bg-rose-soft text-rose-deep" : "bg-shell text-muted"
               }`}
             >
               <span className="opacity-70">0{i + 1}</span> {label}
@@ -131,7 +131,7 @@ export function Configurator({
               type="button"
               onClick={() => setPurpose(p.key)}
               className={`rounded-2xl border px-5 py-4 text-left transition-colors ${
-                purpose === p.key ? "border-clay bg-clay-soft" : "border-line bg-white hover:border-clay/40"
+                purpose === p.key ? "border-rose bg-rose-soft" : "border-line bg-white hover:border-rose/40"
               }`}
             >
               <p className="font-semibold">{copy.purposeLabels[p.key] ?? p.key}</p>
@@ -190,7 +190,7 @@ export function Configurator({
                 type="button"
                 onClick={() => toggleEmotion(e)}
                 className={`rounded-full border px-5 py-2.5 text-sm font-medium transition-colors ${
-                  active ? "border-clay bg-clay text-white" : "border-line bg-white hover:border-clay/40"
+                  active ? "border-rose bg-rose text-white" : "border-line bg-white hover:border-rose/40"
                 }`}
               >
                 {copy.emotionLabels[e] ?? e}
@@ -223,7 +223,7 @@ export function Configurator({
                 {FORMATS.map((f) => (
                   <label
                     key={f}
-                    className="flex-1 cursor-pointer rounded-xl border border-line bg-white px-4 py-3 text-center text-sm has-checked:border-clay has-checked:bg-clay-soft"
+                    className="flex-1 cursor-pointer rounded-xl border border-line bg-white px-4 py-3 text-center text-sm has-checked:border-rose has-checked:bg-rose-soft"
                   >
                     <input
                       type="radio"
@@ -278,7 +278,7 @@ export function Configurator({
         </div>
 
         {state.error ? (
-          <p className="mt-5 rounded-xl border border-clay/40 bg-clay-soft px-4 py-3 text-sm text-clay-deep">
+          <p className="mt-5 rounded-xl border border-rose/40 bg-rose-soft px-4 py-3 text-sm text-rose-deep">
             {state.error}
           </p>
         ) : null}

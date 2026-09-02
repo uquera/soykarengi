@@ -31,7 +31,7 @@ export function PanelNav({ groups }: { groups: NavGroup[] }) {
                     {item.badge ? (
                       <span
                         className={`rounded-full px-2 py-0.5 text-[0.6875rem] font-semibold ${
-                          active ? "bg-cream/20 text-cream" : "bg-clay-soft text-clay-deep"
+                          active ? "bg-cream/20 text-cream" : "bg-rose-soft text-rose-deep"
                         }`}
                       >
                         {item.badge}

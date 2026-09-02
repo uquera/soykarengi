@@ -21,7 +21,7 @@ export default async function AdminCategoriasPage() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-clay-deep">Unidad Diseños</p>
+        <p className="eyebrow text-rose-deep">Unidad Diseños</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">Categorías</h1>
         <p className="mt-2 text-ink-soft">
           Los tres grupos de la vitrina: Eventos, Personal y Con propósito.
@@ -57,7 +57,7 @@ export default async function AdminCategoriasPage() {
                         <input type="hidden" name="id" value={c.id} />
                         <button
                           type="submit"
-                          className="rounded-full border border-line px-4 py-1.5 text-[0.75rem] text-muted transition-colors hover:border-clay/50 hover:text-clay-deep"
+                          className="rounded-full border border-line px-4 py-1.5 text-[0.75rem] text-muted transition-colors hover:border-rose/50 hover:text-rose-deep"
                         >
                           {c._count.designs > 0 ? "Ocultar" : "Eliminar"}
                         </button>

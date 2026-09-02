@@ -47,15 +47,15 @@ export default async function DisenosPage({
 
   return (
     <>
-      <section className="border-b border-line bg-clay-soft/40">
+      <section className="border-b border-line bg-rose-soft/40">
         <div className="shell py-16">
-          <Eyebrow className="text-clay-deep">{t.designs.eyebrow}</Eyebrow>
+          <Eyebrow className="text-rose-deep">{t.designs.eyebrow}</Eyebrow>
           <h1 className="mt-4 max-w-3xl font-[family-name:var(--font-display)] text-4xl leading-[1.08] text-balance sm:text-5xl">
             {t.designs.title}
           </h1>
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">{t.designs.lead}</p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <ButtonLink href="/configurador" tone="clay">
+            <ButtonLink href="/configurador" tone="rose">
               {t.designs.cta}
             </ButtonLink>
           </div>
@@ -79,8 +79,8 @@ export default async function DisenosPage({
               href={`/disenos?grupo=${g.key}`}
               className={`rounded-full border px-4 py-2 text-[0.8125rem] font-medium transition-colors ${
                 grupo === g.key && !categoria
-                  ? "border-clay bg-clay text-white"
-                  : "border-line bg-white hover:border-clay/40"
+                  ? "border-rose bg-rose text-white"
+                  : "border-line bg-white hover:border-rose/40"
               }`}
             >
               {t.designs.groups[g.key].name}
@@ -98,8 +98,8 @@ export default async function DisenosPage({
                   href={`/disenos?grupo=${grupo}&categoria=${c.slug}`}
                   className={`rounded-full border px-3.5 py-1.5 text-[0.75rem] transition-colors ${
                     categoria === c.slug
-                      ? "border-clay-deep bg-clay-soft text-clay-deep"
-                      : "border-line bg-white text-ink-soft hover:border-clay/40"
+                      ? "border-rose-deep bg-rose-soft text-rose-deep"
+                      : "border-line bg-white text-ink-soft hover:border-rose/40"
                   }`}
                 >
                   {c.name}
@@ -129,7 +129,7 @@ export default async function DisenosPage({
             title={t.designs.emptyTitle}
             lead={t.designs.emptyLead}
             action={
-              <ButtonLink href="/configurador" tone="clay" className="mt-2">
+              <ButtonLink href="/configurador" tone="rose" className="mt-2">
                 {t.designs.emptyCta}
               </ButtonLink>
             }
@@ -146,7 +146,7 @@ export default async function DisenosPage({
                 <div className="flex flex-1 flex-col p-6">
                   {d.featured ? (
                     <span className="mb-3 self-start">
-                      <Badge tone="gold">{t.designs.featured}</Badge>
+                      <Badge tone="amber">{t.designs.featured}</Badge>
                     </span>
                   ) : null}
                   <p className="font-[family-name:var(--font-display)] text-xl leading-snug">{d.name}</p>
@@ -167,12 +167,12 @@ export default async function DisenosPage({
       <section className="border-t border-line bg-shell/60 py-16">
         <div className="shell grid gap-8 rounded-3xl md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div>
-            <Eyebrow className="text-clay-deep">{t.designs.expEyebrow}</Eyebrow>
+            <Eyebrow className="text-rose-deep">{t.designs.expEyebrow}</Eyebrow>
             <h2 className="mt-3 font-[family-name:var(--font-display)] text-3xl leading-tight text-balance">
               {t.designs.expTitle}
             </h2>
             <p className="mt-4 max-w-xl leading-relaxed text-ink-soft">{t.designs.expLead}</p>
-            <ButtonLink href="/configurador" tone="clay" className="mt-7">
+            <ButtonLink href="/configurador" tone="rose" className="mt-7">
               {t.designs.expCta}
             </ButtonLink>
           </div>
@@ -180,7 +180,7 @@ export default async function DisenosPage({
           <ol className="space-y-2 text-sm">
             {t.designs.flow.map((step, i) => (
               <li key={step} className="flex items-center gap-3 rounded-xl border border-line bg-white px-4 py-2.5">
-                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-clay-soft text-[0.6875rem] font-semibold text-clay-deep">
+                <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-rose-soft text-[0.6875rem] font-semibold text-rose-deep">
                   {i + 1}
                 </span>
                 <span className="text-ink-soft">{step}</span>

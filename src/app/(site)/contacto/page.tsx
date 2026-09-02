@@ -44,16 +44,16 @@ export default async function ContactoPage() {
         <div className="mt-9 space-y-3">
           <Link
             href="/acompanamiento/agenda"
-            className="block rounded-2xl border border-sage/25 bg-sage-soft/60 px-5 py-4 transition-colors hover:border-sage/50"
+            className="block rounded-2xl border border-orchid/25 bg-orchid-soft/60 px-5 py-4 transition-colors hover:border-orchid/50"
           >
-            <p className="font-semibold text-sage-deep">{t.contact.knowTitle}</p>
+            <p className="font-semibold text-orchid-deep">{t.contact.knowTitle}</p>
             <p className="mt-1 text-[0.8125rem] text-ink-soft">{t.contact.knowLead}</p>
           </Link>
           <Link
             href="/configurador"
-            className="block rounded-2xl border border-clay/25 bg-clay-soft/60 px-5 py-4 transition-colors hover:border-clay/50"
+            className="block rounded-2xl border border-rose/25 bg-rose-soft/60 px-5 py-4 transition-colors hover:border-rose/50"
           >
-            <p className="font-semibold text-clay-deep">{t.contact.ideaTitle}</p>
+            <p className="font-semibold text-rose-deep">{t.contact.ideaTitle}</p>
             <p className="mt-1 text-[0.8125rem] text-ink-soft">{t.contact.ideaLead}</p>
           </Link>
         </div>

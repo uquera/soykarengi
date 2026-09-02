@@ -39,19 +39,19 @@ export default async function MisCitasPage({
     <div className="space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow text-sage-deep">{t.home.unit01}</p>
+          <p className="eyebrow text-orchid-deep">{t.home.unit01}</p>
           <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
             {t.space.appointments.title}
           </h1>
         </div>
-        <ButtonLink href="/acompanamiento/agenda" tone="sage">
+        <ButtonLink href="/acompanamiento/agenda" tone="orchid">
           {t.space.appointments.bookAnother}
         </ButtonLink>
       </header>
 
       {nueva ? (
-        <div className="rounded-2xl border border-sage/40 bg-sage-soft px-6 py-5">
-          <p className="font-semibold text-sage-deep">{t.space.appointments.created}</p>
+        <div className="rounded-2xl border border-orchid/40 bg-orchid-soft px-6 py-5">
+          <p className="font-semibold text-orchid-deep">{t.space.appointments.created}</p>
           <p className="mt-1 text-sm text-ink-soft">
             {t.space.code} {nueva}. {t.space.appointments.createdLead}
           </p>
@@ -63,7 +63,7 @@ export default async function MisCitasPage({
           title={t.space.appointments.emptyTitle}
           lead={t.space.appointments.emptyLead}
           action={
-            <ButtonLink href="/acompanamiento/agenda" tone="sage" className="mt-2">
+            <ButtonLink href="/acompanamiento/agenda" tone="orchid" className="mt-2">
               {t.space.appointments.emptyCta}
             </ButtonLink>
           }
@@ -81,7 +81,7 @@ export default async function MisCitasPage({
                       <div className="flex flex-wrap items-start justify-between gap-4">
                         <div className="min-w-0">
                           <div className="flex flex-wrap items-center gap-2">
-                            <Badge tone={a.status === "CONFIRMADA" ? "sage" : "gold"}>
+                            <Badge tone={a.status === "CONFIRMADA" ? "orchid" : "amber"}>
                               {t.status.appointment[a.status]}
                             </Badge>
                             <Badge tone="muted">{t.vocab.modalities[a.modality] ?? a.modality}</Badge>
@@ -100,7 +100,7 @@ export default async function MisCitasPage({
                           <input type="hidden" name="id" value={a.id} />
                           <button
                             type="submit"
-                            className="rounded-full border border-line px-4 py-2 text-[0.8125rem] font-semibold text-muted transition-colors hover:border-clay/50 hover:text-clay-deep"
+                            className="rounded-full border border-line px-4 py-2 text-[0.8125rem] font-semibold text-muted transition-colors hover:border-rose/50 hover:text-rose-deep"
                           >
                             {t.space.appointments.cancel}
                           </button>
