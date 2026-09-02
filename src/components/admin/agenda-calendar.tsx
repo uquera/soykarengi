@@ -5,6 +5,9 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+// Sin este plugin, FullCalendar sólo entiende "local" y "UTC": una zona con
+// nombre como America/New_York se ignoraría en silencio.
+import luxonPlugin from "@fullcalendar/luxon3";
 import esLocale from "@fullcalendar/core/locales/es";
 import type { EventClickArg, EventDropArg, DateSelectArg } from "@fullcalendar/core";
 import { useRouter } from "next/navigation";
@@ -159,7 +162,7 @@ export function AgendaCalendar({
       <div className="card-soft agenda-calendar overflow-hidden p-4 sm:p-6">
         <FullCalendar
           ref={calendarRef}
-          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+          plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, luxonPlugin]}
           initialView="timeGridWeek"
           locale={esLocale}
           timeZone={BUSINESS_TZ}
