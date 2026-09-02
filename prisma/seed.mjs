@@ -515,6 +515,38 @@ async function main() {
     }
   }
 
+  // Unos movimientos de muestra. Se reparten entre este mes y los dos anteriores
+  // para que cualquier rango del panel tenga algo que mostrar el primer día.
+  if ((await db.movement.count()) === 0) {
+    const hoy = new Date();
+
+    // Un día de este mes, sin pasarse de hoy.
+    const esteMes = (dia) => {
+      const d = new Date(hoy.getFullYear(), hoy.getMonth(), Math.min(dia, hoy.getDate()), 12, 0, 0, 0);
+      return d;
+    };
+    const mesesAtras = (meses, dia) =>
+      new Date(hoy.getFullYear(), hoy.getMonth() - meses, dia, 12, 0, 0, 0);
+
+    await db.movement.createMany({
+      data: [
+        // Este mes
+        { kind: "EGRESO", concept: "Hosting y dominio de la plataforma", category: "PLATAFORMAS", amount: 34, method: "TARJETA", date: esteMes(1) },
+        { kind: "EGRESO", concept: "Cajas de regalo y empaque", category: "ENVIOS", amount: 95.5, method: "TARJETA", date: esteMes(2) },
+        { kind: "INGRESO", concept: "Taller de bienestar para equipo corporativo", category: "COLABORACION", amount: 450, method: "TRANSFERENCIA", date: esteMes(3) },
+
+        // Mes anterior
+        { kind: "EGRESO", concept: "Tela y bastidores para la serie de bolsos", category: "MATERIALES", amount: 180, method: "TRANSFERENCIA", date: mesesAtras(1, 6) },
+        { kind: "EGRESO", concept: "Estampado del lote de poleras Renacer", category: "PRODUCCION", amount: 240, method: "TRANSFERENCIA", date: mesesAtras(1, 12) },
+        { kind: "INGRESO", concept: "Venta de bolsos en feria de emprendedoras", category: "VENTA_DIRECTA", amount: 320, method: "EFECTIVO", date: mesesAtras(1, 19), notes: "12 piezas" },
+
+        // Dos meses atrás
+        { kind: "EGRESO", concept: "Campaña de Instagram", category: "MARKETING", amount: 120, method: "TARJETA", date: mesesAtras(2, 9) },
+        { kind: "EGRESO", concept: "Supervisión clínica", category: "FORMACION", amount: 150, method: "TRANSFERENCIA", date: mesesAtras(2, 22) },
+      ],
+    });
+  }
+
   const counts = await Promise.all([
     db.service.count(),
     db.designCategory.count(),

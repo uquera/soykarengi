@@ -209,6 +209,28 @@ model Favorite {
   @@unique([userId, designId])
 }
 
+// ───────────────────────────── FINANZAS ─────────────────────────────
+//
+// Los ingresos de la plataforma ya viven en los datos: una cita COMPLETADA
+// vale el precio de su servicio, y un pedido pagado vale su cotización. Este
+// modelo registra lo que no pasa por ahí: los egresos del negocio y las
+// ventas que ocurren fuera del sitio (ferias, encargos por WhatsApp).
+model Movement {
+  id        String   @id @default(cuid())
+  kind      String // INGRESO | EGRESO
+  concept   String
+  category  String
+  amount    Float
+  method    String   @default("TRANSFERENCIA") // EFECTIVO | TRANSFERENCIA | TARJETA | OTRO
+  date      DateTime
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([date])
+  @@index([kind])
+}
+
 // ───────────────────────── CONTENIDO ─────────────────────────
 
 model Post {
