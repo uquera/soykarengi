@@ -3,7 +3,7 @@
 Plataforma digital de **Karen Ramos**: una marca paraguas con dos unidades de negocio que comparten
 tecnología, clientes, pagos y administración.
 
-> Acompañamiento · Creación · Propósito
+> **SoyKarengi** — Mente entrenada · Vida con propósito
 >
 > *Porque hay momentos que necesitan ser acompañados… y otros que merecen ser recordados.*
 
@@ -14,8 +14,14 @@ tecnología, clientes, pagos y administración.
 | **01 · Bienestar y acompañamiento** | Perfil de Karen, servicios (psicología, Life Coaching, mentoría), especialidades, agenda con reserva y formulario previo | `/acompanamiento`, `/acompanamiento/servicios/[slug]`, `/acompanamiento/agenda` |
 | **02 · Diseños con Propósito** | Vitrina por categorías (Eventos · Personal · Con propósito), ficha de cada pieza, configurador de 5 pasos y solicitudes a medida | `/disenos`, `/disenos/[slug]`, `/configurador` |
 
-Ambas viven en el mismo aplicativo, con acentos visuales distintos (salvia para acompañamiento,
-terracota para diseños) y **una sola base de clientes**.
+Ambas viven en el mismo aplicativo, con **universos de color propios** (ciruela para acompañamiento,
+verde para diseños) y **una sola base de clientes**.
+
+### El menú son cinco entradas
+
+`Inicio · Acompañamiento · Diseños · Recursos · Mi espacio`. Configurador, blog y contacto viven
+dentro de su sección: un menú largo obliga a elegir antes de entender. `Recursos` absorbió el blog y
+funciona como hub de contenidos.
 
 ## Piezas transversales
 
@@ -30,14 +36,41 @@ Lo bloqueado deja de ofrecerse en la agenda pública.
   pedidos, clientes segmentados, contenido, mensajes y estadísticas.
 - **Contenido** — blog y recursos (`/blog`, `/recursos`), editables desde el panel.
 
+### La vitrina se filtra por intención, no por categoría
+
+Nadie busca «PERSONAL»: busca **regalar**. Sobre los tres grupos del catálogo hay un filtro de
+intención —celebrar, regalar, homenajear, inspirar, compartir un momento— y un sexto camino que
+lleva directo al configurador: *crear algo único*.
+
+Cada pieza declara a qué intenciones responde en la columna `intents` (claves separadas por coma,
+editable desde el panel con casillas). Si la deja vacía, hereda el grupo de su categoría. Una pieza
+puede responder a varias, así que el filtro **cruza categorías**: «homenajear» devuelve piezas de
+Homenajes, de Mensajes especiales y de Graduaciones a la vez.
+
+El filtro se resuelve en memoria a propósito: el catálogo es corto y SQLite no sabe consultar una
+lista separada por comas.
+
 ### El flujo de una solicitud de diseño
 
 ```
 SOLICITUD → COTIZADA → APROBADA → PAGADA → EN DISEÑO → REVISIÓN → APROBACIÓN FINAL → ENTREGADA
 ```
 
-El cliente lo ve como una línea de tiempo en Mi espacio; Karen lo mueve desde el panel. Una solicitud
-que ya pasó por caja aparece además como **pedido**.
+Cada estado tiene **su propio color** (`REQUEST_COLOR` en `src/lib/domain.ts`) y el tracker dibuja
+una barra de avance del color del estado actual más «Paso 3 de 8 · 37% listo». Así el cliente ve
+dónde está sin tener que leer las ocho etiquetas. Karen lo mueve desde el panel; una solicitud que
+ya pasó por caja aparece además como **pedido**.
+
+### Antes de reservar
+
+Quien no sabe qué servicio elegir sí sabe cómo se siente. En `/acompanamiento/servicios` y en la
+agenda hay seis maneras de nombrarlo —*necesito sentirme mejor*, *necesito claridad*, *quiero avanzar
+en un proyecto*, *estoy atravesando un cambio*, *necesito acompañamiento*, *no estoy segura*— y cada
+una apunta a una especialidad (`NEEDS`). Sin certeza, cae en la conversación de orientación, que es
+la respuesta correcta cuando no hay certeza.
+
+El cruce usa la especialidad **sin traducir**: en inglés `specialty` sería «Psychology» y ya no
+calzaría con la tabla.
 
 ### Finanzas: el ingreso no se escribe dos veces
 
@@ -99,23 +132,49 @@ Las fotografías del negocio viven en `public/`:
 | `sparkwell-marca.jpg` | «Sobre Karen» — su tarjeta de marca con credenciales y pilares |
 | `producto-tote.jpg` | Portada de Diseños y ficha del bolso |
 | `producto-renacer.jpg` | Portada de Diseños y ficha de la polera |
-| `sparkwell-caja.jpg` | Sección «Experiencias de creación» |
+| `sparkwell-caja.jpg` | Sección «Qué pasa después» de la vitrina |
 
 Un diseño puede llevar **foto real** (columna `image`) o quedarse con la **portada generada**
 determinista de `design-visual.tsx`. Karen carga la ruta desde el panel; si la deja vacía, se dibuja
 la portada. Las piezas con foto encabezan la vitrina a propósito.
 
-La paleta vive sobre **ciruela y crema**, con un acento por unidad:
+La identidad no es una paleta: es una **arquitectura de marca de dos universos** sobre una tinta
+marrón común.
 
-| Familia | Uso | Tokens |
-|---|---|---|
-| Morado | Marca y Unidad 01 · Acompañamiento | `orchid`, `orchid-deep`, `orchid-soft` |
-| Rosa | Unidad 02 · Diseños con Propósito | `rose`, `rose-deep`, `rose-soft` |
-| Ámbar | Estados: cotización pendiente | `amber`, `amber-ink` |
+| Familia | Uso | Tokens | Color |
+|---|---|---|---|
+| Marrón | Tinta transversal de la marca | `ink`, `ink-soft`, `muted` | `#38261A` |
+| Beige y crema | Puente entre las dos unidades | `sand`, `shell`, `cream` | `#D0B69E` · `#EEE1D5` |
+| Ciruela malva | Unidad 01 · estructura, encabezados, navegación | `orchid-deep`, `orchid`, `orchid-soft`, `mauve` | `#6B4A68` |
+| Rosa vieja | Acción de la marca: botones, CTA, links, estados | `rose`, `rose-deep`, `rose-soft` | `#C0526B` |
+| Verde | Unidad 02 · Diseños con Propósito | `moss-deep`, `moss`, `moss-soft` | `#494C31` · `#8BB08E` |
+| Ámbar | Estados: cotización pendiente | `amber`, `amber-ink` | `#B4823C` |
+
+Los nombres de token se conservaron a propósito (`orchid` pasó de morado a ciruela malva, `rose` de
+rosa fucsia a rosa vieja): cambiar los valores en un solo sitio recolorea la plataforma entera sin
+tocar componentes. Lo único que sí cambió de familia es la Unidad 02, que antes compartía el rosa con
+la marca y ahora tiene su verde.
 
 Todo se define una sola vez en el bloque `@theme` de `src/app/globals.css`; ningún componente
 inventa un color propio. Las claves de `PALETTES` (`src/lib/domain.ts`) son datos guardados en la
 base para las portadas de la vitrina: **cambia sus valores, nunca sus nombres.**
+
+## SEO: una URL por búsqueda real
+
+«Psicóloga online en español» o «regalos personalizados» son búsquedas concretas, y cada una tiene
+su página con su contenido:
+
+| Ruta | Búsqueda que responde |
+|---|---|
+| `/acompanamiento/psicologia` | psicóloga online en español |
+| `/acompanamiento/life-coaching` | life coach en español |
+| `/acompanamiento/mentoria` | mentoría para mujeres |
+| `/acompanamiento/orientacion` | primera sesión de orientación |
+| `/disenos/categoria/[slug]` | una por categoría del catálogo (17) |
+
+Las de especialidad se definen en `SPECIALTY_PAGES` y su copy vive en los diccionarios, así que
+existen también en inglés. Se suman `sitemap.xml` (50 URLs, generado desde la base), `robots.txt`
+—que deja fuera `/admin`, `/mi-espacio` y `/api`—, canonicals y Open Graph.
 
 ## Stack
 
@@ -162,7 +221,8 @@ Fase 1 (esta entrega) cubre home, las dos unidades, agenda, vitrina, configurado
 clientes, Mi espacio y panel administrativo completo.
 
 - **Fase 2** — pasarela de pago, carrito para piezas prediseñadas, subida real de archivos,
-  notificaciones por correo y WhatsApp.
+  notificaciones por correo y WhatsApp, recuperación de contraseña y verificación de cuenta (las
+  cuatro últimas necesitan un proveedor de correo, que hoy no está contratado).
 - **Fase 3** — configurador avanzado con IA para conceptualizar diseños, recomendaciones,
   cotización automática, analytics, CRM y programa de clientes recurrentes.
 
