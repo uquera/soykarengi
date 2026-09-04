@@ -12,14 +12,16 @@ const SERVICES = [
     specialty: "Orientación",
     specialtyEn: "Orientation",
     accentEmoji: "◇",
-    summary: "Treinta minutos para conocernos y definir juntas cuál es el camino que te sirve.",
-    summaryEn: "Thirty minutes to meet each other and decide together which path fits you.",
+    summary:
+      "Treinta minutos para conocernos y definir juntas cuál acompañamiento se adapta mejor a este momento de tu vida.",
+    summaryEn:
+      "Thirty minutes to meet each other and decide together which kind of support fits this moment of your life.",
     description:
-      "Si no sabes qué necesitas, empezamos por aquí. Una conversación corta para entender tu situación y orientarte hacia el formato adecuado.\nSi al terminar decides seguir, esta sesión se descuenta de tu primer proceso.",
+      "No tienes que tener todas las respuestas para comenzar. Solo necesitas decidir que mereces avanzar, sanar y volver a ti.\nUna conversación corta para entender tu situación y orientarte hacia el formato adecuado: terapia, coaching o mentoría.",
     descriptionEn:
-      "If you don't know what you need, we start here. A short conversation to understand your situation and point you to the right format.\nIf you decide to continue, this session is credited toward your first process.",
+      "You do not need every answer to begin. You only need to decide that you deserve to move forward, to heal, and to come back to yourself.\nA short conversation to understand your situation and point you to the right format: therapy, coaching or mentoring.",
     forWho:
-      "Quien nunca ha trabajado con una psicóloga o coach\nPersonas que dudan entre psicología, coaching o mentoría\nQuien quiere conocer la forma de trabajo antes de comprometerse",
+      "Quien nunca ha trabajado con una psicóloga o coach\nPersonas que dudan entre terapia, coaching o mentoría\nQuien quiere conocer la forma de trabajo antes de comprometerse",
     forWhoEn:
       "Anyone who has never worked with a psychologist or coach\nPeople torn between therapy, coaching or mentoring\nAnyone who wants to see how I work before committing",
     whatToExpect:
@@ -30,31 +32,33 @@ const SERVICES = [
     modalityEn: "Online",
     durationMin: 30,
     price: 0,
+    priceNote: "Sin costo",
+    priceNoteEn: "Free",
     order: 0,
   },
   {
-    slug: "sesion-psicologica-individual",
-    name: "Sesión psicológica individual",
-    nameEn: "Individual therapy session",
+    slug: "terapia-psicologica",
+    name: "Terapia psicológica",
+    nameEn: "Psychological therapy",
     specialty: "Psicología",
     specialtyEn: "Psychology",
     accentEmoji: "◍",
     summary:
-      "Un espacio clínico para trabajar lo que estás atravesando, con foco en entenderlo antes de resolverlo.",
+      "Acompañamiento profesional y personalizado para atender situaciones que afectan tu bienestar emocional.",
     summaryEn:
-      "A clinical space to work on what you're going through, focused on understanding it before solving it.",
+      "Professional, personalized support for the situations affecting your emotional wellbeing.",
     description:
-      "Una sesión individual de acompañamiento psicológico. Trabajamos sobre lo que aparece hoy: lo que sientes, lo que te preocupa y lo que se repite.\nNo es una conversación improvisada. Cada sesión tiene un foco, y entre sesiones te llevas algo concreto para observar o practicar.",
+      "Un espacio seguro y cercano para comprender lo que estás viviendo, transformar patrones y avanzar hacia una vida más consciente y coherente contigo.\nSesiones presenciales y en línea: individuales, para adolescentes y de pareja.",
     descriptionEn:
-      "An individual psychological support session. We work on what shows up today: what you feel, what worries you, and what keeps repeating.\nThis isn't an improvised conversation. Every session has a focus, and between sessions you take something concrete to observe or practice.",
+      "A safe, close space to understand what you are going through, transform patterns, and move toward a life that is more conscious and more coherent with who you are.\nIn-person and online sessions: individual, for teenagers, and for couples.",
     forWho:
-      "Personas que están atravesando ansiedad, estrés sostenido o un momento difícil\nQuienes sienten que algo se repite y no logran identificar el patrón\nPersonas en duelo o en una pérdida reciente\nQuien busca un espacio confidencial para ordenar lo que piensa",
+      "Terapia individual para adultos\nTerapia para adolescentes\nTerapia de pareja\nAnsiedad y manejo del estrés\nAutoestima y seguridad personal\nDuelo, pérdidas y procesos de cambio\nDependencia emocional y relaciones difíciles\nLímites saludables\nRegulación emocional\nCreencias limitantes y patrones repetitivos\nProcesos migratorios y adaptación",
     forWhoEn:
-      "People going through anxiety, sustained stress or a hard season\nAnyone who feels something keeps repeating and can't name the pattern\nPeople in grief or after a recent loss\nAnyone looking for a confidential space to sort out their thinking",
+      "Individual therapy for adults\nTherapy for teenagers\nCouples therapy\nAnxiety and stress management\nSelf-esteem and personal confidence\nGrief, loss and processes of change\nEmotional dependence and difficult relationships\nHealthy boundaries\nEmotional regulation\nLimiting beliefs and repeating patterns\nMigration and adaptation",
     whatToExpect:
-      "Un espacio confidencial, sin juicio y con estructura\nUna devolución honesta, no solo escucha pasiva\nUn foco claro para la sesión y una tarea concreta al cerrar\nRegistro de tu proceso en tu cuenta, sesión a sesión",
+      "Un espacio confidencial, sin juicio y con estructura\nUna devolución honesta, no solo escucha pasiva\nUn foco claro para la sesión y algo concreto al cerrar\nSesiones presenciales y en línea\nRegistro de tu proceso en tu cuenta, sesión a sesión",
     whatToExpectEn:
-      "A confidential space, without judgment and with structure\nHonest feedback, not just passive listening\nA clear focus for the session and a concrete takeaway at the end\nA record of your process in your account, session by session",
+      "A confidential space, without judgment and with structure\nHonest feedback, not just passive listening\nA clear focus for the session and something concrete at the end\nIn-person and online sessions\nA record of your process in your account, session by session",
     modality: "Ambas",
     modalityEn: "Both",
     durationMin: 60,
@@ -62,83 +66,135 @@ const SERVICES = [
     order: 1,
   },
   {
+    slug: "programa-intervencion-emocional",
+    name: "Programa de intervención emocional",
+    nameEn: "Emotional intervention program",
+    specialty: "Psicología",
+    specialtyEn: "Psychology",
+    accentEmoji: "◎",
+    summary:
+      "Un proceso estructurado para comprender tus emociones, reconocer su origen y desarrollar nuevas formas de pensar, sentir y actuar.",
+    summaryEn:
+      "A structured process to understand your emotions, recognize where they come from, and build new ways of thinking, feeling and acting.",
+    description:
+      "No es una sesión suelta: es un programa con etapas, pensado para sostener un cambio en el tiempo.\nSe arma sobre tu punto de partida, así que el número de encuentros y el valor se definen en la primera conversación.",
+    descriptionEn:
+      "It is not a one-off session: it is a program with stages, designed to sustain change over time.\nIt is built around your starting point, so the number of sessions and the fee are agreed in the first conversation.",
+    forWho:
+      "Quien ya identificó algo que quiere cambiar y necesita un proceso, no una sesión\nPersonas que repiten el mismo patrón en distintas relaciones\nQuien quiere trabajar la raíz y no solo el síntoma\nPersonas que prefieren un camino con etapas y seguimiento",
+    forWhoEn:
+      "Anyone who has already named what they want to change and needs a process, not a session\nPeople repeating the same pattern across different relationships\nAnyone who wants to work the root and not just the symptom\nPeople who prefer a path with stages and follow-up",
+    whatToExpect:
+      "Autoconocimiento\nGestión emocional\nCreencias limitantes\nFortalecimiento de la autoestima\nValidación interna\nLímites saludables\nRelaciones conscientes\nConstrucción de nuevos hábitos\nReconexión con tu propósito\nPlan de acción personal",
+    whatToExpectEn:
+      "Self-knowledge\nEmotional management\nLimiting beliefs\nStronger self-esteem\nInternal validation\nHealthy boundaries\nConscious relationships\nBuilding new habits\nReconnecting with your purpose\nA personal action plan",
+    modality: "Ambas",
+    modalityEn: "Both",
+    durationMin: 60,
+    price: 0,
+    priceNote: "Valor del programa a convenir",
+    priceNoteEn: "Program fee agreed case by case",
+    order: 2,
+  },
+  {
     slug: "life-coaching",
-    name: "Life Coaching · sesión de foco",
-    nameEn: "Life Coaching · focus session",
+    name: "Sesiones de Life Coaching",
+    nameEn: "Life Coaching sessions",
     specialty: "Life Coaching",
     specialtyEn: "Life Coaching",
     accentEmoji: "✧",
-    summary: "Para cuando sabes hacia dónde quieres ir, pero no logras mover el primer paso.",
-    summaryEn: "For when you know where you want to go but can't move the first step.",
+    summary:
+      "Un acompañamiento práctico para quienes desean alcanzar una meta, tomar decisiones y avanzar con mayor claridad, enfoque y confianza.",
+    summaryEn:
+      "Practical support for anyone who wants to reach a goal, make decisions, and move forward with more clarity, focus and confidence.",
     description:
       "Coaching orientado a metas. Definimos qué quieres lograr, qué te está frenando y qué acciones concretas tomas esta semana.\nEs un trabajo activo: sales de la sesión con un plan, no con una reflexión.",
     descriptionEn:
-      "Goal-oriented coaching. We define what you want to achieve, what's holding you back, and what concrete actions you take this week.\nIt's active work: you leave with a plan, not a reflection.",
+      "Goal-oriented coaching. We define what you want to achieve, what is holding you back, and what concrete actions you take this week.\nIt is active work: you leave with a plan, not a reflection.",
     forWho:
       "Personas con una meta clara que no logran avanzar\nQuienes están frente a una decisión importante\nPersonas que quieren construir hábitos que se sostengan\nQuien necesita una mirada externa que le devuelva foco",
     forWhoEn:
-      "People with a clear goal who can't move forward\nAnyone facing an important decision\nPeople who want to build habits that hold\nAnyone who needs an outside perspective to regain focus",
+      "People with a clear goal who cannot move forward\nAnyone facing an important decision\nPeople who want to build habits that hold\nAnyone who needs an outside perspective to regain focus",
     whatToExpect:
-      "Preguntas incómodas y útiles\nUn objetivo definido en términos medibles\nUn plan de acción para las próximas dos semanas\nSeguimiento del avance entre sesiones",
+      "Definir metas claras y alcanzables\nOrganizar tus prioridades\nSuperar bloqueos personales\nFortalecer la confianza en ti\nMejorar tu motivación y disciplina\nDesarrollar nuevos hábitos\nTomar decisiones con mayor seguridad\nDiseñar un plan de acción\nDar seguimiento a tus avances\nConstruir una vida alineada con tus valores",
     whatToExpectEn:
-      "Uncomfortable, useful questions\nA goal defined in measurable terms\nAn action plan for the next two weeks\nProgress tracking between sessions",
+      "Define clear, reachable goals\nOrganize your priorities\nMove past personal blocks\nStrengthen your confidence\nImprove your motivation and discipline\nBuild new habits\nMake decisions with more certainty\nDesign an action plan\nTrack your progress\nBuild a life aligned with your values",
     modality: "Online",
     modalityEn: "Online",
     durationMin: 50,
     price: 90,
-    order: 2,
+    order: 3,
   },
   {
-    slug: "mentoria-mujeres-que-crean",
-    name: "Mentoría · Mujeres que crean",
-    nameEn: "Mentoring · Women who build",
+    slug: "mentorias",
+    name: "Mentorías",
+    nameEn: "Mentoring",
     specialty: "Mentoría",
     specialtyEn: "Mentoring",
     accentEmoji: "❖",
     summary:
-      "Acompañamiento sostenido para mujeres que están construyendo un proyecto y necesitan sostenerse ellas también.",
+      "Un proceso de crecimiento y transformación enfocado en entrenar la mente, elevar el nivel de conciencia y desarrollar el potencial necesario para crear la vida que deseas.",
     summaryEn:
-      "Ongoing support for women building a project who need to hold themselves up too.",
+      "A growth process focused on training the mind, raising awareness, and developing the potential needed to create the life you want.",
     description:
-      "Un proceso de mentoría de varios encuentros, pensado para mujeres emprendedoras, líderes o creadoras.\nTrabajamos las dos capas al mismo tiempo: la del proyecto y la de quien lo sostiene. Porque casi siempre el cuello de botella no está en la estrategia.",
+      "Las mentorías integran las herramientas de entrenamiento mental, liderazgo y desarrollo del potencial humano que Karen incorporó a su práctica como Máster Trainer del Círculo de Realización Personal.\nEs un proceso de varios encuentros: se trabaja sobre la manera de interpretar las circunstancias, no solo sobre las circunstancias.",
     descriptionEn:
-      "A mentoring process across several sessions, designed for founders, leaders and creators.\nWe work both layers at once: the project and the person holding it up. Because the bottleneck is almost never the strategy.",
+      "Mentoring draws on the mental-training, leadership and human-potential tools Karen added to her practice as a Máster Trainer of the Círculo de Realización Personal.\nIt runs across several sessions: the work is on how you interpret circumstances, not only on the circumstances.",
     forWho:
-      "Emprendedoras en los primeros años de su proyecto\nMujeres en posiciones de liderazgo que se sienten solas en la decisión\nCreadoras que dudan del valor de lo que hacen\nQuien necesita ordenar propósito, energía y negocio a la vez",
+      "Quien siente que repite los mismos patrones y quiere entender por qué\nPersonas que quieren fortalecer su liderazgo personal\nQuien busca conectar con su propósito y convertirlo en acciones\nPersonas dispuestas a comprometerse con un proceso, no con una sesión",
     forWhoEn:
-      "Founders in the first years of their project\nWomen in leadership who feel alone in the decision\nCreators who doubt the value of what they make\nAnyone who needs to align purpose, energy and business at once",
+      "Anyone who feels stuck in the same patterns and wants to understand why\nPeople who want to strengthen their personal leadership\nAnyone looking to connect with their purpose and turn it into action\nPeople willing to commit to a process, not a single session",
     whatToExpect:
-      "Un proceso, no una sesión suelta\nRevisión honesta de tu proyecto y de tu rol en él\nHerramientas de gestión emocional aplicadas al trabajo\nAcompañamiento entre sesiones",
+      "Reconocer los patrones que te mantienen estancada\nTransformar creencias limitantes\nFortalecer tu liderazgo personal\nDescubrir tus recursos y capacidades\nConectar con tu propósito\nCambiar tu manera de interpretar las circunstancias\nCrear una visión más clara de tu futuro\nConvertir tus objetivos en acciones concretas\nAvanzar con enfoque, responsabilidad y compromiso",
     whatToExpectEn:
-      "A process, not a one-off session\nAn honest review of your project and of your role in it\nEmotional-management tools applied to work\nSupport between sessions",
+      "Recognize the patterns keeping you stuck\nTransform limiting beliefs\nStrengthen your personal leadership\nDiscover your resources and capabilities\nConnect with your purpose\nChange how you interpret circumstances\nBuild a clearer vision of your future\nTurn your goals into concrete action\nMove forward with focus, responsibility and commitment",
     modality: "Ambas",
     modalityEn: "Both",
     durationMin: 75,
     price: 150,
-    order: 3,
+    order: 4,
   },
 ];
 
+// Servicios anteriores al documento de septiembre. No se borran porque hay
+// citas que los referencian: se apagan y dejan de ofrecerse.
+const SERVICIOS_RETIRADOS = ["sesion-psicologica-individual", "mentoria-mujeres-que-crean"];
+
 const CATEGORIES = [
-  { slug: "cumpleanos", name: "Cumpleaños", nameEn: "Birthdays", group: "EVENTOS", description: "Invitaciones, señalética y recuerdos para celebrar un año más.", descriptionEn: "Invitations, signage and keepsakes to celebrate another year.", order: 1 },
-  { slug: "bautizos", name: "Bautizos", nameEn: "Christenings", group: "EVENTOS", description: "Piezas sobrias y cálidas para una primera celebración.", descriptionEn: "Warm, understated pieces for a first celebration.", order: 2 },
-  { slug: "baby-shower", name: "Baby shower", nameEn: "Baby shower", group: "EVENTOS", description: "Para la espera, la ilusión y la gente que acompaña.", descriptionEn: "For the wait, the excitement, and the people who show up.", order: 3 },
-  { slug: "matrimonios", name: "Matrimonios", nameEn: "Weddings", group: "EVENTOS", description: "Papelería completa para el día y para lo que queda después.", descriptionEn: "Full stationery for the day and for what stays afterward.", order: 4 },
-  { slug: "graduaciones", name: "Graduaciones", nameEn: "Graduations", group: "EVENTOS", description: "Cerrar una etapa merece quedar registrado.", descriptionEn: "Closing a chapter deserves to be recorded.", order: 5 },
-  { slug: "eventos-corporativos", name: "Eventos corporativos", nameEn: "Corporate events", group: "EVENTOS", description: "Piezas con identidad para empresas y equipos.", descriptionEn: "Pieces with identity for companies and teams.", order: 6 },
+  // 1 · Viste tu mensaje
+  { slug: "prendas-con-mensaje", name: "Franelas y prendas personalizadas", nameEn: "Personalized tees and apparel", group: "VISTE", description: "Franelas y prendas que llevan puesto lo que quieres recordar.", descriptionEn: "Tees and apparel that wear what you want to remember.", order: 1 },
+  { slug: "tote-bags", name: "Tote bags y bolsos", nameEn: "Tote bags", group: "VISTE", description: "Bolsos de tela que acompañan el día y dicen algo por ti.", descriptionEn: "Cloth bags that go with you and say something for you.", order: 2 },
+  { slug: "uniformes", name: "Uniformes para empresas y emprendedores", nameEn: "Uniforms for teams and founders", group: "VISTE", description: "Uniformes con identidad para equipos, locales y emprendimientos.", descriptionEn: "Uniforms with identity for teams, shops and small businesses.", order: 3 },
+  { slug: "frases", name: "Frases", nameEn: "Quotes", group: "VISTE", description: "Palabras que alguien necesita leer todos los días.", descriptionEn: "Words someone needs to read every day.", order: 4 },
 
-  { slug: "regalos-personalizados", name: "Regalos personalizados", nameEn: "Personalized gifts", group: "PERSONAL", description: "Un regalo pensado para una persona específica.", descriptionEn: "A gift made for one specific person.", order: 1 },
-  { slug: "frases", name: "Frases", nameEn: "Quotes", group: "PERSONAL", description: "Palabras que alguien necesita leer todos los días.", descriptionEn: "Words someone needs to read every day.", order: 2 },
-  { slug: "ilustraciones", name: "Ilustraciones", nameEn: "Illustrations", group: "PERSONAL", description: "Retratos e ilustraciones hechas a mano.", descriptionEn: "Hand-made portraits and illustrations.", order: 3 },
-  { slug: "invitaciones", name: "Invitaciones", nameEn: "Invitations", group: "PERSONAL", description: "La primera impresión de lo que estás organizando.", descriptionEn: "The first impression of what you're organizing.", order: 4 },
-  { slug: "papeleria", name: "Papelería", nameEn: "Stationery", group: "PERSONAL", description: "Agendas, tarjetas y piezas de uso diario.", descriptionEn: "Planners, cards and everyday pieces.", order: 5 },
-  { slug: "disenos-digitales", name: "Diseños digitales", nameEn: "Digital designs", group: "PERSONAL", description: "Piezas listas para compartir o imprimir tú misma.", descriptionEn: "Pieces ready to share or print yourself.", order: 6 },
-  { slug: "prendas-con-mensaje", name: "Prendas con mensaje", nameEn: "Wearable messages", group: "PERSONAL", description: "Poleras y bolsos que llevan puesto lo que quieres recordar.", descriptionEn: "Tees and totes that carry what you want to remember.", order: 7 },
+  // 2 · Regala con intención
+  { slug: "tazas-tumblers-termos", name: "Tazas, tumblers y termos", nameEn: "Mugs, tumblers and flasks", group: "REGALA", description: "El regalo que se usa todos los días y no se guarda en un cajón.", descriptionEn: "The gift that gets used daily instead of stored in a drawer.", order: 1 },
+  { slug: "regalos-personalizados", name: "Regalos y recuerdos personalizados", nameEn: "Personalized gifts and keepsakes", group: "REGALA", description: "Un regalo pensado para una persona específica.", descriptionEn: "A gift made for one specific person.", order: 2 },
+  { slug: "papeleria", name: "Papelería", nameEn: "Stationery", group: "REGALA", description: "Agendas, tarjetas y piezas de uso diario.", descriptionEn: "Planners, cards and everyday pieces.", order: 3 },
+  { slug: "ilustraciones", name: "Ilustraciones", nameEn: "Illustrations", group: "REGALA", description: "Retratos e ilustraciones hechas a mano.", descriptionEn: "Hand-made portraits and illustrations.", order: 4 },
+  { slug: "disenos-digitales", name: "Diseños digitales", nameEn: "Digital designs", group: "REGALA", description: "Piezas listas para compartir o imprimir tú misma.", descriptionEn: "Pieces ready to share or print yourself.", order: 5 },
 
-  { slug: "homenajes", name: "Homenajes", nameEn: "Tributes", group: "PROPOSITO", description: "Para honrar a alguien que dejó una huella.", descriptionEn: "To honor someone who left a mark.", order: 1 },
-  { slug: "recuerdos", name: "Recuerdos", nameEn: "Keepsakes", group: "PROPOSITO", description: "Guardar un momento antes de que se difumine.", descriptionEn: "Keeping a moment before it fades.", order: 2 },
-  { slug: "mensajes-especiales", name: "Mensajes especiales", nameEn: "Special messages", group: "PROPOSITO", description: "Lo que cuesta decir en voz alta, escrito y diseñado.", descriptionEn: "What's hard to say out loud, written and designed.", order: 3 },
-  { slug: "fechas-importantes", name: "Fechas importantes", nameEn: "Milestones", group: "PROPOSITO", description: "Aniversarios, hitos y días que cambian algo.", descriptionEn: "Anniversaries, milestones and days that change something.", order: 4 },
+  // 3 · Celebra tu historia
+  { slug: "cumpleanos", name: "Cumpleaños y celebraciones", nameEn: "Birthdays and celebrations", group: "CELEBRA", description: "Invitaciones, señalética y recuerdos para celebrar un año más.", descriptionEn: "Invitations, signage and keepsakes to celebrate another year.", order: 1 },
+  { slug: "craft-bar", name: "Craft Bar", nameEn: "Craft Bar", group: "CELEBRA", description: "Una estación creativa para que cada invitado cree y personalice su propio recuerdo.", descriptionEn: "A creative station where every guest makes and personalizes their own keepsake.", order: 2 },
+  { slug: "familias-y-mascotas", name: "Familias, mascotas y raíces", nameEn: "Families, pets and roots", group: "CELEBRA", description: "Diseños para familias, mascotas, ciudades y raíces culturales.", descriptionEn: "Designs for families, pets, cities and cultural roots.", order: 3 },
+  { slug: "invitaciones", name: "Invitaciones", nameEn: "Invitations", group: "CELEBRA", description: "La primera impresión de lo que estás organizando.", descriptionEn: "The first impression of what you're organizing.", order: 4 },
+  { slug: "baby-shower", name: "Baby shower", nameEn: "Baby shower", group: "CELEBRA", description: "Para la espera, la ilusión y la gente que acompaña.", descriptionEn: "For the wait, the excitement, and the people who show up.", order: 5 },
+  { slug: "bautizos", name: "Bautizos", nameEn: "Christenings", group: "CELEBRA", description: "Piezas sobrias y cálidas para una primera celebración.", descriptionEn: "Warm, understated pieces for a first celebration.", order: 6 },
+  { slug: "matrimonios", name: "Matrimonios", nameEn: "Weddings", group: "CELEBRA", description: "Papelería completa para el día y para lo que queda después.", descriptionEn: "Full stationery for the day and for what stays afterward.", order: 7 },
+  { slug: "graduaciones", name: "Graduaciones", nameEn: "Graduations", group: "CELEBRA", description: "Cerrar una etapa merece quedar registrado.", descriptionEn: "Closing a chapter deserves to be recorded.", order: 8 },
+
+  // 4 · Haz visible tu marca
+  { slug: "emprendimientos", name: "Emprendimientos y pequeños negocios", nameEn: "Small businesses", group: "MARCA", description: "Productos personalizados para quien está construyendo algo propio.", descriptionEn: "Personalized products for anyone building something of their own.", order: 1 },
+  { slug: "eventos-corporativos", name: "Eventos y equipos", nameEn: "Events and teams", group: "MARCA", description: "Piezas con identidad para empresas, eventos y equipos.", descriptionEn: "Pieces with identity for companies, events and teams.", order: 2 },
+  { slug: "pedidos-al-mayor", name: "Pedidos al mayor", nameEn: "Wholesale orders", group: "MARCA", description: "Producción por volumen, con la misma pieza repetida sin perder el detalle.", descriptionEn: "Volume production, the same piece repeated without losing the detail.", order: 3 },
+
+  // 5 · Diseños que dejan huella
+  { slug: "homenajes", name: "Homenajes", nameEn: "Tributes", group: "HUELLA", description: "Para honrar a alguien que dejó una huella.", descriptionEn: "To honor someone who left a mark.", order: 1 },
+  { slug: "colecciones-solidarias", name: "Colecciones solidarias", nameEn: "Charitable collections", group: "HUELLA", description: "Series creadas con una causa detrás, donde la pieza sostiene algo más grande.", descriptionEn: "Series made around a cause, where the piece supports something larger.", order: 2 },
+  { slug: "recuerdos", name: "Recuerdos", nameEn: "Keepsakes", group: "HUELLA", description: "Guardar un momento antes de que se difumine.", descriptionEn: "Keeping a moment before it fades.", order: 3 },
+  { slug: "mensajes-especiales", name: "Mensajes especiales", nameEn: "Special messages", group: "HUELLA", description: "Lo que cuesta decir en voz alta, escrito y diseñado.", descriptionEn: "What's hard to say out loud, written and designed.", order: 4 },
+  { slug: "fechas-importantes", name: "Fechas conmemorativas", nameEn: "Commemorative dates", group: "HUELLA", description: "Aniversarios, hitos y días que cambian algo.", descriptionEn: "Anniversaries, milestones and days that change something.", order: 5 },
 ];
 
 const DELIVERY_ES = "Digital / Impresa / Ambas";
@@ -454,6 +510,10 @@ async function main() {
 
   for (const s of SERVICES) {
     await db.service.upsert({ where: { slug: s.slug }, update: s, create: s });
+  }
+
+  for (const slug of SERVICIOS_RETIRADOS) {
+    await db.service.updateMany({ where: { slug }, data: { active: false } });
   }
 
   for (const c of CATEGORIES) {

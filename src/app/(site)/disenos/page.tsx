@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { money } from "@/lib/format";
-import { CATEGORY_GROUPS, INTENTS, intentOf, matchesIntent } from "@/lib/domain";
+import { CATEGORY_GROUPS, INTENTS, SPARKWELL_CATALOG, intentOf, matchesIntent } from "@/lib/domain";
 import { getDict, getLocale } from "@/lib/i18n";
 import { categoryView, designView } from "@/lib/content";
 import { ButtonLink, Eyebrow, Badge, EmptyState } from "@/components/ui";
@@ -88,18 +88,35 @@ export default async function DisenosPage({
             </div>
           </div>
 
-          {/* Piezas reales, no ilustraciones: es lo que de verdad se entrega. */}
-          <div className="grid grid-cols-2 gap-4">
-            <img
-              src="/producto-tote.jpg"
-              alt="Bolso de tela con la frase «Soy mi proyecto más importante»"
-              className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
-            />
-            <img
-              src="/producto-renacer.jpg"
-              alt="Polera Renacer Venezuela dentro de su caja de regalo"
-              className="mt-8 aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
-            />
+          {/* El logo de la sub-marca y, debajo, dos piezas reales: es lo que de
+              verdad se entrega, no ilustraciones. */}
+          <div>
+            <div className="flex flex-col items-center gap-3">
+              <img
+                src="/sparkwell-logo.png"
+                alt="SparkWell Karengi"
+                width={260}
+                height={238}
+                className="rounded-2xl border border-line shadow-sm"
+                style={{ width: 260, height: "auto" }}
+              />
+              <p className="font-[family-name:var(--font-display)] text-[0.9375rem] text-moss-deep italic">
+                {t.designs.brandTagline}
+              </p>
+            </div>
+
+            <div className="mt-8 grid grid-cols-2 gap-4">
+              <img
+                src="/producto-tote.jpg"
+                alt="Bolso de tela con la frase «Soy mi proyecto más importante»"
+                className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
+              />
+              <img
+                src="/producto-renacer.jpg"
+                alt="Polera Renacer Venezuela dentro de su caja de regalo"
+                className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -250,6 +267,55 @@ export default async function DisenosPage({
             ))}
           </div>
         )}
+      </section>
+
+      {/* Craft Bar: lo nuevo del documento, con sitio propio */}
+      <section className="shell pb-14">
+        <div className="card-soft grid gap-8 overflow-hidden p-8 sm:p-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <span className="inline-flex">
+              <Badge tone="amber">{t.designs.craftEyebrow}</Badge>
+            </span>
+            <h2 className="mt-4 font-[family-name:var(--font-display)] text-3xl leading-snug sm:text-4xl">
+              {t.designs.craftTitle}
+            </h2>
+            <p className="mt-4 max-w-xl leading-relaxed text-ink-soft">{t.designs.craftLead}</p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <ButtonLink href="/contacto" tone="moss">
+                {t.designs.craftCta}
+              </ButtonLink>
+              <ButtonLink href="/configurador" tone="ghost">
+                {t.designs.cta}
+              </ButtonLink>
+            </div>
+            <p className="mt-4 text-[0.8125rem] text-muted">{t.designs.craftNote}</p>
+          </div>
+          <img
+            src="/sparkwell-caja.jpg"
+            alt="Caja de regalo con el mensaje «Siempre es posible renacer»"
+            className="w-full rounded-3xl border border-line object-cover shadow-sm"
+          />
+        </div>
+      </section>
+
+      {/* La lista completa: quien no encuentra su pieza en la vitrina sí
+          encuentra aquí el tipo de producto que buscaba. */}
+      <section className="border-y border-line bg-moss-soft/60 py-14">
+        <div className="shell">
+          <h2 className="font-[family-name:var(--font-display)] text-3xl">{t.designs.catalogTitle}</h2>
+          <p className="mt-2 text-ink-soft">{t.designs.catalogLead}</p>
+          <ul className="mt-8 grid gap-2.5 sm:grid-cols-2 lg:grid-cols-3">
+            {SPARKWELL_CATALOG.map((item) => (
+              <li
+                key={item}
+                className="flex items-center gap-3 rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink-soft"
+              >
+                <span aria-hidden="true" className="h-1.5 w-1.5 shrink-0 rounded-full bg-moss" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
       </section>
 
       <CustomDesignCall

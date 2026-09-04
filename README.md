@@ -11,8 +11,8 @@ tecnología, clientes, pagos y administración.
 
 | Unidad | Qué resuelve | Rutas |
 |---|---|---|
-| **01 · Bienestar y acompañamiento** | Perfil de Karen, servicios (psicología, Life Coaching, mentoría), especialidades, agenda con reserva y formulario previo | `/acompanamiento`, `/acompanamiento/servicios/[slug]`, `/acompanamiento/agenda` |
-| **02 · Diseños con Propósito** | Vitrina por categorías (Eventos · Personal · Con propósito), ficha de cada pieza, configurador de 5 pasos y solicitudes a medida | `/disenos`, `/disenos/[slug]`, `/configurador` |
+| **01 · Terapias, Coaching y Mentorías** — *«Entrena tu mente y renace»* | Perfil de Karen, cuatro formatos (terapia, programa de intervención emocional, Life Coaching, mentorías), especialidades, agenda con reserva y formulario previo | `/acompanamiento`, `/acompanamiento/servicios/[slug]`, `/acompanamiento/agenda`, `/crp` |
+| **02 · SparkWell · Diseños con Propósito** — *«Crea, celebra y diviértete»* | Vitrina por las cinco categorías comerciales, Craft Bar, ficha de cada pieza, configurador de 5 pasos y solicitudes a medida | `/disenos`, `/disenos/[slug]`, `/disenos/categoria/[slug]`, `/configurador` |
 
 Ambas viven en el mismo aplicativo, con **universos de color propios** (ciruela para acompañamiento,
 verde para diseños) y **una sola base de clientes**.
@@ -35,6 +35,30 @@ Lo bloqueado deja de ofrecerse en la agenda pública.
 - **Panel administrativo** (`/admin`) — dashboard, servicios, agenda, categorías, diseños, solicitudes,
   pedidos, clientes segmentados, contenido, mensajes y estadísticas.
 - **Contenido** — blog y recursos (`/blog`, `/recursos`), editables desde el panel.
+
+### Las cinco categorías comerciales
+
+El eje del catálogo son las cinco que definió Karen, nombradas por lo que la persona quiere hacer y
+no por el tipo de pieza:
+
+| Grupo | Qué agrupa |
+|---|---|
+| `VISTE` · Viste tu mensaje | Franelas, prendas, uniformes y tote bags |
+| `REGALA` · Regala con intención | Tazas, tumblers, termos y detalles |
+| `CELEBRA` · Celebra tu historia | Cumpleaños, familias, mascotas, ciudades y raíces culturales |
+| `MARCA` · Haz visible tu marca | Emprendimientos, negocios, eventos y equipos |
+| `HUELLA` · Diseños que dejan huella | Homenajes, colecciones solidarias y productos con una causa |
+
+Dentro viven 25 categorías, cada una con su URL propia. El **Craft Bar** —la estación creativa para
+cumpleaños y eventos— tiene su bloque en la vitrina, pero su botón lleva a contacto y no al
+catálogo: se coordina por fecha y lugar, no se compra de una vitrina.
+
+### El CRP va aparte
+
+Karen pidió sacar «CRP» del nombre del servicio y darle un módulo propio. Las mentorías se llaman
+**Mentorías** a secas, y `/crp` explica de dónde vienen sus herramientas: Karen es Máster Trainer del
+Círculo de Realización Personal. El logo del CRP es de terceros, así que va sobre blanco y sin
+recolorear, con su nota de atribución.
 
 ### La vitrina se filtra por intención, no por categoría
 
@@ -138,7 +162,19 @@ Sobre fondo oscuro el isotipo va sobre un disco crema (`<BrandMark plate />`): l
 se pierde contra el marrón.
 
 `public/karen-retrato.png` es su **fotografía**, no la marca, así que se quedó donde se presenta
-ella: «Sobre Karen» y las páginas por especialidad.
+ella: «Soy Karen Ramos» y las páginas por especialidad.
+
+Junto a la marca paraguas conviven dos marcas más:
+
+| Archivo | Marca | Dónde va |
+|---|---|---|
+| `sparkwell-logo.png` | **SparkWell Karengi**, la sub-marca de la Unidad 02 | Cabecera de la vitrina |
+| `crp-logo.png` · `crp-buho.png` | **Círculo de Realización Personal**, de terceros | `/crp` y el sello de acreditación |
+
+El de SparkWell se recortó igual que el principal, cortando después de KARENGI, y su bajada
+*«Lleva tu historia contigo, vive tu propósito»* va como texto. El del CRP **no se recolorea ni se
+adapta a la paleta**: es la marca de otra organización y aparece como acreditación de la formación de
+Karen, sobre blanco y con su nota de atribución.
 
 Las fotografías del negocio viven en `public/`:
 
@@ -174,6 +210,16 @@ Todo se define una sola vez en el bloque `@theme` de `src/app/globals.css`; ning
 inventa un color propio. Las claves de `PALETTES` (`src/lib/domain.ts`) son datos guardados en la
 base para las portadas de la vitrina: **cambia sus valores, nunca sus nombres.**
 
+### No todo servicio tiene una cifra
+
+La primera conversación no se cobra y el programa de intervención emocional se arma sobre el punto de
+partida de cada persona. Para eso está `Service.priceNote`: cuando trae texto, reemplaza al precio en
+toda la web (ficha, listados, orientador y agenda). Karen la escribe desde el panel.
+
+> **Los precios que están hoy en producción son los que ya estaban antes del documento**, porque el
+> documento de servicios no trae ninguno. Terapia $110, Coaching $90 y Mentorías $150 están a la
+> espera de que Karen los confirme o los corrija desde el panel.
+
 ## SEO: una URL por búsqueda real
 
 «Psicóloga online en español» o «regalos personalizados» son búsquedas concretas, y cada una tiene
@@ -185,7 +231,8 @@ su página con su contenido:
 | `/acompanamiento/life-coaching` | life coach en español |
 | `/acompanamiento/mentoria` | mentoría para mujeres |
 | `/acompanamiento/orientacion` | primera sesión de orientación |
-| `/disenos/categoria/[slug]` | una por categoría del catálogo (17) |
+| `/disenos/categoria/[slug]` | una por categoría del catálogo (25) |
+| `/crp` | Círculo de Realización Personal, entrenamiento mental |
 
 Las de especialidad se definen en `SPECIALTY_PAGES` y su copy vive en los diccionarios, así que
 existen también en inglés. Se suman `sitemap.xml` (50 URLs, generado desde la base), `robots.txt`

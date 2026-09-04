@@ -1,5 +1,6 @@
 import type { Design, DesignCategory, Post, Service } from "@prisma/client";
 import { pick, type Locale } from "./i18n";
+import { money } from "./format";
 
 /**
  * El contenido se escribe en español y, opcionalmente, en inglés desde el panel.
@@ -17,7 +18,19 @@ export function serviceView(s: Service, locale: Locale) {
     whatToExpect: pick(locale, s.whatToExpect, s.whatToExpectEn),
     specialty: pick(locale, s.specialty, s.specialtyEn),
     modalityLabel: pick(locale, s.modality, s.modalityEn),
+    // No todo servicio tiene una cifra cerrada: un programa se arma sobre el
+    // punto de partida, y la primera conversación no se cobra. Cuando hay nota,
+    // manda ella; si no, se muestra el precio.
+    priceLabel: priceLabelOf(s, locale),
   };
+}
+
+export function priceLabelOf(
+  s: { price: number; priceNote: string | null; priceNoteEn: string | null },
+  locale: Locale,
+) {
+  const note = pick(locale, s.priceNote ?? "", s.priceNoteEn);
+  return note.trim() !== "" ? note : money(s.price, locale);
 }
 
 export function categoryView(c: DesignCategory, locale: Locale) {

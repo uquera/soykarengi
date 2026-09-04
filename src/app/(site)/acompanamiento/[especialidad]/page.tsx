@@ -137,7 +137,7 @@ export default async function EspecialidadPage({
                     </div>
                     <div className="flex items-center gap-4 sm:flex-col sm:items-end">
                       <p className="font-[family-name:var(--font-display)] text-2xl">
-                        {money(s.price, locale)}
+                        {s.priceLabel}
                       </p>
                       <ButtonLink
                         href={`/acompanamiento/servicios/${s.slug}`}

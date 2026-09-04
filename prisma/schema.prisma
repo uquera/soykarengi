@@ -43,6 +43,9 @@ model Service {
   durationMin   Int
   price         Int
   specialty     String  @default("Acompañamiento")
+  /// Cuando el valor no es una cifra cerrada (un programa completo, una sesión
+  /// sin costo), esta nota reemplaza al precio en la ficha.
+  priceNote     String?
   accentEmoji   String  @default("✦")
   order         Int     @default(0)
   active        Boolean @default(true)
@@ -55,6 +58,7 @@ model Service {
   whatToExpectEn String?
   specialtyEn    String?
   modalityEn     String?
+  priceNoteEn    String?
 
   appointments Appointment[]
 }

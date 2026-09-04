@@ -42,7 +42,7 @@ export default async function AgendaPage({
       name: s.name,
       summary: s.summary,
       specialty: row.specialty,
-      price: money(s.price, locale),
+      price: s.priceLabel,
       duration: duration(s.durationMin, locale),
     };
   });

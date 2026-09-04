@@ -16,6 +16,7 @@ type Service = {
   specialty: string;
   durationMin: number;
   price: number;
+  priceNote: string | null;
   accentEmoji: string;
   order: number;
   active: boolean;
@@ -25,6 +26,7 @@ type Service = {
   forWhoEn: string | null;
   whatToExpectEn: string | null;
   specialtyEn: string | null;
+  priceNoteEn: string | null;
   modalityEn: string | null;
 };
 
@@ -119,6 +121,18 @@ export function ServiceForm({ service }: { service?: Service }) {
           />
         </Field>
 
+        <Field
+          label="Nota de precio"
+          hint="Opcional. Si la escribes, reemplaza al precio en la ficha: «Sin costo», «Valor del programa a convenir»."
+        >
+          <input
+            name="priceNote"
+            defaultValue={service?.priceNote ?? ""}
+            className={inputClass}
+            placeholder="A convenir"
+          />
+        </Field>
+
         <Field label="Orden">
           <input name="order" type="number" min={0} defaultValue={service?.order ?? 0} className={inputClass} />
         </Field>
@@ -147,6 +161,10 @@ export function ServiceForm({ service }: { service?: Service }) {
             </Field>
             <Field label="Specialty">
               <input name="specialtyEn" defaultValue={service?.specialtyEn ?? ""} className={inputClass} />
+            </Field>
+
+            <Field label="Price note (EN)">
+              <input name="priceNoteEn" defaultValue={service?.priceNoteEn ?? ""} className={inputClass} />
             </Field>
           </div>
 

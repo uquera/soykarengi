@@ -45,7 +45,7 @@ export function CategoryForm({ category }: { category?: Category }) {
           required
           className={inputClass}
         />
-        <select name="group" defaultValue={category?.group ?? "EVENTOS"} className={inputClass}>
+        <select name="group" defaultValue={category?.group ?? CATEGORY_GROUPS[0].key} className={inputClass}>
           {CATEGORY_GROUPS.map((g) => (
             <option key={g.key} value={g.key}>
               {g.name}

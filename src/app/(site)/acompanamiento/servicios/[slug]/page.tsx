@@ -100,7 +100,7 @@ export default async function ServicioPage({ params }: Props) {
                 {t.services.sessionPrice}
               </p>
               <p className="mt-1 font-[family-name:var(--font-display)] text-4xl">
-                {money(service.price, locale)}
+                {service.priceLabel}
               </p>
             </div>
 
@@ -147,7 +147,7 @@ export default async function ServicioPage({ params }: Props) {
                   <span className="text-xl">{s.accentEmoji}</span>
                   <p className="mt-3 font-[family-name:var(--font-display)] text-lg leading-snug">{s.name}</p>
                   <p className="mt-2 text-[0.8125rem] text-muted">
-                    {duration(s.durationMin, locale)} · {money(s.price, locale)}
+                    {duration(s.durationMin, locale)} · {s.priceLabel}
                   </p>
                 </Link>
               ))}

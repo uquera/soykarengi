@@ -163,7 +163,7 @@ export default async function HomePage() {
                 <span className="text-muted">
                   {duration(s.durationMin, locale)} · {s.modalityLabel}
                 </span>
-                <span className="font-semibold">{money(s.price, locale)}</span>
+                <span className="font-semibold">{s.priceLabel}</span>
               </div>
             </Link>
           ))}

@@ -53,6 +53,7 @@ const serviceSchema = z.object({
   specialty: z.string().trim().min(2),
   durationMin: z.coerce.number().int().min(15).max(480),
   price: z.coerce.number().int().min(0),
+  priceNote: optionalEn,
   accentEmoji: z.string().trim().min(1).max(4),
   order: z.coerce.number().int().min(0).max(999),
   nameEn: optionalEn,
@@ -62,6 +63,7 @@ const serviceSchema = z.object({
   whatToExpectEn: optionalEn,
   specialtyEn: optionalEn,
   modalityEn: optionalEn,
+  priceNoteEn: optionalEn,
 });
 
 export async function saveServiceAction(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -81,6 +83,7 @@ export async function saveServiceAction(_prev: FormState, formData: FormData): P
   }
 
   revalidatePath("/admin/servicios");
+  revalidatePath("/acompanamiento");
   revalidatePath("/acompanamiento/servicios");
   redirect("/admin/servicios");
 }

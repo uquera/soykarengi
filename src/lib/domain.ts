@@ -60,23 +60,52 @@ export const APPOINTMENT_LABEL: Record<string, string> = {
   CANCELADA: "Cancelada",
 };
 
+/**
+ * Las cinco categorías principales que pidió Karen. Se nombran por lo que la
+ * persona quiere hacer —vestir, regalar, celebrar— y no por el tipo de pieza,
+ * que era el eje anterior (EVENTOS / PERSONAL / CON PROPÓSITO).
+ */
 export const CATEGORY_GROUPS = [
   {
-    key: "EVENTOS",
-    name: "Eventos",
-    blurb: "Fechas que se celebran en compañía.",
+    key: "VISTE",
+    name: "Viste tu mensaje",
+    blurb: "Franelas, prendas, uniformes y tote bags personalizados.",
   },
   {
-    key: "PERSONAL",
-    name: "Personal",
-    blurb: "Detalles que se regalan y se guardan.",
+    key: "REGALA",
+    name: "Regala con intención",
+    blurb: "Tazas, tumblers, termos y detalles para momentos especiales.",
   },
   {
-    key: "PROPOSITO",
-    name: "Con propósito",
-    blurb: "Piezas que sostienen una historia.",
+    key: "CELEBRA",
+    name: "Celebra tu historia",
+    blurb: "Diseños para cumpleaños, familias, mascotas, ciudades y raíces culturales.",
+  },
+  {
+    key: "MARCA",
+    name: "Haz visible tu marca",
+    blurb: "Productos personalizados para emprendimientos, negocios, eventos y equipos.",
+  },
+  {
+    key: "HUELLA",
+    name: "Diseños que dejan huella",
+    blurb: "Homenajes, colecciones solidarias y productos creados con una causa.",
   },
 ] as const;
+
+/** La lista completa de lo que SparkWell produce, tal como la escribió Karen. */
+export const SPARKWELL_CATALOG = [
+  "Franelas y prendas personalizadas",
+  "Tazas, tumblers y termos",
+  "Tote bags y bolsos",
+  "Regalos y recuerdos personalizados",
+  "Diseños para cumpleaños y celebraciones",
+  "Craft Bar para cumpleaños y eventos",
+  "Productos para familias, grupos y pequeños negocios",
+  "Diseños conmemorativos, culturales y con propósito",
+  "Uniformes para empresas y emprendedores",
+  "Pedidos individuales y al mayor",
+];
 
 export const PURPOSES = [
   { key: "Evento", hint: "Una fecha que quiero celebrar" },
@@ -138,11 +167,11 @@ export function segmentOf(appointments: number, requests: number): Segment {
  * los diseños declaran a qué intenciones responden en su campo `intents`.
  */
 export const INTENTS = [
-  { key: "celebrar", label: "Celebrar", group: "EVENTOS" },
-  { key: "regalar", label: "Regalar", group: "PERSONAL" },
-  { key: "homenajear", label: "Homenajear", group: "PROPOSITO" },
-  { key: "inspirar", label: "Inspirar", group: "PERSONAL" },
-  { key: "compartir", label: "Compartir un momento", group: "PROPOSITO" },
+  { key: "celebrar", label: "Celebrar", group: "CELEBRA" },
+  { key: "regalar", label: "Regalar", group: "REGALA" },
+  { key: "homenajear", label: "Homenajear", group: "HUELLA" },
+  { key: "inspirar", label: "Inspirar", group: "VISTE" },
+  { key: "compartir", label: "Compartir un momento", group: "CELEBRA" },
 ] as const;
 
 export type IntentKey = (typeof INTENTS)[number]["key"];

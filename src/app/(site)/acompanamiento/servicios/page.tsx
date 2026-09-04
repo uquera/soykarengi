@@ -28,7 +28,7 @@ export default async function ServiciosPage() {
       name: s.name,
       summary: s.summary,
       specialty: row.specialty,
-      price: money(s.price, locale),
+      price: s.priceLabel,
       duration: duration(s.durationMin, locale),
     };
   });
@@ -75,7 +75,7 @@ export default async function ServiciosPage() {
             </div>
 
             <div className="flex items-center gap-5 sm:flex-col sm:items-end">
-              <p className="font-[family-name:var(--font-display)] text-2xl">{money(s.price, locale)}</p>
+              <p className="font-[family-name:var(--font-display)] text-2xl">{s.priceLabel}</p>
               <ButtonLink href={`/acompanamiento/servicios/${s.slug}`} tone="orchid" className="px-5 py-2.5">
                 {t.services.seeSheet}
               </ButtonLink>
