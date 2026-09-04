@@ -121,14 +121,18 @@ Karen atiende desde Estados Unidos, así que **toda la agenda vive en `America/N
 
 ## Identidad visual
 
-La marca es el **logo de SoyKarengi**: la figura que se eleva dentro del círculo, con la palabra y su
-bajada *«Sana la raíz, eleva tu ser, renace»*. Se recortó del original con fondo transparente en dos
-piezas, porque el lockup completo a 32 px sería ilegible:
+La marca es el **logo de SoyKarengi**: la figura que se eleva dentro del círculo. Se recortó del
+original con fondo transparente en dos piezas, porque el lockup entero a 32 px sería ilegible:
 
 | Archivo | Qué es | Dónde va |
 |---|---|---|
 | `soykarengi-isotipo.png` | Sólo el círculo con la figura, 512 px | Cabecera, pie, pantallas de acceso, favicon |
-| `soykarengi-logo.png` | El lockup completo con la bajada, 900 px | Portada y Open Graph |
+| `soykarengi-logo.png` | Isotipo + la palabra SOY KARENGI, 900 px | Portada y Open Graph |
+
+El original trae **su propia bajada** grabada bajo la palabra. El lockup se corta justo después de
+KARENGI porque la bajada de la marca es la del documento —*«Mente entrenada · Vida con propósito»*—
+y dos frases compitiendo en la misma pantalla no dicen nada. Va como texto, no como imagen: así se
+traduce al inglés y se cambia en un solo sitio (`brand.tagline` en los diccionarios).
 
 Sobre fondo oscuro el isotipo va sobre un disco crema (`<BrandMark plate />`): la ciruela del trazo
 se pierde contra el marrón.

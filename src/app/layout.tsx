@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName: "SoyKarengi",
       type: "website",
       locale: locale === "en" ? "en_US" : "es_US",
-      images: [{ url: "/soykarengi-logo.png", width: 900, height: 1324, alt: "SoyKarengi · Karen Ramos" }],
+      images: [{ url: "/soykarengi-logo.png", width: 900, height: 1213, alt: "SoyKarengi · Karen Ramos" }],
     },
     twitter: { card: "summary_large_image", title: m.title, description: m.og },
     icons: { icon: "/soykarengi-isotipo.png", apple: "/soykarengi-isotipo.png" },

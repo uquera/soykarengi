@@ -73,8 +73,11 @@ export default async function HomePage() {
 
           {/* Marca paraguas: dos unidades, una sola cuenta */}
           <div className="rise relative" style={{ animationDelay: "120ms" }}>
-            <div className="mb-8 flex justify-center lg:justify-end">
-              <BrandLogo width={300} />
+            <div className="mb-8 flex flex-col items-center gap-4 lg:items-end">
+              <BrandLogo width={280} />
+              <p className="font-[family-name:var(--font-display)] text-[0.9375rem] text-orchid-deep italic">
+                {t.brand.tagline}
+              </p>
             </div>
 
             <div className="card-soft relative p-7 sm:p-9">

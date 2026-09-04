@@ -39,16 +39,19 @@ export function BrandMark({
 }
 
 /**
- * El logo completo, con la palabra y su bajada («Sana la raíz, eleva tu ser,
- * renace»). Para donde hay aire: la portada y las pantallas de acceso.
+ * El lockup: isotipo más la palabra. Va recortado justo después de KARENGI
+ * porque el original trae su propia bajada, y la bajada de la marca es la del
+ * documento («Mente entrenada · Vida con propósito»): dos frases compitiendo
+ * en la misma pantalla no dicen nada. La del documento va como texto, aparte,
+ * para que además se traduzca.
  */
 export function BrandLogo({ width = 300, className = "" }: { width?: number; className?: string }) {
   return (
     <img
       src="/soykarengi-logo.png"
-      alt="SoyKarengi · Sana la raíz, eleva tu ser, renace"
+      alt="SoyKarengi"
       width={width}
-      height={Math.round((width * 1324) / 900)}
+      height={Math.round((width * 1213) / 900)}
       className={className}
       style={{ width, height: "auto" }}
     />
