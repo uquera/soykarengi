@@ -25,7 +25,7 @@ export default async function MisPedidosPage() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-rose-deep">{t.home.unit02}</p>
+        <p className="eyebrow text-moss-deep">{t.home.unit02}</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
           {t.space.orders.title}
         </h1>
@@ -37,7 +37,7 @@ export default async function MisPedidosPage() {
           title={t.space.orders.emptyTitle}
           lead={t.space.orders.emptyLead}
           action={
-            <ButtonLink href="/mi-espacio/disenos" tone="rose" className="mt-2">
+            <ButtonLink href="/mi-espacio/disenos" tone="moss" className="mt-2">
               {t.space.orders.emptyCta}
             </ButtonLink>
           }
@@ -78,6 +78,12 @@ export default async function MisPedidosPage() {
                   status={o.status}
                   labels={t.status.request}
                   cancelledText={t.status.cancelled}
+                  copy={{
+                    title: t.status.trackerTitle,
+                    step: t.status.trackerStep,
+                    of: t.status.trackerOf,
+                    done: t.status.trackerDone,
+                  }}
                 />
               </div>
 

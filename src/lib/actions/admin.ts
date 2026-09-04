@@ -125,15 +125,20 @@ export async function saveDesignAction(_prev: FormState, formData: FormData): Pr
   const active = formData.get("active") === "on";
   const featured = formData.get("featured") === "on";
 
+  // Las intenciones vienen como casillas; se guardan en una sola columna.
+  // Vacío es una respuesta válida: el diseño hereda el grupo de su categoría.
+  const intents = formData.getAll("intents").map(String).filter(Boolean).join(",") || null;
+
   if (id) {
-    await db.design.update({ where: { id }, data: { ...parsed.data, active, featured } });
+    await db.design.update({ where: { id }, data: { ...parsed.data, active, featured, intents } });
   } else {
     const slug = await uniqueSlug(parsed.data.name, async (s) => !!(await db.design.findUnique({ where: { slug: s } })));
-    await db.design.create({ data: { ...parsed.data, slug, active, featured } });
+    await db.design.create({ data: { ...parsed.data, slug, active, featured, intents } });
   }
 
   revalidatePath("/admin/disenos");
   revalidatePath("/disenos");
+  revalidatePath("/disenos/categoria", "layout");
   redirect("/admin/disenos");
 }
 

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/auth";
 import { dateTime, money } from "@/lib/format";
-import { ORDER_STATUSES } from "@/lib/domain";
+import { ORDER_STATUSES, REQUEST_COLOR } from "@/lib/domain";
 import { getDict, getLocale } from "@/lib/i18n";
 import { designName, serviceView } from "@/lib/content";
 import { ButtonLink, EmptyState } from "@/components/ui";
@@ -13,13 +13,35 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = { title: "Mi espacio" };
 
+/** Color del estado de una cita, en la misma clave que el tracker de pedidos. */
+const APPOINTMENT_COLOR: Record<string, string> = {
+  PENDIENTE: "#D8A129",
+  CONFIRMADA: "#4C9A8A",
+  COMPLETADA: "#494C31",
+  CANCELADA: "#A0938A",
+};
+
+function StateLine({ color, label }: { color: string; label: string }) {
+  return (
+    <span className="flex items-center gap-2 text-sm font-semibold" style={{ color }}>
+      <span aria-hidden="true" className="h-2 w-2 rounded-full" style={{ background: color }} />
+      {label}
+    </span>
+  );
+}
+
 export default async function MiEspacioPage() {
   const [user, locale, t] = await Promise.all([requireUser(), getLocale(), getDict()]);
 
-  const [nextAppointment, openRequests, deliverables, counts] = await Promise.all([
+  const [nextAppointment, lastAppointment, openRequests, deliverables, counts] = await Promise.all([
     db.appointment.findFirst({
       where: { userId: user.id, status: { in: ["PENDIENTE", "CONFIRMADA"] }, startsAt: { gte: new Date() } },
       orderBy: { startsAt: "asc" },
+      include: { service: true },
+    }),
+    db.appointment.findFirst({
+      where: { userId: user.id },
+      orderBy: { startsAt: "desc" },
       include: { service: true },
     }),
     db.designRequest.findMany({
@@ -40,28 +62,60 @@ export default async function MiEspacioPage() {
   const pendingQuote = openRequests.find((r) => r.status === "COTIZADA");
   const nextService = nextAppointment ? serviceView(nextAppointment.service, locale) : null;
 
+  // "Mi proceso" mira el acompañamiento; "Mi diseño" mira la unidad de diseños.
+  const processAppointment = nextAppointment ?? lastAppointment;
+  const currentDesign = openRequests[0];
+
+  const quickAccess = [
+    { href: "/mi-espacio/citas", label: t.space.nav.citas, count: totalCitas },
+    { href: "/mi-espacio/disenos", label: t.space.nav.disenos, count: totalDisenos },
+    { href: "/mi-espacio/pedidos", label: t.space.nav.pedidos, count: totalPedidos },
+    { href: "/mi-espacio/archivos", label: t.space.nav.archivos, count: deliverables },
+  ];
+
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-rose">
+        <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
           {t.space.hi}, {user.name.split(" ")[0]}
-        </p>
-        <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">{t.space.title}</h1>
+        </h1>
         <p className="mt-2 text-ink-soft">{t.space.lead}</p>
       </header>
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        {[
-          [t.space.statAppointments, totalCitas, "/mi-espacio/citas"],
-          [t.space.statRequests, totalDisenos, "/mi-espacio/disenos"],
-          [t.space.statOrders, totalPedidos, "/mi-espacio/pedidos"],
-        ].map(([label, value, href]) => (
-          <Link key={href as string} href={href as string} className="card-soft p-5 hover:border-ink/20">
-            <p className="text-sm text-muted">{label}</p>
-            <p className="mt-2 font-[family-name:var(--font-display)] text-3xl">{value}</p>
-          </Link>
-        ))}
-      </div>
+      {/* PRÓXIMAMENTE — lo primero que alguien quiere saber al entrar */}
+      <section className="card-soft overflow-hidden">
+        <div className="border-b border-line bg-orchid-soft px-6 py-4">
+          <p className="eyebrow text-orchid-deep">{t.space.upcoming}</p>
+        </div>
+
+        {nextAppointment && nextService ? (
+          <div className="flex flex-wrap items-center justify-between gap-5 px-6 py-6">
+            <div className="min-w-0">
+              <p className="font-[family-name:var(--font-display)] text-2xl leading-snug">
+                {nextService.name}
+              </p>
+              <p className="mt-2 text-ink-soft capitalize">{dateTime(nextAppointment.startsAt, locale)}</p>
+              <p className="mt-1 text-sm text-muted">
+                {t.vocab.modalities[nextAppointment.modality] ?? nextAppointment.modality} ·{" "}
+                {t.space.code} {nextAppointment.code}
+              </p>
+            </div>
+            <Link
+              href="/mi-espacio/citas"
+              className="rounded-full border border-line px-5 py-2.5 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:border-ink/40 hover:text-ink"
+            >
+              {t.space.seeAll}
+            </Link>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center justify-between gap-5 px-6 py-6">
+            <p className="text-sm text-ink-soft">{t.space.noAppointments}</p>
+            <ButtonLink href="/acompanamiento/agenda" tone="orchid" className="px-5 py-2.5">
+              {t.space.bookOne}
+            </ButtonLink>
+          </div>
+        )}
+      </section>
 
       {pendingQuote ? (
         <div className="rounded-2xl border border-amber/40 bg-amber/10 p-6">
@@ -79,73 +133,95 @@ export default async function MiEspacioPage() {
         </div>
       ) : null}
 
+      {/* MI PROCESO · MI DISEÑO — una unidad de negocio en cada tarjeta */}
       <section className="grid gap-5 lg:grid-cols-2">
-        <div className="card-soft p-6">
-          <div className="flex items-center justify-between">
-            <p className="eyebrow text-orchid-deep">{t.space.nextAppointment}</p>
-            <Link href="/mi-espacio/citas" className="text-[0.8125rem] text-muted hover:text-ink">
-              {t.space.seeAll}
-            </Link>
-          </div>
-
-          {nextAppointment && nextService ? (
-            <div className="mt-5">
-              <p className="font-[family-name:var(--font-display)] text-2xl leading-snug">
-                {nextService.name}
+        <Link href="/mi-espacio/citas" className="card-soft p-6 transition-colors hover:border-orchid/50">
+          <p className="eyebrow text-orchid-deep">{t.space.myProcess}</p>
+          {processAppointment ? (
+            <>
+              <p className="mt-4 font-[family-name:var(--font-display)] text-xl leading-snug">
+                {serviceView(processAppointment.service, locale).name}
               </p>
-              <p className="mt-2 text-sm text-ink-soft">{dateTime(nextAppointment.startsAt, locale)}</p>
-              <p className="mt-1 text-sm text-muted">
-                {t.vocab.modalities[nextAppointment.modality] ?? nextAppointment.modality} ·{" "}
-                {t.status.appointment[nextAppointment.status]}
-              </p>
-              <p className="mt-4 text-xs text-muted">
-                {t.space.code} {nextAppointment.code}
-              </p>
-            </div>
+              <div className="mt-3">
+                <StateLine
+                  color={APPOINTMENT_COLOR[processAppointment.status] ?? "#857060"}
+                  label={t.status.appointment[processAppointment.status] ?? processAppointment.status}
+                />
+              </div>
+            </>
           ) : (
-            <div className="mt-5">
-              <p className="text-sm text-ink-soft">{t.space.noAppointments}</p>
-              <ButtonLink href="/acompanamiento/agenda" tone="orchid" className="mt-5">
-                {t.space.bookOne}
-              </ButtonLink>
-            </div>
+            <p className="mt-4 text-sm text-muted">{t.space.noProcess}</p>
           )}
-        </div>
+        </Link>
 
-        <div className="card-soft p-6">
+        <Link href="/mi-espacio/disenos" className="card-soft p-6 transition-colors hover:border-moss/60">
+          <p className="eyebrow text-moss-deep">{t.space.myDesign}</p>
+          {currentDesign ? (
+            <>
+              <p className="mt-4 font-[family-name:var(--font-display)] text-xl leading-snug">
+                {designName(
+                  currentDesign.design,
+                  locale,
+                  t.vocab.purposes[currentDesign.purpose] ?? currentDesign.purpose,
+                )}
+              </p>
+              <div className="mt-3">
+                <StateLine
+                  color={REQUEST_COLOR[currentDesign.status] ?? "#857060"}
+                  label={t.status.request[currentDesign.status] ?? currentDesign.status}
+                />
+              </div>
+            </>
+          ) : (
+            <p className="mt-4 text-sm text-muted">{t.space.noDesign}</p>
+          )}
+        </Link>
+      </section>
+
+      {/* ACCESOS RÁPIDOS */}
+      <section>
+        <p className="eyebrow mb-4 text-muted">{t.space.quickAccess}</p>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {quickAccess.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="card-soft flex items-center justify-between gap-3 px-5 py-4 transition-colors hover:border-ink/25"
+            >
+              <span className="text-sm font-semibold">{item.label}</span>
+              <span className="font-[family-name:var(--font-display)] text-2xl tabular-nums text-muted">
+                {item.count}
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      {openRequests.length > 1 ? (
+        <section className="card-soft p-6">
           <div className="flex items-center justify-between">
-            <p className="eyebrow text-rose-deep">{t.space.openDesigns}</p>
+            <p className="eyebrow text-moss-deep">{t.space.openDesigns}</p>
             <Link href="/mi-espacio/disenos" className="text-[0.8125rem] text-muted hover:text-ink">
               {t.space.seeAll}
             </Link>
           </div>
-
-          {openRequests.length > 0 ? (
-            <ul className="mt-5 space-y-3">
-              {openRequests.map((r) => (
-                <li key={r.id} className="rounded-xl border border-line px-4 py-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="truncate font-semibold">
-                        {designName(r.design, locale, t.vocab.purposes[r.purpose] ?? r.purpose)}
-                      </p>
-                      <p className="mt-0.5 truncate text-[0.8125rem] text-muted">{r.recipient}</p>
-                    </div>
-                    <StatusPill status={r.status} labels={t.status.request} />
+          <ul className="mt-5 space-y-3">
+            {openRequests.map((r) => (
+              <li key={r.id} className="rounded-xl border border-line px-4 py-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate font-semibold">
+                      {designName(r.design, locale, t.vocab.purposes[r.purpose] ?? r.purpose)}
+                    </p>
+                    <p className="mt-0.5 truncate text-[0.8125rem] text-muted">{r.recipient}</p>
                   </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="mt-5">
-              <p className="text-sm text-ink-soft">{t.space.noOpenDesigns}</p>
-              <ButtonLink href="/configurador" tone="rose" className="mt-5">
-                {t.space.createDesign}
-              </ButtonLink>
-            </div>
-          )}
-        </div>
-      </section>
+                  <StatusPill status={r.status} labels={t.status.request} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
 
       {deliverables > 0 ? (
         <Link
@@ -172,7 +248,7 @@ export default async function MiEspacioPage() {
               <ButtonLink href="/acompanamiento/agenda" tone="orchid">
                 {t.space.bookOne}
               </ButtonLink>
-              <ButtonLink href="/configurador" tone="rose">
+              <ButtonLink href="/configurador" tone="moss">
                 {t.space.createDesign}
               </ButtonLink>
             </div>

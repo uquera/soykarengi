@@ -69,7 +69,7 @@ export default async function DisenoPage({ params }: Props) {
 
         <div className="lg:pt-12">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge tone="rose">{design.categoryName}</Badge>
+            <Badge tone="moss">{design.categoryName}</Badge>
             {design.featured ? <Badge tone="amber">{t.designs.featured}</Badge> : null}
           </div>
 
@@ -85,12 +85,12 @@ export default async function DisenoPage({ params }: Props) {
           </div>
 
           <div className="card-soft mt-9 p-6">
-            <Eyebrow className="text-rose-deep">{t.designs.customize}</Eyebrow>
+            <Eyebrow className="text-moss-deep">{t.designs.customize}</Eyebrow>
             <ul className="mt-4 flex flex-wrap gap-2">
               {fields.map((f) => (
                 <li
                   key={f}
-                  className="rounded-full border border-rose/25 bg-rose-soft/70 px-3.5 py-1.5 text-[0.8125rem] text-rose-deep"
+                  className="rounded-full border border-moss/45 bg-moss-soft px-3.5 py-1.5 text-[0.8125rem] text-moss-deep"
                 >
                   {f}
                 </li>
@@ -111,7 +111,7 @@ export default async function DisenoPage({ params }: Props) {
             </dl>
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href={`/configurador?diseno=${design.slug}`} tone="rose" className="flex-1">
+              <ButtonLink href={`/configurador?diseno=${design.slug}`} tone="moss" className="flex-1">
                 {t.designs.customizeCta}
               </ButtonLink>
 
@@ -121,7 +121,7 @@ export default async function DisenoPage({ params }: Props) {
                   type="submit"
                   className={`inline-flex items-center justify-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition-colors ${
                     favorite
-                      ? "border-rose bg-rose-soft text-rose-deep"
+                      ? "border-moss-deep bg-moss-soft text-moss-deep"
                       : "border-line bg-white text-ink-soft hover:border-ink/40"
                   }`}
                 >

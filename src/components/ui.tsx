@@ -1,12 +1,13 @@
 import Link from "next/link";
 import type { ComponentProps, ReactNode } from "react";
 
-type Tone = "ink" | "orchid" | "rose" | "ghost";
+type Tone = "ink" | "orchid" | "rose" | "moss" | "ghost";
 
 const TONE: Record<Tone, string> = {
   ink: "bg-ink text-cream hover:bg-ink-soft",
   orchid: "bg-orchid-deep text-cream hover:bg-orchid",
   rose: "bg-rose text-white hover:bg-rose-deep",
+  moss: "bg-moss-deep text-cream hover:bg-moss-deep/85",
   ghost: "border border-line bg-white/70 text-ink hover:border-ink/40 hover:bg-white",
 };
 
@@ -60,12 +61,13 @@ export function Badge({
   tone = "neutral",
 }: {
   children: ReactNode;
-  tone?: "neutral" | "orchid" | "rose" | "amber" | "muted";
+  tone?: "neutral" | "orchid" | "rose" | "moss" | "amber" | "muted";
 }) {
   const tones = {
     neutral: "border-line bg-shell text-ink-soft",
     orchid: "border-orchid/30 bg-orchid-soft text-orchid-deep",
     rose: "border-rose/30 bg-rose-soft text-rose-deep",
+    moss: "border-moss/40 bg-moss-soft text-moss-deep",
     amber: "border-amber/30 bg-amber/10 text-amber-ink",
     muted: "border-line bg-white text-muted",
   };

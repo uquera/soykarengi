@@ -7,6 +7,8 @@ import { timezoneLabel } from "@/lib/timezone";
 import { getDict, getLocale } from "@/lib/i18n";
 import { serviceView } from "@/lib/content";
 import { Eyebrow, ButtonLink } from "@/components/ui";
+import { NeedFinder } from "@/components/need-finder";
+import { money, duration } from "@/lib/format";
 import { BookingForm } from "./booking-form";
 
 export const dynamic = "force-dynamic";
@@ -32,6 +34,19 @@ export default async function AgendaPage({
   const services = servicesRaw.map((s) => serviceView(s, locale));
   const preselected = servicio ? (services.find((s) => s.slug === servicio)?.id ?? "") : "";
 
+  // `specialty` va sin traducir a propósito: es la clave con la que cruza NEEDS.
+  const finderServices = servicesRaw.map((row) => {
+    const s = serviceView(row, locale);
+    return {
+      slug: s.slug,
+      name: s.name,
+      summary: s.summary,
+      specialty: row.specialty,
+      price: money(s.price, locale),
+      duration: duration(s.durationMin, locale),
+    };
+  });
+
   return (
     <div className="shell grid gap-14 py-16 lg:grid-cols-[1fr_20rem] lg:items-start">
       <div className="min-w-0">
@@ -40,6 +55,27 @@ export default async function AgendaPage({
           {t.agenda.title}
         </h1>
         <p className="mt-4 max-w-xl text-lg leading-relaxed text-ink-soft">{t.agenda.lead}</p>
+
+        {/* «Antes de reservar»: si ya sabes qué quieres, sáltalo y baja al paso 1. */}
+        {!servicio ? (
+          <div className="mt-10">
+            <NeedFinder
+              services={finderServices}
+              copy={{
+                eyebrow: t.finder.eyebrow,
+                title: t.finder.title,
+                lead: t.finder.lead,
+                options: t.finder.options,
+                resultEyebrow: t.finder.resultEyebrow,
+                resultLead: t.finder.resultLead,
+                seeSheet: t.finder.seeSheet,
+                book: t.finder.book,
+                again: t.finder.again,
+                note: t.finder.note,
+              }}
+            />
+          </div>
+        ) : null}
 
         <div className="mt-10">
           {session ? (

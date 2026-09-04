@@ -1,33 +1,51 @@
 @import "tailwindcss";
 
 /* ───────────────────────── SoyKarengi · Sistema visual ─────────────────────────
-   Marca paraguas sobre ciruela y crema. Dos unidades con acentos propios:
-   · Acompañamiento → morado, sereno, profesional
-   · Diseños con Propósito → rosa y durazno, cálido, celebratorio             */
+   Arquitectura de marca de dos universos sobre una tinta marrón común.
+
+   · Marca transversal        marrón #38261A  ·  beige #D0B69E  ·  crema #EEE1D5
+   · Acompañamiento           ciruela malva #6B4A68 (estructura)
+                              rosa vieja #C0526B (acción)
+                              malva claro #A985A3 (apoyo)
+   · Diseños con Propósito    verde oliva #494C31 (principal)
+                              verde salvia #8BB08E (secundario)
+
+   Los nombres de token se mantienen (orchid = ciruela, rose = rosa vieja) para
+   no reescribir media plataforma; lo que cambió son los valores.            */
 
 @theme {
-  /* Tinta y fondos: la marca vive sobre ciruela oscura y crema cálido. */
-  --color-ink: #2B1730;
-  --color-ink-soft: #574063;
-  --color-muted: #8C7A96;
-  --color-cream: #FDF7F2;
-  --color-shell: #F6EEF7;
-  --color-line: #E8DCEA;
+  /* Tinta y fondos: marrón sobre un crema rosado. */
+  --color-ink: #38261A;
+  --color-ink-soft: #5B4636;
+  --color-muted: #857060;
+  --color-cream: #F8F3F5;
+  --color-shell: #EEE1D5;
+  --color-line: #E4D6C9;
 
-  /* Unidad 01 · Acompañamiento — familia morada */
-  --color-orchid: #8257A0;
-  --color-orchid-deep: #4A1E55;
-  --color-orchid-soft: #F4EBF9;
+  /* Beige de marca: el puente entre las dos unidades. */
+  --color-sand: #D0B69E;
+  --color-sand-deep: #A88B6E;
 
-  /* Unidad 02 · Diseños con Propósito — familia rosa */
-  --color-rose: #C9506B;
-  --color-rose-deep: #9E3350;
-  --color-rose-soft: #FCEBEE;
+  /* Unidad 01 · Acompañamiento — ciruela malva + rosa vieja */
+  --color-orchid: #8A6787;
+  --color-orchid-deep: #6B4A68;
+  --color-orchid-soft: #F2EAF1;
+  --color-mauve: #A985A3;
+
+  /* Rosa vieja: color de acción de la marca (botones, CTA, links, estados). */
+  --color-rose: #C0526B;
+  --color-rose-deep: #9C3B52;
+  --color-rose-soft: #FAEBEE;
+
+  /* Unidad 02 · Diseños con Propósito — universo verde */
+  --color-moss: #8BB08E;
+  --color-moss-deep: #494C31;
+  --color-moss-soft: #EDF3ED;
 
   /* Lavado cálido de apoyo y color de estados */
-  --color-peach: #FDF1E8;
-  --color-amber: #C08A2E;
-  --color-amber-ink: #8A6420;
+  --color-peach: #F7EFE6;
+  --color-amber: #B4823C;
+  --color-amber-ink: #7B5622;
 
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
@@ -49,8 +67,8 @@ body {
 }
 
 ::selection {
-  background: var(--color-orchid-soft);
-  color: var(--color-orchid-deep);
+  background: var(--color-shell);
+  color: var(--color-ink);
 }
 
 /* Utilidades de composición reutilizadas en toda la plataforma */
@@ -72,7 +90,7 @@ body {
   border-radius: 1.25rem;
   border: 1px solid var(--color-line);
   background: white;
-  box-shadow: 0 1px 2px rgb(43 23 48 / 0.04), 0 12px 32px -24px rgb(43 23 48 / 0.30);
+  box-shadow: 0 1px 2px rgb(56 38 26 / 0.05), 0 12px 32px -24px rgb(56 38 26 / 0.28);
 }
 
 /* Grano sutil para que el crema no se vea plano */
@@ -82,7 +100,7 @@ body {
   inset: 0;
   pointer-events: none;
   opacity: 0.35;
-  background-image: radial-gradient(circle at 1px 1px, rgb(43 23 48 / 0.07) 1px, transparent 0);
+  background-image: radial-gradient(circle at 1px 1px, rgb(56 38 26 / 0.07) 1px, transparent 0);
   background-size: 22px 22px;
 }
 
@@ -105,9 +123,9 @@ body {
   --fc-border-color: var(--color-line);
   --fc-page-bg-color: white;
   --fc-neutral-bg-color: var(--color-shell);
-  --fc-today-bg-color: color-mix(in srgb, var(--color-orchid-soft) 60%, white);
+  --fc-today-bg-color: color-mix(in srgb, var(--color-orchid-soft) 70%, white);
   --fc-now-indicator-color: var(--color-rose);
-  --fc-business-hours-bg-color: color-mix(in srgb, var(--color-orchid-soft) 45%, white);
+  --fc-business-hours-bg-color: color-mix(in srgb, var(--color-orchid-soft) 55%, white);
   font-family: var(--font-sans);
 }
 

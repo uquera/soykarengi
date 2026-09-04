@@ -18,7 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   return (
     <div className="shell grid gap-10 py-10 lg:grid-cols-[15rem_1fr] lg:items-start">
       <aside className="lg:sticky lg:top-24">
-        <p className="eyebrow mb-5 px-3 text-ink">Panel · Karen Ramos</p>
+        <p className="eyebrow mb-5 px-3 text-ink">Panel · SoyKarengi</p>
         <PanelNav
           groups={[
             { items: [{ href: "/admin", label: "Dashboard" }] },
@@ -35,7 +35,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 { href: "/admin/categorias", label: "Categorías" },
                 { href: "/admin/disenos", label: "Diseños" },
                 { href: "/admin/solicitudes", label: "Solicitudes", badge: solicitudes },
-                { href: "/admin/pedidos", label: "Pedidos", badge: pedidos },
+                { href: "/admin/pedidos", label: "Pedidos y pagos", badge: pedidos },
               ],
             },
             {
@@ -45,7 +45,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 { href: "/admin/contenido", label: "Contenido" },
                 { href: "/admin/mensajes", label: "Mensajes", badge: mensajes },
                 { href: "/admin/finanzas", label: "Finanzas" },
-                { href: "/admin/estadisticas", label: "Estadísticas" },
+                { href: "/admin/estadisticas", label: "Reportes" },
               ],
             },
           ]}

@@ -149,6 +149,7 @@ const FIELDS_EN = "Name,Date,Quote,Photograph,Colors,Format";
 const DESIGNS = [
   {
     slug: "un-recuerdo-que-permanece",
+    intents: "homenajear,compartir",
     name: "Un recuerdo que permanece",
     nameEn: "A keepsake that stays",
     category: "homenajes",
@@ -167,6 +168,7 @@ const DESIGNS = [
   },
   {
     slug: "la-primera-vuelta-al-sol",
+    intents: "celebrar,compartir",
     name: "La primera vuelta al sol",
     nameEn: "The first trip around the sun",
     category: "cumpleanos",
@@ -185,6 +187,7 @@ const DESIGNS = [
   },
   {
     slug: "lo-que-nos-dijimos",
+    intents: "celebrar,compartir",
     name: "Lo que nos dijimos",
     nameEn: "What we said to each other",
     category: "matrimonios",
@@ -203,6 +206,7 @@ const DESIGNS = [
   },
   {
     slug: "gracias-por-tanto",
+    intents: "regalar,homenajear",
     name: "Gracias por tanto",
     nameEn: "Thank you for all of it",
     category: "mensajes-especiales",
@@ -220,6 +224,7 @@ const DESIGNS = [
   },
   {
     slug: "el-dia-que-llegaste",
+    intents: "celebrar,regalar",
     name: "El día que llegaste",
     nameEn: "The day you arrived",
     category: "baby-shower",
@@ -237,6 +242,7 @@ const DESIGNS = [
   },
   {
     slug: "una-frase-para-los-dias-dificiles",
+    intents: "inspirar,regalar",
     name: "Una frase para los días difíciles",
     nameEn: "A phrase for the hard days",
     category: "frases",
@@ -254,6 +260,7 @@ const DESIGNS = [
   },
   {
     slug: "invitacion-que-cuenta-algo",
+    intents: "celebrar,compartir",
     name: "Una invitación que cuenta algo",
     nameEn: "An invitation that tells something",
     category: "invitaciones",
@@ -271,6 +278,7 @@ const DESIGNS = [
   },
   {
     slug: "el-cierre-de-una-etapa",
+    intents: "celebrar,homenajear",
     name: "El cierre de una etapa",
     nameEn: "The close of a chapter",
     category: "graduaciones",
@@ -288,6 +296,7 @@ const DESIGNS = [
   },
   {
     slug: "soy-mi-proyecto-mas-importante",
+    intents: "inspirar,regalar",
     name: "Soy mi proyecto más importante",
     nameEn: "I am my most important project",
     category: "prendas-con-mensaje",
@@ -307,6 +316,7 @@ const DESIGNS = [
   },
   {
     slug: "renacer-venezuela",
+    intents: "inspirar,homenajear",
     name: "Renacer · Venezuela",
     nameEn: "Renacer · Venezuela",
     category: "mensajes-especiales",
@@ -326,6 +336,7 @@ const DESIGNS = [
   },
   {
     slug: "un-ano-mas-contigo",
+    intents: "celebrar,regalar,compartir",
     name: "Un año más contigo",
     nameEn: "One more year with you",
     category: "fechas-importantes",

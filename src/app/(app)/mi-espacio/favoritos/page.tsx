@@ -24,7 +24,7 @@ export default async function MisFavoritosPage() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-rose-deep">{t.space.favorites.eyebrow}</p>
+        <p className="eyebrow text-moss-deep">{t.space.favorites.eyebrow}</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
           {t.space.favorites.title}
         </h1>
@@ -36,7 +36,7 @@ export default async function MisFavoritosPage() {
           title={t.space.favorites.emptyTitle}
           lead={t.space.favorites.emptyLead}
           action={
-            <ButtonLink href="/disenos" tone="rose" className="mt-2">
+            <ButtonLink href="/disenos" tone="moss" className="mt-2">
               {t.space.favorites.emptyCta}
             </ButtonLink>
           }
@@ -61,7 +61,7 @@ export default async function MisFavoritosPage() {
                   <div className="mt-4 flex gap-2">
                     <ButtonLink
                       href={`/configurador?diseno=${d.slug}`}
-                      tone="rose"
+                      tone="moss"
                       className="flex-1 px-4 py-2 text-[0.8125rem]"
                     >
                       {t.space.favorites.customize}

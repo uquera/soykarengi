@@ -1,12 +1,13 @@
 /** Diccionario de origen. Todo texto de interfaz vive aquí. */
 export const es = {
   brand: {
-    name: "Karen Ramos",
-    tagline: "Acompañamiento · Creación · Propósito",
+    name: "SoyKarengi",
+    tagline: "Mente entrenada · Vida con propósito",
     quote: "Porque hay momentos que necesitan ser acompañados… y otros que merecen ser recordados.",
   },
 
   nav: {
+    inicio: "Inicio",
     acompanamiento: "Acompañamiento",
     disenos: "Diseños con Propósito",
     configurador: "Crear a medida",
@@ -38,15 +39,15 @@ export const es = {
   },
 
   home: {
-    eyebrow: "SoyKarengi · Una experiencia digital con propósito",
-    titleA: "Un espacio para",
-    titleB: "acompañarte",
-    titleC: "y",
-    titleD: "crear momentos",
-    titleE: "con propósito.",
-    lead: "Dos formas de trabajar juntas: el acompañamiento profesional que sostiene tus procesos, y los diseños que convierten tus historias en algo que se puede guardar.",
+    eyebrow: "Karen Ramos · Psicóloga, life coach y mentora",
+    titleA: "Mente entrenada.",
+    titleB: "Vida con propósito.",
+    leadA: "Acompañamiento para transformar lo que estás viviendo.",
+    leadB: "Diseños para convertir lo que sientes en algo que permanece.",
+    railA: "Sesiones · Mentoría · Coaching",
+    railB: "Diseños · Regalos · Eventos · Homenajes",
     ctaUnit1: "Quiero acompañamiento",
-    ctaUnit2: "Quiero crear algo especial",
+    ctaUnit2: "Quiero crear",
     archEyebrow: "La arquitectura",
     archTitle: "Una marca, dos propuestas.",
     unit01: "Unidad 01",
@@ -239,6 +240,28 @@ export const es = {
     emptyTitle: "Todavía no hay piezas en esta categoría",
     emptyLead: "Puedes contarnos tu idea directamente y la creamos desde cero.",
     emptyCta: "Ir al configurador",
+    lookingFor: "¿Qué estás buscando?",
+    lookingForLead: "Filtra por lo que quieres lograr, no por el tipo de pieza.",
+    intents: {
+      celebrar: "Celebrar",
+      regalar: "Regalar",
+      homenajear: "Homenajear",
+      inspirar: "Inspirar",
+      compartir: "Compartir un momento",
+      crear: "Crear algo único",
+    } as Record<string, string>,
+    clearIntent: "Quitar filtro",
+    noIntentTitle: "No hay piezas para esa intención todavía",
+    noIntentLead: "Puedes contarnos qué tienes en mente y la creamos desde cero.",
+    customEyebrow: "Tu idea. Tu historia. Tu diseño.",
+    customTitle: "¿No encuentras lo que buscas?",
+    customLead: "Cuéntanos qué tienes en mente. Puedes enviarnos:",
+    customItems: ["Fotografías", "Textos", "Referencias", "Fecha del evento", "Una idea"],
+    customNote: "Nosotros hacemos el resto.",
+    customCta: "Quiero crear algo único",
+    inCategory: "en esta categoría",
+    piece: "pieza",
+    pieces: "piezas",
     expEyebrow: "Experiencias de creación",
     expTitle: "¿No encuentras la pieza exacta? Entonces todavía no existe.",
     expLead:
@@ -361,6 +384,10 @@ export const es = {
     emptyTitle: "Todavía no hay recursos publicados",
     emptyLead: "Karen está preparando los primeros materiales.",
     fallbackTag: "Recurso",
+    hubResources: "Recursos descargables",
+    hubBlog: "Del blog",
+    hubBlogLead: "Textos sobre lo que aparece en consulta y sobre lo que aparece cuando alguien decide crear algo que permanezca.",
+    allPosts: "Ver todo el blog →",
   },
 
   contact: {
@@ -435,6 +462,12 @@ export const es = {
     statOrders: "Pedidos en curso",
     quoteWaiting: "Tienes una cotización esperando",
     reviewQuote: "Revisar cotización",
+    upcoming: "Próximamente",
+    myProcess: "Mi proceso",
+    myDesign: "Mi diseño",
+    noProcess: "Sin proceso abierto",
+    noDesign: "Sin diseño en curso",
+    quickAccess: "Accesos rápidos",
     nextAppointment: "Tu próxima cita",
     seeAll: "Ver todas →",
     noAppointments: "No tienes sesiones agendadas.",
@@ -561,6 +594,10 @@ export const es = {
       CANCELADA: "Cancelada",
     } as Record<string, string>,
     cancelled: "Esta solicitud fue cancelada.",
+    trackerTitle: "Seguimiento del pedido",
+    trackerStep: "Paso",
+    trackerOf: "de",
+    trackerDone: "listo",
   },
 
   vocab: {
@@ -583,6 +620,67 @@ export const es = {
     } as Record<string, string>,
     formats: { Digital: "Digital", Impresa: "Impresa", Ambas: "Ambas" } as Record<string, string>,
     modalities: { Online: "Online", Presencial: "Presencial", Ambas: "Ambas" } as Record<string, string>,
+  },
+
+  finder: {
+    eyebrow: "Antes de reservar",
+    title: "¿Qué estás buscando?",
+    lead: "Elige lo que más se parezca a tu momento y te digo por dónde empezaría yo.",
+    options: {
+      mejor: "Necesito sentirme mejor",
+      claridad: "Necesito claridad",
+      proyecto: "Quiero avanzar en un proyecto",
+      cambio: "Estoy atravesando un cambio",
+      acompanamiento: "Necesito acompañamiento",
+      insegura: "No estoy segura",
+    } as Record<string, string>,
+    resultEyebrow: "Mi sugerencia",
+    resultLead: "Por lo que nos cuentas, podría interesarte",
+    seeSheet: "Ver la ficha completa",
+    book: "Agendar",
+    again: "Elegir otra respuesta",
+    note: "Es una sugerencia, no un diagnóstico. En la primera sesión lo afinamos juntas.",
+  },
+
+  specialty: {
+    back: "← Acompañamiento",
+    otherAreas: "Otras formas de trabajar",
+    noServices: "Todavía no hay servicios publicados en esta área.",
+    bookHere: "Agendar en esta área",
+    pages: {
+      psicologia: {
+        title: "Psicóloga online en español",
+        lead: "Sesiones de psicología online, en español, para personas que están atravesando un proceso emocional y necesitan un espacio seguro donde poder decir la verdad.",
+        body: [
+          "Soy psicóloga titulada en Venezuela y atiendo desde Estados Unidos. Trabajo con ansiedad, duelo, autoestima, culpa y los procesos que aparecen cuando la vida cambia de forma.",
+          "Las sesiones son online, de una hora, y cada reserva incluye un formulario previo para que la primera hora no se vaya en ponernos al día.",
+        ],
+      },
+      "life-coaching": {
+        title: "Life coach en español",
+        lead: "Life Coaching en español para quien ya sabe que algo tiene que cambiar y necesita convertir esa certeza en decisiones y en hábitos.",
+        body: [
+          "El coaching no reemplaza a la psicología: trabaja en otra capa. Aquí el foco está en las metas, en la claridad y en el paso siguiente.",
+          "Cada proceso parte de un mapa de dónde estás hoy y termina con acuerdos concretos que puedes sostener entre sesión y sesión.",
+        ],
+      },
+      mentoria: {
+        title: "Mentoría para mujeres",
+        lead: "Mentoría para mujeres y emprendedoras que están construyendo algo y necesitan una mirada externa honesta.",
+        body: [
+          "La mentoría es para la mujer que ya está en movimiento: tiene un proyecto, un negocio o una decisión de carrera sobre la mesa y no quiere tomarla sola.",
+          "Trabajamos sobre lo que ya existe, no sobre teoría: tu proyecto, tus tiempos y lo que estás dispuesta a sostener.",
+        ],
+      },
+      orientacion: {
+        title: "Primera conversación de orientación",
+        lead: "Una sesión corta para ordenar el mapa antes de decidir el camino. Si no sabes qué necesitas, empieza aquí.",
+        body: [
+          "En una conversación de orientación revisamos qué te está pasando y qué formato te conviene: psicología, coaching o mentoría.",
+          "Sales de ella con una recomendación clara y sin compromiso de continuar.",
+        ],
+      },
+    } as Record<string, { title: string; lead: string; body: string[] }>,
   },
 
   common: {

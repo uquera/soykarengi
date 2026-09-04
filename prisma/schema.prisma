@@ -129,6 +129,10 @@ model Design {
   /// Foto real de la pieza. Si falta, la vitrina dibuja una portada generada.
   image String?
 
+  /// Intenciones a las que responde, separadas por coma: celebrar,regalar,
+  /// homenajear,inspirar,compartir. Vacío = se deduce del grupo de la categoría.
+  intents String?
+
   nameEn         String?
   taglineEn      String?
   descriptionEn  String?

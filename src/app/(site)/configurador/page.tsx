@@ -37,7 +37,7 @@ export default async function ConfiguradorPage({
   return (
     <div className="shell grid gap-14 py-16 lg:grid-cols-[1fr_19rem] lg:items-start">
       <div className="min-w-0">
-        <Eyebrow className="text-rose-deep">{t.configurator.eyebrow}</Eyebrow>
+        <Eyebrow className="text-moss-deep">{t.configurator.eyebrow}</Eyebrow>
         <h1 className="mt-4 max-w-2xl font-[family-name:var(--font-display)] text-4xl leading-[1.08] text-balance sm:text-5xl">
           {t.configurator.title}
         </h1>
@@ -108,7 +108,7 @@ export default async function ConfiguradorPage({
                 {t.configurator.gateLead}
               </p>
               <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
-                <ButtonLink href="/registro?next=/configurador" tone="rose">
+                <ButtonLink href="/registro?next=/configurador" tone="moss">
                   {t.configurator.gateCreate}
                 </ButtonLink>
                 <ButtonLink href="/ingresar?next=/configurador" tone="ghost">
@@ -126,7 +126,7 @@ export default async function ConfiguradorPage({
           <ol className="mt-4 space-y-3 text-sm leading-relaxed text-ink-soft">
             {t.configurator.afterSteps.map((s, i) => (
               <li key={s} className="flex gap-3">
-                <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-rose-soft text-[0.625rem] font-semibold text-rose-deep">
+                <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-moss-soft text-[0.625rem] font-semibold text-moss-deep">
                   {i + 1}
                 </span>
                 {s}

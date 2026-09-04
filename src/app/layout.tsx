@@ -16,20 +16,44 @@ const manrope = Manrope({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://karengi.srv1485601.hstgr.cloud";
+
 const META = {
   es: {
-    title: "Karen Ramos · Acompañamiento, Creación y Propósito",
+    title: "SoyKarengi · Mente entrenada, vida con propósito",
     description:
-      "Un espacio para acompañarte y crear momentos con propósito. Psicología, Life Coaching y mentoría junto a Diseños con Propósito para eventos, regalos y celebraciones.",
+      "Acompañamiento para transformar lo que estás viviendo y diseños para convertir lo que sientes en algo que permanece. Psicología, Life Coaching y mentoría en español, junto a Diseños con Propósito para eventos, regalos y homenajes.",
     og: "Porque hay momentos que necesitan ser acompañados… y otros que merecen ser recordados.",
-    keywords: ["psicología", "life coach", "mentoría", "diseños personalizados", "SoyKarengi", "Karen Ramos"],
+    keywords: [
+      "psicóloga online en español",
+      "life coach en español",
+      "mentoría para mujeres",
+      "diseños personalizados",
+      "regalos personalizados",
+      "diseños para homenajes",
+      "invitaciones personalizadas",
+      "diseños para eventos",
+      "SoyKarengi",
+      "Karen Ramos",
+    ],
   },
   en: {
-    title: "Karen Ramos · Support, Creation and Purpose",
+    title: "SoyKarengi · Trained mind, life with purpose",
     description:
-      "A space to walk with you and to create moments with purpose. Psychology, Life Coaching and mentoring alongside Designs with Purpose for events, gifts and celebrations.",
+      "Support to transform what you are going through, and designs to turn what you feel into something that lasts. Psychology, Life Coaching and mentoring in Spanish, alongside Designs with Purpose for events, gifts and tributes.",
     og: "Because some moments need company… and others deserve to be remembered.",
-    keywords: ["psychologist", "life coach", "mentoring", "custom designs", "SoyKarengi", "Karen Ramos"],
+    keywords: [
+      "online psychologist in Spanish",
+      "life coach in Spanish",
+      "mentoring for women",
+      "custom designs",
+      "personalized gifts",
+      "tribute designs",
+      "custom invitations",
+      "event designs",
+      "SoyKarengi",
+      "Karen Ramos",
+    ],
   },
 } as const;
 
@@ -38,15 +62,21 @@ export async function generateMetadata(): Promise<Metadata> {
   const m = META[locale];
 
   return {
-    title: { default: m.title, template: "%s · Karen Ramos" },
+    metadataBase: new URL(SITE_URL),
+    title: { default: m.title, template: "%s · SoyKarengi" },
     description: m.description,
     keywords: [...m.keywords],
+    alternates: { canonical: "/" },
     openGraph: {
       title: m.title,
       description: m.og,
+      siteName: "SoyKarengi",
       type: "website",
       locale: locale === "en" ? "en_US" : "es_US",
+      images: [{ url: "/karen-retrato.png", width: 440, height: 440, alt: "Karen Ramos · SoyKarengi" }],
     },
+    twitter: { card: "summary_large_image", title: m.title, description: m.og },
+    icons: { icon: "/karen-logo.png", apple: "/karen-logo.png" },
   };
 }
 

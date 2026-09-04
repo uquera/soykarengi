@@ -21,7 +21,7 @@ export default async function AdminCategoriasPage() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-rose-deep">Unidad Diseños</p>
+        <p className="eyebrow text-moss-deep">Unidad Diseños</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">Categorías</h1>
         <p className="mt-2 text-ink-soft">
           Los tres grupos de la vitrina: Eventos, Personal y Con propósito.

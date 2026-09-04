@@ -3,12 +3,13 @@ import type { es } from "./es";
 /** English mirror of the Spanish source dictionary. */
 export const en: typeof es = {
   brand: {
-    name: "Karen Ramos",
-    tagline: "Support · Creation · Purpose",
+    name: "SoyKarengi",
+    tagline: "Trained mind · Life with purpose",
     quote: "Because some moments need company… and others deserve to be remembered.",
   },
 
   nav: {
+    inicio: "Home",
     acompanamiento: "Support",
     disenos: "Designs with Purpose",
     configurador: "Custom design",
@@ -40,15 +41,15 @@ export const en: typeof es = {
   },
 
   home: {
-    eyebrow: "SoyKarengi · A digital experience with purpose",
-    titleA: "A space to",
-    titleB: "walk with you",
-    titleC: "and to",
-    titleD: "create moments",
-    titleE: "with purpose.",
-    lead: "Two ways of working together: the professional support that holds your process, and the designs that turn your stories into something you can keep.",
+    eyebrow: "Karen Ramos · Psychologist, life coach and mentor",
+    titleA: "Trained mind.",
+    titleB: "Life with purpose.",
+    leadA: "Support to transform what you are going through.",
+    leadB: "Designs to turn what you feel into something that lasts.",
+    railA: "Sessions · Mentoring · Coaching",
+    railB: "Designs · Gifts · Events · Tributes",
     ctaUnit1: "I want support",
-    ctaUnit2: "I want to create something",
+    ctaUnit2: "I want to create",
     archEyebrow: "The architecture",
     archTitle: "One brand, two offerings.",
     unit01: "Unit 01",
@@ -241,6 +242,28 @@ export const en: typeof es = {
     emptyTitle: "No pieces in this category yet",
     emptyLead: "You can tell us your idea directly and we'll create it from scratch.",
     emptyCta: "Go to the design builder",
+    lookingFor: "What are you looking for?",
+    lookingForLead: "Filter by what you want to achieve, not by the type of piece.",
+    intents: {
+      celebrar: "Celebrate",
+      regalar: "Give a gift",
+      homenajear: "Honor someone",
+      inspirar: "Inspire",
+      compartir: "Share a moment",
+      crear: "Create something unique",
+    } as Record<string, string>,
+    clearIntent: "Clear filter",
+    noIntentTitle: "No pieces for that intention yet",
+    noIntentLead: "Tell us what you have in mind and we'll create it from scratch.",
+    customEyebrow: "Your idea. Your story. Your design.",
+    customTitle: "Can't find what you're looking for?",
+    customLead: "Tell us what you have in mind. You can send us:",
+    customItems: ["Photographs", "Text", "References", "Event date", "An idea"],
+    customNote: "We'll take it from there.",
+    customCta: "I want to create something unique",
+    inCategory: "in this category",
+    piece: "piece",
+    pieces: "pieces",
     expEyebrow: "Creation experiences",
     expTitle: "Can't find the exact piece? Then it doesn't exist yet.",
     expLead:
@@ -363,6 +386,10 @@ export const en: typeof es = {
     emptyTitle: "No resources published yet",
     emptyLead: "Karen is preparing the first materials.",
     fallbackTag: "Resource",
+    hubResources: "Downloadable resources",
+    hubBlog: "From the blog",
+    hubBlogLead: "Writing about what shows up in session, and about what shows up when someone decides to create something that lasts.",
+    allPosts: "See the whole blog →",
   },
 
   contact: {
@@ -437,6 +464,12 @@ export const en: typeof es = {
     statOrders: "Orders in progress",
     quoteWaiting: "You have a quote waiting",
     reviewQuote: "Review quote",
+    upcoming: "Coming up",
+    myProcess: "My process",
+    myDesign: "My design",
+    noProcess: "No open process",
+    noDesign: "No design in progress",
+    quickAccess: "Quick access",
     nextAppointment: "Your next appointment",
     seeAll: "See all →",
     noAppointments: "You have no sessions booked.",
@@ -562,6 +595,10 @@ export const en: typeof es = {
       CANCELADA: "Cancelled",
     },
     cancelled: "This request was cancelled.",
+    trackerTitle: "Order tracking",
+    trackerStep: "Step",
+    trackerOf: "of",
+    trackerDone: "done",
   },
 
   vocab: {
@@ -584,6 +621,67 @@ export const en: typeof es = {
     },
     formats: { Digital: "Digital", Impresa: "Printed", Ambas: "Both" },
     modalities: { Online: "Online", Presencial: "In person", Ambas: "Both" },
+  },
+
+  finder: {
+    eyebrow: "Before you book",
+    title: "What are you looking for?",
+    lead: "Pick whatever sounds closest to your moment and I'll tell you where I'd start.",
+    options: {
+      mejor: "I need to feel better",
+      claridad: "I need clarity",
+      proyecto: "I want to move a project forward",
+      cambio: "I'm going through a change",
+      acompanamiento: "I need someone alongside me",
+      insegura: "I'm not sure",
+    } as Record<string, string>,
+    resultEyebrow: "My suggestion",
+    resultLead: "From what you tell us, this could be a fit",
+    seeSheet: "See the full sheet",
+    book: "Book",
+    again: "Pick another answer",
+    note: "This is a suggestion, not a diagnosis. We'll fine-tune it together in the first session.",
+  },
+
+  specialty: {
+    back: "← Support",
+    otherAreas: "Other ways of working",
+    noServices: "No services published in this area yet.",
+    bookHere: "Book in this area",
+    pages: {
+      psicologia: {
+        title: "Online psychologist in Spanish",
+        lead: "Online psychology sessions, in Spanish, for people going through an emotional process who need a safe place to tell the truth.",
+        body: [
+          "I'm a psychologist licensed in Venezuela, working from the United States. I work with anxiety, grief, self-worth, guilt, and the processes that show up when life changes shape.",
+          "Sessions are online, one hour long, and every booking includes a short form beforehand so the first hour isn't spent catching up.",
+        ],
+      },
+      "life-coaching": {
+        title: "Life coach in Spanish",
+        lead: "Life Coaching in Spanish for someone who already knows something has to change and needs to turn that certainty into decisions and habits.",
+        body: [
+          "Coaching doesn't replace psychology: it works on a different layer. Here the focus is on goals, on clarity and on the next step.",
+          "Every process starts with a map of where you are today and ends with concrete agreements you can hold between sessions.",
+        ],
+      },
+      mentoria: {
+        title: "Mentoring for women",
+        lead: "Mentoring for women and founders who are building something and need an honest outside view.",
+        body: [
+          "Mentoring is for the woman already in motion: she has a project, a business or a career decision on the table and doesn't want to make it alone.",
+          "We work on what already exists, not on theory: your project, your timing, and what you're willing to sustain.",
+        ],
+      },
+      orientacion: {
+        title: "First orientation conversation",
+        lead: "A short session to map things out before choosing a path. If you don't know what you need, start here.",
+        body: [
+          "In an orientation conversation we look at what's happening and which format fits: psychology, coaching or mentoring.",
+          "You leave with a clear recommendation and no obligation to continue.",
+        ],
+      },
+    } as Record<string, { title: string; lead: string; body: string[] }>,
   },
 
   common: {

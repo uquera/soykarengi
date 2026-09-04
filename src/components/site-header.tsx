@@ -10,6 +10,7 @@ export type HeaderCopy = {
   brand: string;
   tagline: string;
   nav: {
+    inicio: string;
     acompanamiento: string;
     disenos: string;
     configurador: string;
@@ -38,13 +39,14 @@ export function SiteHeader({
 
   useEffect(() => setOpen(false), [pathname]);
 
+  /* Cinco entradas y ni una más: el menú largo obligaba a elegir antes de
+     entender. Configurador, blog y contacto viven dentro de su sección. */
   const nav = [
+    { href: "/", label: copy.nav.inicio },
     { href: "/acompanamiento", label: copy.nav.acompanamiento },
     { href: "/disenos", label: copy.nav.disenos },
-    { href: "/configurador", label: copy.nav.configurador },
     { href: "/recursos", label: copy.nav.recursos },
-    { href: "/blog", label: copy.nav.blog },
-    { href: "/contacto", label: copy.nav.contacto },
+    { href: "/mi-espacio", label: copy.nav.miEspacio },
   ];
 
   return (
@@ -54,7 +56,8 @@ export function SiteHeader({
 
         <nav className="hidden items-center gap-1 lg:flex">
           {nav.map((item) => {
-            const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
+            const active =
+              item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}
@@ -82,11 +85,13 @@ export function SiteHeader({
                   {copy.nav.panel}
                 </Link>
               ) : null}
+              {/* Con sesión abierta el botón dice el nombre: "Mi espacio" ya está
+                  en el menú y repetirlo dos veces no aporta nada. */}
               <Link
                 href="/mi-espacio"
                 className="rounded-full bg-ink px-4 py-2 text-[0.8125rem] font-semibold text-cream transition-colors hover:bg-ink-soft"
               >
-                {copy.nav.miEspacio}
+                {session.name.split(" ")[0]}
               </Link>
             </>
           ) : (

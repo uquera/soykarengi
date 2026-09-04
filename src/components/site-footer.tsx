@@ -5,13 +5,17 @@ import { BrandMark } from "@/components/brand";
 export async function SiteFooter() {
   const t = await getDict();
 
+  /* El menú se redujo a cinco entradas; el pie recoge lo que salió de arriba,
+     incluidas las páginas por especialidad y por categoría que existen por SEO. */
   const columns = [
     {
       title: t.footer.colAcompanamiento,
       links: [
         { href: "/acompanamiento", label: t.footer.sobreKaren },
+        { href: "/acompanamiento/psicologia", label: t.specialty.pages.psicologia.title },
+        { href: "/acompanamiento/life-coaching", label: t.specialty.pages["life-coaching"].title },
+        { href: "/acompanamiento/mentoria", label: t.specialty.pages.mentoria.title },
         { href: "/acompanamiento/servicios", label: t.footer.servicios },
-        { href: "/acompanamiento/especialidades", label: t.footer.especialidades },
         { href: "/acompanamiento/agenda", label: t.footer.agendar },
       ],
     },
@@ -19,8 +23,9 @@ export async function SiteFooter() {
       title: t.footer.colDisenos,
       links: [
         { href: "/disenos", label: t.footer.vitrina },
-        { href: "/disenos?grupo=EVENTOS", label: t.footer.eventos },
-        { href: "/disenos?grupo=PERSONAL", label: t.footer.personal },
+        { href: "/disenos/categoria/regalos-personalizados", label: t.designs.intents.regalar },
+        { href: "/disenos/categoria/invitaciones", label: t.footer.eventos },
+        { href: "/disenos/categoria/homenajes", label: t.designs.intents.homenajear },
         { href: "/configurador", label: t.footer.configurador },
       ],
     },
@@ -28,9 +33,10 @@ export async function SiteFooter() {
       title: t.footer.colPlataforma,
       links: [
         { href: "/mi-espacio", label: t.space.label },
-        { href: "/blog", label: t.nav.blog },
         { href: "/recursos", label: t.nav.recursos },
+        { href: "/blog", label: t.nav.blog },
         { href: "/contacto", label: t.nav.contacto },
+        { href: "/ingresar", label: t.nav.ingresar },
       ],
     },
   ];
@@ -66,7 +72,7 @@ export async function SiteFooter() {
       <div className="border-t border-line">
         <div className="shell flex flex-col gap-2 py-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {new Date().getFullYear()} {t.brand.name} · SoyKarengi. {t.footer.rights}
+            © {new Date().getFullYear()} {t.brand.name} · Karen Ramos. {t.footer.rights}
           </p>
           <p>
             {t.footer.builtBy} <span className="font-semibold text-ink-soft">HYPNOS</span> ·

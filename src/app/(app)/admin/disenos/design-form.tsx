@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { saveDesignAction } from "@/lib/actions/admin";
-import { PALETTES } from "@/lib/domain";
+import { PALETTES, INTENTS } from "@/lib/domain";
 import { Field, inputClass } from "@/components/ui";
 
 type Design = {
@@ -20,6 +20,7 @@ type Design = {
   active: boolean;
   featured: boolean;
   image: string | null;
+  intents: string | null;
   nameEn: string | null;
   taglineEn: string | null;
   descriptionEn: string | null;
@@ -120,6 +121,31 @@ export function DesignForm({
               className={inputClass}
               placeholder="/producto-tote.jpg"
             />
+          </Field>
+        </div>
+
+        <div className="sm:col-span-2">
+          <Field
+            label="¿A qué está buscando responde?"
+            hint="Es el filtro emocional de la vitrina. Si no marcas ninguna, la pieza aparece según el grupo de su categoría."
+          >
+            <div className="flex flex-wrap gap-2 pt-1">
+              {INTENTS.map((intent) => (
+                <label
+                  key={intent.key}
+                  className="cursor-pointer rounded-full border border-line bg-white px-4 py-2 text-[0.8125rem] has-checked:border-moss-deep has-checked:bg-moss-soft has-checked:font-semibold has-checked:text-moss-deep"
+                >
+                  <input
+                    type="checkbox"
+                    name="intents"
+                    value={intent.key}
+                    defaultChecked={(design?.intents ?? "").split(",").includes(intent.key)}
+                    className="sr-only"
+                  />
+                  {intent.label}
+                </label>
+              ))}
+            </div>
           </Field>
         </div>
 

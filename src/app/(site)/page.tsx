@@ -33,25 +33,40 @@ export default async function HomePage() {
       {/* HERO — la home vende el concepto antes que los servicios */}
       <section className="grain relative overflow-hidden border-b border-line">
         <div className="shell relative grid gap-14 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
+          {/* Dos frases, dos botones y una línea que dice qué hay detrás de cada
+              uno. Todo lo demás baja: el hero sólo tiene que hacer elegir. */}
           <div className="rise">
             <Eyebrow>{t.home.eyebrow}</Eyebrow>
             <h1 className="mt-5 font-[family-name:var(--font-display)] text-[2.6rem] leading-[1.05] text-balance sm:text-6xl">
-              {t.home.titleA} <em className="text-orchid-deep not-italic">{t.home.titleB}</em>{" "}
-              {t.home.titleC} <em className="text-rose-deep not-italic">{t.home.titleD}</em>{" "}
-              {t.home.titleE}
+              <span className="text-orchid-deep">{t.home.titleA}</span>{" "}
+              <span className="text-moss-deep">{t.home.titleB}</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-ink-soft">{t.home.lead}</p>
+
+            <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-soft">{t.home.leadA}</p>
+            <p className="mt-2 max-w-xl text-lg leading-relaxed text-ink-soft">{t.home.leadB}</p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <ButtonLink href="/acompanamiento" tone="orchid" className="px-7 py-3.5">
                 {t.home.ctaUnit1}
               </ButtonLink>
-              <ButtonLink href="/disenos" tone="rose" className="px-7 py-3.5">
+              <ButtonLink href="/disenos" tone="moss" className="px-7 py-3.5">
                 {t.home.ctaUnit2}
               </ButtonLink>
             </div>
 
-            <p className="mt-10 max-w-lg border-l-2 border-amber/60 pl-5 font-[family-name:var(--font-display)] text-lg leading-snug text-ink-soft italic">
+            <div className="mt-6 flex flex-col gap-2 text-[0.8125rem] text-muted sm:flex-row sm:items-center sm:gap-5">
+              <span className="flex items-center gap-2">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-orchid-deep" />
+                {t.home.railA}
+              </span>
+              <span aria-hidden="true" className="hidden h-3 w-px bg-line sm:block" />
+              <span className="flex items-center gap-2">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-moss-deep" />
+                {t.home.railB}
+              </span>
+            </div>
+
+            <p className="mt-10 max-w-lg border-l-2 border-sand pl-5 font-[family-name:var(--font-display)] text-lg leading-snug text-ink-soft italic">
               &ldquo;{t.brand.quote}&rdquo;
             </p>
           </div>
@@ -87,10 +102,10 @@ export default async function HomePage() {
 
               <Link
                 href="/disenos"
-                className="rounded-2xl border border-rose/25 bg-rose-soft/60 p-5 transition-colors hover:border-rose/50"
+                className="rounded-2xl border border-moss/40 bg-moss-soft p-5 transition-colors hover:border-moss-deep/50"
               >
-                <p className="eyebrow text-rose-deep">{t.home.unit02}</p>
-                <p className="mt-2 font-[family-name:var(--font-display)] text-xl text-rose-deep">
+                <p className="eyebrow text-moss-deep">{t.home.unit02}</p>
+                <p className="mt-2 font-[family-name:var(--font-display)] text-xl text-moss-deep">
                   {t.home.unit2Name}
                 </p>
                 <ul className="mt-4 space-y-1.5 text-[0.8125rem] text-ink-soft">
@@ -98,7 +113,7 @@ export default async function HomePage() {
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
-                <span className="mt-5 inline-block text-[0.8125rem] font-semibold text-rose-deep">
+                <span className="mt-5 inline-block text-[0.8125rem] font-semibold text-moss-deep">
                   {t.home.seeShowcase}
                 </span>
               </Link>
@@ -161,7 +176,7 @@ export default async function HomePage() {
               title={t.home.designsTitle}
               lead={t.home.designsLead}
             />
-            <ButtonLink href="/configurador" tone="rose">
+            <ButtonLink href="/configurador" tone="moss">
               {t.home.createMine}
             </ButtonLink>
           </div>
@@ -191,7 +206,7 @@ export default async function HomePage() {
               <Link
                 key={g.key}
                 href={`/disenos?grupo=${g.key}`}
-                className="rounded-2xl border border-line bg-white px-5 py-4 transition-colors hover:border-rose/40"
+                className="rounded-2xl border border-line bg-white px-5 py-4 transition-colors hover:border-moss/60"
               >
                 <p className="font-semibold">{t.designs.groups[g.key].name}</p>
                 <p className="mt-1 text-[0.8125rem] text-ink-soft">{t.designs.groups[g.key].blurb}</p>
@@ -213,7 +228,7 @@ export default async function HomePage() {
           <ol className="grid gap-3 sm:grid-cols-2">
             {t.home.configSteps.map(([n, title, body]) => (
               <li key={n} className="rounded-2xl border border-line bg-white p-5">
-                <span className="font-[family-name:var(--font-display)] text-sm text-rose">{n}</span>
+                <span className="font-[family-name:var(--font-display)] text-sm text-moss-deep">{n}</span>
                 <p className="mt-2 font-semibold">{title}</p>
                 <p className="mt-1 text-[0.8125rem] leading-relaxed text-ink-soft">{body}</p>
               </li>

@@ -22,7 +22,7 @@ export default async function MisArchivosPage() {
   return (
     <div className="space-y-8">
       <header>
-        <p className="eyebrow text-rose-deep">{t.space.files.eyebrow}</p>
+        <p className="eyebrow text-moss-deep">{t.space.files.eyebrow}</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
           {t.space.files.title}
         </h1>

@@ -5,6 +5,7 @@ import { money, duration } from "@/lib/format";
 import { getDict, getLocale } from "@/lib/i18n";
 import { serviceView } from "@/lib/content";
 import { Badge, ButtonLink, SectionHeading } from "@/components/ui";
+import { NeedFinder } from "@/components/need-finder";
 
 export const dynamic = "force-dynamic";
 
@@ -15,13 +16,45 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function ServiciosPage() {
   const [locale, t] = await Promise.all([getLocale(), getDict()]);
-  const services = (await db.service.findMany({ where: { active: true }, orderBy: { order: "asc" } })).map(
-    (s) => serviceView(s, locale),
-  );
+  const rows = await db.service.findMany({ where: { active: true }, orderBy: { order: "asc" } });
+  const services = rows.map((s) => serviceView(s, locale));
+
+  // El orientador cruza por especialidad, así que necesita el valor sin traducir:
+  // en inglés `specialty` sería "Psychology" y ya no calzaría con NEEDS.
+  const finderServices = rows.map((row) => {
+    const s = serviceView(row, locale);
+    return {
+      slug: s.slug,
+      name: s.name,
+      summary: s.summary,
+      specialty: row.specialty,
+      price: money(s.price, locale),
+      duration: duration(s.durationMin, locale),
+    };
+  });
 
   return (
     <div className="shell py-16">
       <SectionHeading eyebrow={t.home.servicesEyebrow} title={t.services.title} lead={t.services.lead} />
+
+      {/* Antes de la lista: quien no sabe qué elegir sí sabe cómo se siente. */}
+      <div className="mt-10">
+        <NeedFinder
+          services={finderServices}
+          copy={{
+            eyebrow: t.finder.eyebrow,
+            title: t.finder.title,
+            lead: t.finder.lead,
+            options: t.finder.options,
+            resultEyebrow: t.finder.resultEyebrow,
+            resultLead: t.finder.resultLead,
+            seeSheet: t.finder.seeSheet,
+            book: t.finder.book,
+            again: t.finder.again,
+            note: t.finder.note,
+          }}
+        />
+      </div>
 
       <div className="mt-12 space-y-4">
         {services.map((s) => (

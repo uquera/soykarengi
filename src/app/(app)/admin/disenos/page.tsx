@@ -23,7 +23,7 @@ export default async function AdminDisenosPage() {
     <div className="space-y-7">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow text-rose-deep">Unidad Diseños</p>
+          <p className="eyebrow text-moss-deep">Unidad Diseños</p>
           <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">Diseños</h1>
         </div>
         <ButtonLink href="/admin/disenos/nuevo" tone="ink">
