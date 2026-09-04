@@ -121,9 +121,20 @@ Karen atiende desde Estados Unidos, así que **toda la agenda vive en `America/N
 
 ## Identidad visual
 
-La marca es **el rostro de Karen**: `public/karen-logo.png` (círculo de 512 px, recortado y
-enmascarado desde su retrato de marca) aparece en la cabecera, el pie y las pantallas de acceso;
-`public/karen-retrato.png` preside la portada.
+La marca es el **logo de SoyKarengi**: la figura que se eleva dentro del círculo, con la palabra y su
+bajada *«Sana la raíz, eleva tu ser, renace»*. Se recortó del original con fondo transparente en dos
+piezas, porque el lockup completo a 32 px sería ilegible:
+
+| Archivo | Qué es | Dónde va |
+|---|---|---|
+| `soykarengi-isotipo.png` | Sólo el círculo con la figura, 512 px | Cabecera, pie, pantallas de acceso, favicon |
+| `soykarengi-logo.png` | El lockup completo con la bajada, 900 px | Portada y Open Graph |
+
+Sobre fondo oscuro el isotipo va sobre un disco crema (`<BrandMark plate />`): la ciruela del trazo
+se pierde contra el marrón.
+
+`public/karen-retrato.png` es su **fotografía**, no la marca, así que se quedó donde se presenta
+ella: «Sobre Karen» y las páginas por especialidad.
 
 Las fotografías del negocio viven en `public/`:
 

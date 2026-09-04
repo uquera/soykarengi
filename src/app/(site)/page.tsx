@@ -6,7 +6,7 @@ import { getDict, getLocale } from "@/lib/i18n";
 import { serviceView, designView, postView } from "@/lib/content";
 import { ButtonLink, Eyebrow, SectionHeading } from "@/components/ui";
 import { DesignVisual } from "@/components/design-visual";
-import { KarenPortrait } from "@/components/brand";
+import { BrandLogo } from "@/components/brand";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +74,7 @@ export default async function HomePage() {
           {/* Marca paraguas: dos unidades, una sola cuenta */}
           <div className="rise relative" style={{ animationDelay: "120ms" }}>
             <div className="mb-8 flex justify-center lg:justify-end">
-              <KarenPortrait size={220} />
+              <BrandLogo width={300} />
             </div>
 
             <div className="card-soft relative p-7 sm:p-9">
