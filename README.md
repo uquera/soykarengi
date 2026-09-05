@@ -238,6 +238,46 @@ Las de especialidad se definen en `SPECIALTY_PAGES` y su copy vive en los diccio
 existen también en inglés. Se suman `sitemap.xml` (50 URLs, generado desde la base), `robots.txt`
 —que deja fuera `/admin`, `/mi-espacio` y `/api`—, canonicals y Open Graph.
 
+## Gobernanza SaaS
+
+La instalación está gobernada desde el panel de Hypnos (`hypnosapps.com/admin/clientes`), siguiendo
+el estándar de `hypnos-panel/CLAUDE.md`.
+
+| Pieza | Dónde |
+|---|---|
+| Estado de la licencia | `src/lib/licencia.ts` — `getLicenciaStatus()` |
+| Sync del operador | `PATCH /api/gobernanza/licencia` (header `X-Master-Key`) |
+| Consulta del operador | `GET /api/gobernanza/licencia` (master key **o** sesión ADMIN) |
+| Registro de pagos | `POST /api/gobernanza/pagos` (header `X-Master-Key`) |
+| Lo que ve Karen | `/admin/licencia` — estado, días restantes e historial de pagos |
+| Aviso y corte | `src/components/licencia.tsx` + `/suspendido` |
+
+```bash
+curl -X PATCH https://karengi.srv1485601.hstgr.cloud/api/gobernanza/licencia   -H "Content-Type: application/json"   -H "X-Master-Key: $GOBERNANZA_MASTER_KEY"   -d '{"fechaVencimiento":"2026-10-05","plan":"BASICO","suspendida":false}'
+```
+
+**Sin fila de licencia no se restringe nada.** Una instalación recién desplegada funciona completa
+hasta que el panel la sincroniza por primera vez; el `upsert` la crea en ese primer PATCH.
+
+### Dónde ocurre el corte, y por qué ahí
+
+El corte vive en `requireUser()` / `requireAdmin()` (`src/lib/auth.ts`), no solo en los layouts.
+Un layout que devuelve otra pantalla en lugar de sus hijos **no impide que la página hija se
+renderice**: sus consultas corren igual y el resultado viaja en el payload RSC. Se vería el bloqueo
+y los datos saldrían del servidor de todos modos. Como toda página privada llama a uno de esos dos
+guardas antes de consultar nada, ahí el corte sí es real: se responde un 307 a `/suspendido` sin
+haber tocado la base.
+
+Dos rutas quedan fuera a propósito:
+
+- **`/admin/licencia`** — es la pantalla que explica el corte y da el contacto. Para saber qué ruta
+  se está pintando, `src/proxy.ts` pasa el pathname en la cabecera `x-pathname` (en Next 16 la
+  convención `middleware` se renombró a `proxy`).
+- **La web pública** — la vitrina, la agenda y el blog siguen en línea. Lo que se pausa es la
+  plataforma privada: el panel de Karen y Mi espacio.
+
+El aviso previo aparece en el panel a los 7 días del vencimiento (`AVISO_DIAS`).
+
 ## Stack
 
 - **Next.js 16** (App Router, Server Components, Server Actions) + **React 19**
@@ -276,6 +316,8 @@ npm run dev
 | `DATABASE_URL` | Ruta del archivo SQLite, relativa a `prisma/` |
 | `AUTH_SECRET` | Firma de las sesiones. Debe ser largo y aleatorio en producción |
 | `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD` | Credenciales del admin que crea el seed |
+| `GOBERNANZA_MASTER_KEY` | Secreto compartido con el panel de Hypnos. Hex de 64 caracteres |
+| `NEXT_PUBLIC_GOBERNANZA_CONTACTO` | Correo del aviso de vencimiento y de la pantalla de corte |
 
 ## Roadmap
 

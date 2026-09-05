@@ -3,11 +3,16 @@ import { requireUser } from "@/lib/auth";
 import { ORDER_STATUSES } from "@/lib/domain";
 import { getDict } from "@/lib/i18n";
 import { PanelNav } from "@/components/panel-nav";
+import { redirect } from "next/navigation";
+import { getLicenciaStatus } from "@/lib/licencia";
 
 export const dynamic = "force-dynamic";
 
 export default async function MiEspacioLayout({ children }: { children: React.ReactNode }) {
-  const [user, t] = await Promise.all([requireUser(), getDict()]);
+  const [user, t, licencia] = await Promise.all([requireUser(), getDict(), getLicenciaStatus()]);
+
+  // El corte por licencia es de toda la plataforma privada, no solo del panel.
+  if (licencia.bloqueada) redirect("/suspendido");
 
   const [citas, disenos, pedidos, archivos, favoritos] = await Promise.all([
     db.appointment.count({ where: { userId: user.id, status: { in: ["PENDIENTE", "CONFIRMADA"] } } }),

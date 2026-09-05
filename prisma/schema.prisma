@@ -271,3 +271,45 @@ model ContactMessage {
   handled   Boolean  @default(false)
   createdAt DateTime @default(now())
 }
+
+// ───────────────────── GOBERNANZA · LICENCIA SaaS ─────────────────────
+//
+// Singleton: una sola fila por instalación, sin FK, porque es configuración
+// del deployment y no dato de negocio. El operador (Hypnos) la actualiza con
+// PATCH /api/gobernanza/licencia usando el header X-Master-Key.
+//
+// El estándar de hypnos-panel define `plan` como enum, pero SQLite no tiene
+// enums: se guarda como texto con los mismos valores (BASICO | PRO | ENTERPRISE).
+
+model Licencia {
+  id               String   @id @default("singleton")
+  plan             String   @default("BASICO")
+  fechaVencimiento DateTime
+  suspendida       Boolean  @default(false)
+  notasAdmin       String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  pagos PagoLicencia[]
+
+  @@map("licencia")
+}
+
+/// Historial de pagos de la licencia. Lo puebla el panel de Hypnos con
+/// POST /api/gobernanza/pagos; Karen solo lo lee desde /admin/licencia.
+model PagoLicencia {
+  id            String   @id @default(cuid())
+  licenciaId    String   @default("singleton")
+  monto         Float
+  moneda        String   @default("USD")
+  periodoInicio DateTime
+  periodoFin    DateTime
+  fechaPago     DateTime @default(now())
+  notas         String?
+  createdAt     DateTime @default(now())
+
+  licencia Licencia @relation(fields: [licenciaId], references: [id], onDelete: Cascade)
+
+  @@index([fechaPago])
+  @@map("pagos_licencia")
+}
