@@ -112,7 +112,7 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
                   label={d.categoryName}
                   image={d.image}
                   alt={d.name}
-                  className="h-52"
+                  className="aspect-square w-full"
                 />
                 <div className="flex flex-1 flex-col p-6">
                   {d.featured ? (
@@ -125,7 +125,7 @@ export default async function CategoriaPage({ params }: { params: Promise<{ slug
                   <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4 text-[0.8125rem]">
                     <span className="text-muted">{d.delivery}</span>
                     <span className="font-semibold whitespace-nowrap">
-                      {t.designs.from} {money(d.basePrice, locale)}
+                      {d.basePrice > 0 ? `${t.designs.from} ${money(d.basePrice, locale)}` : t.designs.onRequest}
                     </span>
                   </div>
                 </div>

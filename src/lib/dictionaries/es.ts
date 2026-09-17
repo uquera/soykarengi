@@ -266,6 +266,8 @@ export const es = {
     all: "Todo",
     featured: "Destacado",
     from: "Desde",
+    onRequest: "A cotizar",
+    price: "Valor",
     emptyTitle: "Todavía no hay piezas en esta categoría",
     emptyLead: "Puedes contarnos tu idea directamente y la creamos desde cero.",
     emptyCta: "Ir al configurador",

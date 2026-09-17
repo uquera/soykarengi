@@ -113,7 +113,7 @@ export default async function DisenosPage({
               />
               <img
                 src="/producto-renacer.jpg"
-                alt="Polera Renacer Venezuela dentro de su caja de regalo"
+                alt="Franela Renacer Venezuela dentro de su caja de regalo"
                 className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
               />
             </div>
@@ -247,7 +247,7 @@ export default async function DisenosPage({
                 href={`/disenos/${d.slug}`}
                 className="card-soft flex flex-col overflow-hidden transition-transform hover:-translate-y-1"
               >
-                <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} image={d.image} alt={d.name} className="h-52" />
+                <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} image={d.image} alt={d.name} className="aspect-square w-full" />
                 <div className="flex flex-1 flex-col p-6">
                   {d.featured ? (
                     <span className="mb-3 self-start">
@@ -259,7 +259,7 @@ export default async function DisenosPage({
                   <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4 text-[0.8125rem]">
                     <span className="text-muted">{d.delivery}</span>
                     <span className="font-semibold whitespace-nowrap">
-                      {t.designs.from} {money(d.basePrice, locale)}
+                      {d.basePrice > 0 ? `${t.designs.from} ${money(d.basePrice, locale)}` : t.designs.onRequest}
                     </span>
                   </div>
                 </div>

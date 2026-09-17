@@ -21,6 +21,7 @@ export type ConfiguratorCopy = {
   baseHint: string;
   baseNone: string;
   from: string;
+  onRequest: string;
   q3: string;
   q3Lead: string;
   q4: string;
@@ -168,7 +169,7 @@ export function Configurator({
               <option value="">{copy.baseNone}</option>
               {designs.map((d) => (
                 <option key={d.id} value={d.id}>
-                  {d.name} · {d.categoryName} · {copy.from} {money(d.basePrice, locale)}
+                  {d.name} · {d.categoryName} · {d.basePrice > 0 ? `${copy.from} ${money(d.basePrice, locale)}` : copy.onRequest}
                 </option>
               ))}
             </select>

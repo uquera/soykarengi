@@ -63,7 +63,7 @@ export default async function DisenoPage({ params }: Props) {
             {t.designs.backToShowcase}
           </Link>
           <div className="card-soft mt-5 overflow-hidden">
-            <DesignVisual slug={design.slug} palette={design.palette} image={design.image} alt={design.name} className="aspect-[4/3] w-full" />
+            <DesignVisual slug={design.slug} palette={design.palette} image={design.image} alt={design.name} className="aspect-square w-full" />
           </div>
         </div>
 
@@ -103,9 +103,11 @@ export default async function DisenoPage({ params }: Props) {
                 <dd className="text-right font-semibold">{design.delivery}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="text-muted">{t.designs.from}</dt>
+                <dt className="text-muted">
+                  {design.basePrice > 0 ? t.designs.from : t.designs.price}
+                </dt>
                 <dd className="font-[family-name:var(--font-display)] text-2xl">
-                  {money(design.basePrice, locale)}
+                  {design.basePrice > 0 ? money(design.basePrice, locale) : t.designs.onRequest}
                 </dd>
               </div>
             </dl>
@@ -148,11 +150,11 @@ export default async function DisenoPage({ params }: Props) {
                   href={`/disenos/${d.slug}`}
                   className="card-soft overflow-hidden transition-transform hover:-translate-y-1"
                 >
-                  <DesignVisual slug={d.slug} palette={d.palette} image={d.image} alt={d.name} className="h-40" />
+                  <DesignVisual slug={d.slug} palette={d.palette} image={d.image} alt={d.name} className="aspect-square w-full" />
                   <div className="p-5">
                     <p className="font-[family-name:var(--font-display)] text-lg leading-snug">{d.name}</p>
                     <p className="mt-2 text-[0.8125rem] text-muted">
-                      {t.designs.from} {money(d.basePrice, locale)}
+                      {d.basePrice > 0 ? `${t.designs.from} ${money(d.basePrice, locale)}` : t.designs.onRequest}
                     </p>
                   </div>
                 </Link>

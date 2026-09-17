@@ -48,14 +48,14 @@ export default async function MisFavoritosPage() {
             return (
               <div key={f.id} className="card-soft overflow-hidden">
                 <Link href={`/disenos/${d.slug}`}>
-                  <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} image={d.image} alt={d.name} className="h-40" />
+                  <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} image={d.image} alt={d.name} className="aspect-square w-full" />
                 </Link>
                 <div className="p-5">
                   <Link href={`/disenos/${d.slug}`}>
                     <p className="font-[family-name:var(--font-display)] text-lg leading-snug">{d.name}</p>
                   </Link>
                   <p className="mt-2 text-[0.8125rem] text-muted">
-                    {t.space.favorites.from} {money(d.basePrice, locale)}
+                    {d.basePrice > 0 ? `${t.space.favorites.from} ${money(d.basePrice, locale)}` : t.designs.onRequest}
                   </p>
 
                   <div className="mt-4 flex gap-2">

@@ -191,13 +191,19 @@ export default async function HomePage() {
                 href={`/disenos/${d.slug}`}
                 className="card-soft overflow-hidden transition-transform hover:-translate-y-1"
               >
-                <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} image={d.image} alt={d.name} className="h-44" />
+                <DesignVisual slug={d.slug} palette={d.palette} label={d.categoryName} image={d.image} alt={d.name} className="aspect-square w-full" />
                 <div className="p-6">
                   <p className="font-[family-name:var(--font-display)] text-xl leading-snug">{d.name}</p>
                   <p className="mt-2 text-sm leading-relaxed text-ink-soft">{d.tagline}</p>
                   <p className="mt-5 text-[0.8125rem] text-muted">
-                    {t.designs.from}{" "}
-                    <span className="font-semibold text-ink">{money(d.basePrice, locale)}</span>
+                    {d.basePrice > 0 ? (
+                      <>
+                        {t.designs.from}{" "}
+                        <span className="font-semibold text-ink">{money(d.basePrice, locale)}</span>
+                      </>
+                    ) : (
+                      <span className="font-semibold text-ink">{t.designs.onRequest}</span>
+                    )}
                   </p>
                 </div>
               </Link>

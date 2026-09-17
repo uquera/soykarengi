@@ -268,6 +268,8 @@ export const en: typeof es = {
     all: "All",
     featured: "Featured",
     from: "From",
+    onRequest: "Quote on request",
+    price: "Price",
     emptyTitle: "No pieces in this category yet",
     emptyLead: "You can tell us your idea directly and we'll create it from scratch.",
     emptyCta: "Go to the design builder",

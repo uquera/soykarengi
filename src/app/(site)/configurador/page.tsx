@@ -66,6 +66,7 @@ export default async function ConfiguradorPage({
                 baseHint: t.configurator.baseHint,
                 baseNone: t.configurator.baseNone,
                 from: t.configurator.from,
+                onRequest: t.designs.onRequest,
                 q3: t.configurator.q3,
                 q3Lead: t.configurator.q3Lead,
                 q4: t.configurator.q4,

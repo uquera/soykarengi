@@ -45,7 +45,7 @@ export default async function AdminDisenosPage() {
                 </div>
                 <p className="mt-2 font-[family-name:var(--font-display)] text-xl leading-snug">{d.name}</p>
                 <p className="mt-1 text-[0.8125rem] text-muted">
-                  {money(d.basePrice)} · {d._count.requests} solicitudes · {d._count.favorites} favoritos
+                  {d.basePrice > 0 ? money(d.basePrice) : "A cotizar"} · {d._count.requests} solicitudes · {d._count.favorites} favoritos
                 </p>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2">
