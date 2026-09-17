@@ -107,13 +107,13 @@ export default async function DisenosPage({
 
             <div className="mt-8 grid grid-cols-2 gap-4">
               <img
-                src="/producto-tote.jpg"
-                alt="Bolso de tela con la frase «Soy mi proyecto más importante»"
+                src="/piezas/modulo-taller.jpg"
+                alt="Franelas, tote bag, taza y caja de regalo personalizadas de SparkWell"
                 className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
               />
               <img
-                src="/producto-renacer.jpg"
-                alt="Franela Renacer Venezuela dentro de su caja de regalo"
+                src="/piezas/modulo-empaque.jpg"
+                alt="Caja de regalo SparkWell con lazo y etiqueta"
                 className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
               />
             </div>
@@ -291,9 +291,9 @@ export default async function DisenosPage({
             <p className="mt-4 text-[0.8125rem] text-muted">{t.designs.craftNote}</p>
           </div>
           <img
-            src="/sparkwell-caja.jpg"
-            alt="Caja de regalo con el mensaje «Siempre es posible renacer»"
-            className="w-full rounded-3xl border border-line object-cover shadow-sm"
+            src="/piezas/modulo-craft-bar.jpg"
+            alt="Estación Craft Bar con tote bags, franelas y marcadores listos para decorar"
+            className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
           />
         </div>
       </section>
@@ -342,9 +342,9 @@ export default async function DisenosPage({
 
           <div className="order-last md:order-none">
             <img
-              src="/sparkwell-caja.jpg"
-              alt="Caja de regalo con el mensaje «Siempre es posible renacer»"
-              className="w-full rounded-3xl border border-line object-cover shadow-sm"
+              src="/piezas/modulo-entrega.jpg"
+              alt="Pedido listo para entregar en caja kraft con tarjeta de agradecimiento"
+              className="aspect-square w-full rounded-3xl border border-line object-cover shadow-sm"
             />
           </div>
 

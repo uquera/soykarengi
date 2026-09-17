@@ -52,9 +52,9 @@ export function CustomDesignCall({
 
           <div className="hidden lg:block">
             <img
-              src="/sparkwell-marca.jpg"
-              alt="SparkWell by Karengi"
-              className="w-full rounded-3xl border border-cream/15 object-cover opacity-95"
+              src="/piezas/modulo-de-la-idea-al-diseno.jpg"
+              alt="Fotos, notas y bocetos convirtiéndose en un diseño"
+              className="aspect-square w-full rounded-3xl border border-cream/15 object-cover"
             />
           </div>
         </div>
