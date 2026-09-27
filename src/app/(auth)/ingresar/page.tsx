@@ -33,6 +33,7 @@ export default async function IngresarPage({
         copy={{
           email: t.auth.email,
           password: t.auth.password,
+          passwordToggle: { show: t.auth.showPassword, hide: t.auth.hidePassword },
           login: t.auth.login,
           loggingIn: t.auth.loggingIn,
           noAccount: t.auth.noAccount,

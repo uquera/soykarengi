@@ -471,6 +471,8 @@ export const es = {
     email: "Correo",
     password: "Contraseña",
     passwordHint: "Mínimo 6 caracteres.",
+    showPassword: "Mostrar contraseña",
+    hidePassword: "Ocultar contraseña",
     fullName: "Nombre completo",
     namePlaceholder: "Tu nombre",
     phone: "Teléfono",

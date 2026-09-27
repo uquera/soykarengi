@@ -473,6 +473,8 @@ export const en: typeof es = {
     email: "Email",
     password: "Password",
     passwordHint: "At least 6 characters.",
+    showPassword: "Show password",
+    hidePassword: "Hide password",
     fullName: "Full name",
     namePlaceholder: "Your name",
     phone: "Phone",

@@ -39,6 +39,7 @@ export default async function RegistroPage({
           phonePlaceholder: "+1 (305) 555-0123",
           password: t.auth.password,
           passwordHint: t.auth.passwordHint,
+          passwordToggle: { show: t.auth.showPassword, hide: t.auth.hidePassword },
           register: t.auth.register,
           registering: t.auth.registering,
           haveAccount: t.auth.haveAccount,

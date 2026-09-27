@@ -19,13 +19,23 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-ink-soft sm:inline">{user.name}</span>
             <LanguageToggle locale={locale} />
+            {/* Karen trabaja en los dos lados: administra desde /admin y también
+                usa su propio espacio de clienta, así que los dos están a un clic. */}
             {user.role === "ADMIN" ? (
-              <Link
-                href="/admin"
-                className="rounded-full border border-line px-4 py-2 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:border-ink/40"
-              >
-                {t.nav.panel}
-              </Link>
+              <>
+                <Link
+                  href="/admin"
+                  className="rounded-full border border-line px-4 py-2 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:border-ink/40"
+                >
+                  {t.nav.panel}
+                </Link>
+                <Link
+                  href="/mi-espacio"
+                  className="hidden rounded-full border border-line px-4 py-2 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:border-ink/40 sm:inline-flex"
+                >
+                  {t.nav.miEspacio}
+                </Link>
+              </>
             ) : null}
             <form action={logoutAction}>
               <button

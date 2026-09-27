@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { registerAction } from "@/lib/actions/auth";
 import { Field, inputClass } from "@/components/ui";
+import { PasswordInput, type PasswordCopy } from "@/components/password-input";
 
 export type RegisterCopy = {
   fullName: string;
@@ -15,6 +16,7 @@ export type RegisterCopy = {
   phonePlaceholder: string;
   password: string;
   passwordHint: string;
+  passwordToggle: PasswordCopy;
   register: string;
   registering: string;
   haveAccount: string;
@@ -60,14 +62,7 @@ export function RegisterForm({ next, copy }: { next: string; copy: RegisterCopy 
       </Field>
 
       <Field label={copy.password} hint={copy.passwordHint}>
-        <input
-          name="password"
-          type="password"
-          required
-          minLength={6}
-          autoComplete="new-password"
-          className={inputClass}
-        />
+        <PasswordInput autoComplete="new-password" minLength={6} copy={copy.passwordToggle} />
       </Field>
 
       {state.error ? (

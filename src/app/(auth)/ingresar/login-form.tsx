@@ -5,10 +5,12 @@ import { useActionState } from "react";
 import { useFormStatus } from "react-dom";
 import { loginAction } from "@/lib/actions/auth";
 import { Field, inputClass } from "@/components/ui";
+import { PasswordInput, type PasswordCopy } from "@/components/password-input";
 
 export type LoginCopy = {
   email: string;
   password: string;
+  passwordToggle: PasswordCopy;
   login: string;
   loggingIn: string;
   noAccount: string;
@@ -40,13 +42,7 @@ export function LoginForm({ next, copy }: { next: string; copy: LoginCopy }) {
       </Field>
 
       <Field label={copy.password}>
-        <input
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          className={inputClass}
-        />
+        <PasswordInput autoComplete="current-password" copy={copy.passwordToggle} />
       </Field>
 
       {state.error ? (
