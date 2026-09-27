@@ -149,6 +149,42 @@ export default async function AdminPage() {
           )}
         </div>
       </section>
+
+      {/* Los manuales viven aquí para que Karen los tenga a mano y pueda pasarle
+          la guía corta a una clienta sin buscar el archivo en su computadora. */}
+      <section className="card-soft p-6">
+        <p className="eyebrow text-moss-deep">Manuales</p>
+        <p className="mt-3 text-sm text-ink-soft">
+          Cómo se usa la plataforma, con capturas de cada pantalla. Puedes descargarlos o pasar el
+          enlace de la guía corta a tus clientas.
+        </p>
+
+        <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <a
+            href="/manuales/manual-soykarengi-karen.pdf"
+            target="_blank"
+            rel="noopener"
+            className="rounded-2xl border border-line p-4 transition-colors hover:border-ink/25"
+          >
+            <p className="font-semibold">Manual completo · para ti</p>
+            <p className="mt-1 text-[0.8125rem] text-muted">
+              Todo el panel, pantalla por pantalla · PDF, 27 páginas
+            </p>
+          </a>
+
+          <a
+            href="/manuales/guia-soykarengi-clientes.pdf"
+            target="_blank"
+            rel="noopener"
+            className="rounded-2xl border border-line p-4 transition-colors hover:border-ink/25"
+          >
+            <p className="font-semibold">Guía rápida · para tus clientas</p>
+            <p className="mt-1 text-[0.8125rem] text-muted">
+              Crear cuenta, agendar y pedir un diseño · PDF, 12 páginas
+            </p>
+          </a>
+        </div>
+      </section>
     </div>
   );
 }
