@@ -24,7 +24,8 @@ export default async function AdminCategoriasPage() {
         <p className="eyebrow text-moss-deep">Unidad Diseños</p>
         <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl sm:text-4xl">Categorías</h1>
         <p className="mt-2 text-ink-soft">
-          Los tres grupos de la vitrina: Eventos, Personal y Con propósito.
+          Los cinco grupos de la vitrina: Viste tu mensaje, Regala con intención, Celebra tu
+          historia, Haz visible tu marca y Diseños que dejan huella.
         </p>
       </header>
 
