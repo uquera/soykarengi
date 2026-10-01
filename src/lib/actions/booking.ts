@@ -7,6 +7,13 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { makeCode } from "@/lib/format";
 import { parseDay, slotsForDay } from "@/lib/availability";
+import {
+  avisoCitaCancelada,
+  avisoNuevaReserva,
+  correoCitaCancelada,
+  correoCitaConfirmada,
+  correoReservaRecibida,
+} from "@/lib/email";
 import type { FormState } from "./auth";
 
 const schema = z.object({
@@ -63,6 +70,29 @@ export async function createAppointmentAction(_prev: FormState, formData: FormDa
     },
   });
 
+  // Antes del redirect: redirect() lanza, y lo que vaya después no se ejecuta.
+  const quien = await db.user.findUnique({ where: { id: user.id } });
+  if (quien) {
+    await Promise.all([
+      correoReservaRecibida(quien.email, quien.name, {
+        servicio: service.name,
+        fecha: startsAt,
+        modalidad: modality,
+        codigo: appointment.code,
+      }),
+      avisoNuevaReserva({
+        cliente: quien.name,
+        email: quien.email,
+        telefono: quien.phone,
+        servicio: service.name,
+        fecha: startsAt,
+        modalidad: modality,
+        motivo: reason,
+        primeraVez: firstTime === "si",
+      }),
+    ]);
+  }
+
   revalidatePath("/mi-espacio/citas");
   revalidatePath("/admin/agenda");
   redirect(`/mi-espacio/citas?nueva=${appointment.code}`);
@@ -73,13 +103,25 @@ export async function cancelAppointmentAction(formData: FormData) {
   if (!user) redirect("/ingresar");
 
   const id = String(formData.get("id") ?? "");
-  const appointment = await db.appointment.findUnique({ where: { id } });
+  const appointment = await db.appointment.findUnique({
+    where: { id },
+    include: { user: true, service: true },
+  });
   if (!appointment) return;
 
   const mine = appointment.userId === user.id;
   if (!mine && user.role !== "ADMIN") return;
 
   await db.appointment.update({ where: { id }, data: { status: "CANCELADA" } });
+
+  // Quien cancela ya lo sabe: el aviso va para la otra parte.
+  const datos = { servicio: appointment.service.name, fecha: appointment.startsAt };
+  if (mine && user.role !== "ADMIN") {
+    await avisoCitaCancelada({ cliente: appointment.user.name, ...datos });
+  } else {
+    await correoCitaCancelada(appointment.user.email, appointment.user.name, datos);
+  }
+
   revalidatePath("/mi-espacio/citas");
   revalidatePath("/admin/agenda");
 }
@@ -92,7 +134,26 @@ export async function setAppointmentStatusAction(formData: FormData) {
   const status = String(formData.get("status") ?? "");
   if (!["PENDIENTE", "CONFIRMADA", "COMPLETADA", "CANCELADA"].includes(status)) return;
 
+  const antes = await db.appointment.findUnique({
+    where: { id },
+    include: { user: true, service: true },
+  });
+  if (!antes) return;
+
   await db.appointment.update({ where: { id }, data: { status } });
+
+  // Solo avisamos cuando el estado cambia de verdad, para no repetir correos.
+  if (status !== antes.status) {
+    const datos = {
+      servicio: antes.service.name,
+      fecha: antes.startsAt,
+      modalidad: antes.modality,
+      codigo: antes.code,
+    };
+    if (status === "CONFIRMADA") await correoCitaConfirmada(antes.user.email, antes.user.name, datos);
+    if (status === "CANCELADA") await correoCitaCancelada(antes.user.email, antes.user.name, datos);
+  }
+
   revalidatePath("/admin/agenda");
   revalidatePath("/mi-espacio/citas");
 }
@@ -208,17 +269,26 @@ export async function adminCreateAppointmentAction(formData: FormData) {
     });
   }
 
-  await db.appointment.create({
+  const modality = String(formData.get("modality") ?? "Online");
+  const appointment = await db.appointment.create({
     data: {
       code: makeCode("CITA"),
       userId: user.id,
       serviceId: service.id,
       startsAt,
-      modality: String(formData.get("modality") ?? "Online"),
+      modality,
       status: "CONFIRMADA",
       firstTime: false,
       reason: reason || "Agendada por Karen desde el panel.",
     },
+  });
+
+  // Nace confirmada, así que la clienta recibe directamente la confirmación.
+  await correoCitaConfirmada(user.email, user.name, {
+    servicio: service.name,
+    fecha: startsAt,
+    modalidad: modality,
+    codigo: appointment.code,
   });
 
   revalidatePath("/admin/agenda");

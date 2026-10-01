@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
+import { avisoMensajeContacto } from "@/lib/email";
 import type { FormState } from "./auth";
 
 const schema = z.object({
@@ -19,6 +20,14 @@ export async function sendContactAction(_prev: FormState, formData: FormData): P
 
   await db.contactMessage.create({
     data: { ...parsed.data, phone: parsed.data.phone || null },
+  });
+
+  await avisoMensajeContacto({
+    nombre: parsed.data.name,
+    email: parsed.data.email,
+    telefono: parsed.data.phone || null,
+    unidad: parsed.data.unit,
+    mensaje: parsed.data.message,
   });
 
   revalidatePath("/admin/mensajes");

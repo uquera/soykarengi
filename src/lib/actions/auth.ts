@@ -55,6 +55,10 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
     data: { name, email, phone: phone || null, passwordHash: await bcrypt.hash(password, 10) },
   });
 
+  // Antes del redirect, que lanza y corta el resto de la acción.
+  const { correoBienvenida } = await import("@/lib/email");
+  await correoBienvenida(user.email, user.name);
+
   await startSession(user);
   redirect(safeNext(formData.get("next")) || "/mi-espacio");
 }

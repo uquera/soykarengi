@@ -7,7 +7,19 @@ import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { makeCode } from "@/lib/format";
 import { REQUEST_FLOW } from "@/lib/domain";
+import {
+  avisoNuevaSolicitud,
+  avisoRespuestaCotizacion,
+  correoCotizacion,
+  correoEntrega,
+  correoPagoConfirmado,
+  correoPropuestaLista,
+  correoSolicitudRecibida,
+} from "@/lib/email";
 import type { FormState } from "./auth";
+
+/** El nombre con el que la pieza aparece en los correos. */
+const nombrePieza = (nombre?: string | null) => nombre ?? "Diseño a medida";
 
 const schema = z.object({
   purpose: z.string().min(1, "Cuéntanos qué quieres crear."),
@@ -77,6 +89,34 @@ export async function createDesignRequestAction(_prev: FormState, formData: Form
     });
   }
 
+  // Antes del redirect: redirect() lanza y corta lo que venga después.
+  const [quien, base] = await Promise.all([
+    db.user.findUnique({ where: { id: user.id } }),
+    designId ? db.design.findUnique({ where: { id: designId } }) : Promise.resolve(null),
+  ]);
+
+  if (quien) {
+    const pieza = nombrePieza(base?.name ?? null);
+    await Promise.all([
+      correoSolicitudRecibida(quien.email, quien.name, {
+        codigo: request.code,
+        pieza,
+        destinatario: d.recipient,
+      }),
+      avisoNuevaSolicitud({
+        cliente: quien.name,
+        email: quien.email,
+        telefono: quien.phone,
+        codigo: request.code,
+        pieza,
+        destinatario: d.recipient,
+        idea: d.idea,
+        cantidad: d.quantity,
+        formato: d.format,
+      }),
+    ]);
+  }
+
   revalidatePath("/mi-espacio/disenos");
   revalidatePath("/admin/solicitudes");
   redirect(`/mi-espacio/disenos?nueva=${request.code}`);
@@ -104,10 +144,19 @@ export async function approveQuoteAction(formData: FormData) {
   if (!user) redirect("/ingresar");
 
   const id = String(formData.get("id") ?? "");
-  const request = await db.designRequest.findUnique({ where: { id } });
+  const request = await db.designRequest.findUnique({ where: { id }, include: { design: true } });
   if (!request || request.userId !== user.id || request.status !== "COTIZADA") return;
 
   await db.designRequest.update({ where: { id }, data: { status: "APROBADA" } });
+
+  await avisoRespuestaCotizacion({
+    cliente: user.name,
+    codigo: request.code,
+    pieza: nombrePieza(request.design?.name),
+    monto: request.quoteAmount,
+    aprobada: true,
+  });
+
   revalidatePath("/mi-espacio/disenos");
   revalidatePath("/admin/solicitudes");
 }
@@ -117,11 +166,22 @@ export async function cancelRequestAction(formData: FormData) {
   if (!user) redirect("/ingresar");
 
   const id = String(formData.get("id") ?? "");
-  const request = await db.designRequest.findUnique({ where: { id } });
+  const request = await db.designRequest.findUnique({ where: { id }, include: { design: true } });
   if (!request) return;
   if (request.userId !== user.id && user.role !== "ADMIN") return;
 
   await db.designRequest.update({ where: { id }, data: { status: "CANCELADA" } });
+
+  // Si la clienta es quien se baja, Karen necesita enterarse.
+  if (request.userId === user.id && user.role !== "ADMIN") {
+    await avisoRespuestaCotizacion({
+      cliente: user.name,
+      codigo: request.code,
+      pieza: nombrePieza(request.design?.name),
+      monto: request.quoteAmount,
+      aprobada: false,
+    });
+  }
   revalidatePath("/mi-espacio/disenos");
   revalidatePath("/admin/solicitudes");
 }
@@ -135,14 +195,23 @@ export async function quoteRequestAction(formData: FormData) {
   const amount = Number(formData.get("quoteAmount"));
   if (!Number.isFinite(amount) || amount <= 0) return;
 
-  await db.designRequest.update({
+  const notas = String(formData.get("quoteNotes") ?? "").trim() || null;
+  const request = await db.designRequest.update({
     where: { id },
     data: {
       quoteAmount: Math.round(amount),
-      quoteNotes: String(formData.get("quoteNotes") ?? "").trim() || null,
+      quoteNotes: notas,
       quotedAt: new Date(),
       status: "COTIZADA",
     },
+    include: { user: true, design: true },
+  });
+
+  await correoCotizacion(request.user.email, request.user.name, {
+    codigo: request.code,
+    pieza: nombrePieza(request.design?.name),
+    monto: Math.round(amount),
+    notas,
   });
 
   revalidatePath("/admin/solicitudes");
@@ -157,14 +226,35 @@ export async function advanceRequestAction(formData: FormData) {
   const status = String(formData.get("status") ?? "");
   if (!REQUEST_FLOW.includes(status as (typeof REQUEST_FLOW)[number]) && status !== "CANCELADA") return;
 
-  await db.designRequest.update({
+  const antes = await db.designRequest.findUnique({ where: { id } });
+  if (!antes) return;
+
+  const request = await db.designRequest.update({
     where: { id },
     data: {
       status,
       ...(status === "PAGADA" ? { paidAt: new Date() } : {}),
       ...(status === "ENTREGADA" ? { deliveredAt: new Date() } : {}),
     },
+    include: { user: true, design: true, deliverables: true },
   });
+
+  // Tres momentos valen un correo; el resto del avance se ve en Mi espacio.
+  if (status !== antes.status) {
+    const datos = { codigo: request.code, pieza: nombrePieza(request.design?.name) };
+    const { email, name } = request.user;
+
+    if (status === "PAGADA") {
+      await correoPagoConfirmado(email, name, { ...datos, monto: request.quoteAmount });
+    } else if (status === "REVISION") {
+      await correoPropuestaLista(email, name, datos);
+    } else if (status === "ENTREGADA") {
+      await correoEntrega(email, name, {
+        ...datos,
+        archivos: request.deliverables.map((d) => ({ name: d.name, url: d.url })),
+      });
+    }
+  }
 
   revalidatePath("/admin/solicitudes");
   revalidatePath("/admin/pedidos");
