@@ -29,10 +29,12 @@ export function SiteHeader({
   session,
   copy,
   languageToggle,
+  unidad,
 }: {
   session: { name: string; role: string } | null;
   copy: HeaderCopy;
   languageToggle: ReactNode;
+  unidad?: "acompanamiento" | "disenos" | null;
 }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -43,11 +45,17 @@ export function SiteHeader({
      entender. Configurador, blog y contacto viven dentro de su sección. */
   const nav = [
     { href: "/", label: copy.nav.inicio },
-    { href: "/acompanamiento", label: copy.nav.acompanamiento },
-    { href: "/disenos", label: copy.nav.disenos },
+    { href: "/acompanamiento", label: copy.nav.acompanamiento, unidad: "acompanamiento" },
+    { href: "/disenos", label: copy.nav.disenos, unidad: "disenos" },
     { href: "/recursos", label: copy.nav.recursos },
     { href: "/mi-espacio", label: copy.nav.miEspacio },
   ];
+
+  /* Quien eligió una unidad la encuentra primero y marcada; la otra sigue ahí,
+     al lado, porque la idea es segmentar sin encerrar a nadie. */
+  const ordenado = unidad
+    ? [nav[0], ...nav.slice(1).sort((a, b) => Number(b.unidad === unidad) - Number(a.unidad === unidad))]
+    : nav;
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-cream/85 backdrop-blur-md">
@@ -55,7 +63,7 @@ export function SiteHeader({
         <BrandLockup name={copy.brand} tagline={copy.tagline} size={40} taglineClassName="hidden xl:block" />
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {nav.map((item) => {
+          {ordenado.map((item) => {
             const active =
               item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
             return (
@@ -66,6 +74,14 @@ export function SiteHeader({
                   active ? "bg-shell text-ink" : "text-ink-soft hover:text-ink"
                 }`}
               >
+                {item.unidad && item.unidad === unidad ? (
+                  <span
+                    aria-hidden="true"
+                    className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full align-middle ${
+                      unidad === "acompanamiento" ? "bg-orchid-deep" : "bg-moss-deep"
+                    }`}
+                  />
+                ) : null}
                 {item.label}
               </Link>
             );
@@ -140,7 +156,7 @@ export function SiteHeader({
 
       {open ? (
         <nav className="border-t border-line bg-cream px-5 py-3 lg:hidden">
-          {nav.map((item) => (
+          {ordenado.map((item) => (
             <Link
               key={item.href}
               href={item.href}

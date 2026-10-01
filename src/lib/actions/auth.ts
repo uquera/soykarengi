@@ -51,8 +51,15 @@ export async function registerAction(_prev: FormState, formData: FormData): Prom
   const existing = await db.user.findUnique({ where: { email } });
   if (existing) return { error: "Ya existe una cuenta con este correo. Puedes ingresar." };
 
+  const { parseInteres } = await import("@/lib/unidad");
   const user = await db.user.create({
-    data: { name, email, phone: phone || null, passwordHash: await bcrypt.hash(password, 10) },
+    data: {
+      name,
+      email,
+      phone: phone || null,
+      passwordHash: await bcrypt.hash(password, 10),
+      interest: parseInteres(formData.get("interest")),
+    },
   });
 
   // Antes del redirect, que lanza y corta el resto de la acción.

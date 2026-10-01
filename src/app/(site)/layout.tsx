@@ -3,9 +3,15 @@ import { SiteFooter } from "@/components/site-footer";
 import { LanguageToggle } from "@/components/language-toggle";
 import { getSession } from "@/lib/auth";
 import { getDict, getLocale } from "@/lib/i18n";
+import { getUnidad } from "@/lib/unidad";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const [session, t, locale] = await Promise.all([getSession(), getDict(), getLocale()]);
+  const [session, t, locale, unidad] = await Promise.all([
+    getSession(),
+    getDict(),
+    getLocale(),
+    getUnidad(),
+  ]);
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -13,6 +19,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         session={session ? { name: session.name, role: session.role } : null}
         copy={{ brand: t.brand.name, tagline: t.brand.tagline, nav: t.nav }}
         languageToggle={<LanguageToggle locale={locale} />}
+        unidad={unidad}
       />
       <main className="flex-1">{children}</main>
       <SiteFooter />

@@ -20,6 +20,9 @@ model User {
   phone        String?
   city         String?
   role         String   @default("CLIENT") // CLIENT | ADMIN
+  // Lo que la persona dijo que venía a buscar al crear su cuenta:
+  // ACOMPANAMIENTO | DISENOS | AMBAS. El segmento real se calcula aparte.
+  interest     String?
   createdAt    DateTime @default(now())
 
   appointments   Appointment[]

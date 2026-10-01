@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { shortDate } from "@/lib/format";
 import { SEGMENT_LABEL, segmentOf } from "@/lib/domain";
+import { INTERES_LABEL, parseInteres } from "@/lib/unidad";
 import { Badge, EmptyState } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -86,6 +87,13 @@ export default async function AdminClientesPage({
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-semibold">{u.name}</span>
                   <Badge tone={SEGMENT_TONE[u.segment]}>{SEGMENT_LABEL[u.segment]}</Badge>
+                  {/* Lo que declaró al registrarse, junto a lo que terminó
+                      haciendo: ahí está el dato comercial. */}
+                  {parseInteres(u.interest) ? (
+                    <span className="rounded-full border border-line px-2.5 py-0.5 text-[0.6875rem] text-muted">
+                      {INTERES_LABEL[parseInteres(u.interest)!]}
+                    </span>
+                  ) : null}
                 </div>
                 <p className="mt-1 text-[0.8125rem] text-muted">
                   {u.email}

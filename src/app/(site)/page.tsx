@@ -7,11 +7,13 @@ import { serviceView, designView, postView } from "@/lib/content";
 import { ButtonLink, Eyebrow, SectionHeading } from "@/components/ui";
 import { DesignVisual } from "@/components/design-visual";
 import { BrandLogo } from "@/components/brand";
+import { UnitChosenBar, UnitDoor } from "@/components/unit-door";
+import { getUnidad } from "@/lib/unidad";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const [locale, t] = await Promise.all([getLocale(), getDict()]);
+  const [locale, t, unidad] = await Promise.all([getLocale(), getDict(), getUnidad()]);
 
   const [servicesRaw, designsRaw, postsRaw] = await Promise.all([
     db.service.findMany({ where: { active: true }, orderBy: { order: "asc" }, take: 3 }),
@@ -30,6 +32,18 @@ export default async function HomePage() {
 
   return (
     <>
+      {unidad ? (
+        <UnitChosenBar
+          unidad={unidad}
+          copy={{
+            chosen: t.home.doorChosen,
+            unit1: t.home.unit1Name,
+            unit2: t.home.unit2Name,
+            both: t.home.doorBoth,
+          }}
+        />
+      ) : null}
+
       {/* HERO — la home vende el concepto antes que los servicios */}
       <section className="grain relative overflow-hidden border-b border-line">
         <div className="shell relative grid gap-14 py-20 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-28">
@@ -46,12 +60,18 @@ export default async function HomePage() {
             <p className="mt-2 max-w-xl text-lg leading-relaxed text-ink-soft">{t.home.leadB}</p>
 
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href="/acompanamiento" tone="orchid" className="px-7 py-3.5">
+              <UnitDoor
+                unidad="acompanamiento"
+                className="btn inline-flex items-center justify-center rounded-full bg-orchid-deep px-7 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-orchid"
+              >
                 {t.home.ctaUnit1}
-              </ButtonLink>
-              <ButtonLink href="/disenos" tone="moss" className="px-7 py-3.5">
+              </UnitDoor>
+              <UnitDoor
+                unidad="disenos"
+                className="btn inline-flex items-center justify-center rounded-full bg-moss-deep px-7 py-3.5 text-sm font-semibold text-cream transition-colors hover:bg-moss"
+              >
                 {t.home.ctaUnit2}
-              </ButtonLink>
+              </UnitDoor>
             </div>
 
             <div className="mt-6 flex flex-col gap-2 text-[0.8125rem] text-muted sm:flex-row sm:items-center sm:gap-5">
@@ -81,13 +101,16 @@ export default async function HomePage() {
             </div>
 
             <div className="card-soft relative p-7 sm:p-9">
-            <p className="eyebrow text-muted">{t.home.archEyebrow}</p>
+            <p className="eyebrow text-muted">{t.home.doorsEyebrow}</p>
             <p className="mt-3 font-[family-name:var(--font-display)] text-2xl">{t.home.archTitle}</p>
+            <p className="mt-2 text-[0.8125rem] text-muted">{t.home.doorsLead}</p>
 
             <div className="mt-7 grid gap-4 sm:grid-cols-2">
-              <Link
-                href="/acompanamiento"
-                className="rounded-2xl border border-orchid/25 bg-orchid-soft/60 p-5 transition-colors hover:border-orchid/50"
+              <UnitDoor
+                unidad="acompanamiento"
+                className={`rounded-2xl border bg-orchid-soft/60 p-5 text-left transition-colors hover:border-orchid/50 ${
+                  unidad === "acompanamiento" ? "border-orchid ring-2 ring-orchid/20" : "border-orchid/25"
+                }`}
               >
                 <p className="eyebrow text-orchid-deep">{t.home.unit01}</p>
                 <p className="mt-2 font-[family-name:var(--font-display)] text-xl text-orchid-deep">
@@ -99,13 +122,15 @@ export default async function HomePage() {
                   ))}
                 </ul>
                 <span className="mt-5 inline-block text-[0.8125rem] font-semibold text-orchid-deep">
-                  {t.home.seeServices}
+                  {t.home.doorEnter1}
                 </span>
-              </Link>
+              </UnitDoor>
 
-              <Link
-                href="/disenos"
-                className="rounded-2xl border border-moss/40 bg-moss-soft p-5 transition-colors hover:border-moss-deep/50"
+              <UnitDoor
+                unidad="disenos"
+                className={`rounded-2xl border bg-moss-soft p-5 text-left transition-colors hover:border-moss-deep/50 ${
+                  unidad === "disenos" ? "border-moss-deep ring-2 ring-moss/25" : "border-moss/40"
+                }`}
               >
                 <p className="eyebrow text-moss-deep">{t.home.unit02}</p>
                 <p className="mt-2 font-[family-name:var(--font-display)] text-xl text-moss-deep">
@@ -117,9 +142,9 @@ export default async function HomePage() {
                   ))}
                 </ul>
                 <span className="mt-5 inline-block text-[0.8125rem] font-semibold text-moss-deep">
-                  {t.home.seeShowcase}
+                  {t.home.doorEnter2}
                 </span>
-              </Link>
+              </UnitDoor>
             </div>
 
             <div className="mt-5 flex items-center gap-3 rounded-2xl border border-line bg-shell/70 px-5 py-4">
@@ -135,8 +160,9 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* UNIDAD 1 */}
-      <section className="shell py-20">
+      {/* UNIDADES — el orden lo decide la puerta por la que entró */}
+      <div className="flex flex-col">
+      <section className={`shell py-20 ${unidad === "disenos" ? "order-2" : "order-1"}`}>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading
             eyebrow={t.home.servicesEyebrow}
@@ -170,8 +196,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* UNIDAD 2 */}
-      <section className="border-y border-line bg-shell/60 py-20">
+      <section
+        className={`border-y border-line bg-shell/60 py-20 ${
+          unidad === "disenos" ? "order-1" : "order-2"
+        }`}
+      >
         <div className="shell">
           <div className="flex flex-wrap items-end justify-between gap-6">
             <SectionHeading
@@ -224,6 +253,7 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+      </div>
 
       {/* CONFIGURADOR */}
       <section className="shell py-20">

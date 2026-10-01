@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getSession } from "@/lib/auth";
 import { getDict } from "@/lib/i18n";
+import { getUnidad, interesDesdeUnidad } from "@/lib/unidad";
 import { RegisterForm } from "./register-form";
 
 export const dynamic = "force-dynamic";
@@ -19,7 +20,7 @@ export default async function RegistroPage({
   const session = await getSession();
   if (session) redirect(session.role === "ADMIN" ? "/admin" : "/mi-espacio");
 
-  const [{ next }, t] = await Promise.all([searchParams, getDict()]);
+  const [{ next }, t, unidad] = await Promise.all([searchParams, getDict(), getUnidad()]);
   const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "";
 
   return (
@@ -30,6 +31,7 @@ export default async function RegistroPage({
       </header>
       <RegisterForm
         next={safeNext}
+        interesPorDefecto={interesDesdeUnidad(unidad)}
         copy={{
           fullName: t.auth.fullName,
           namePlaceholder: t.auth.namePlaceholder,
@@ -40,6 +42,11 @@ export default async function RegistroPage({
           password: t.auth.password,
           passwordHint: t.auth.passwordHint,
           passwordToggle: { show: t.auth.showPassword, hide: t.auth.hidePassword },
+          interest: t.auth.interest,
+          interestHint: t.auth.interestHint,
+          interestUnit1: t.auth.interestUnit1,
+          interestUnit2: t.auth.interestUnit2,
+          interestBoth: t.auth.interestBoth,
           register: t.auth.register,
           registering: t.auth.registering,
           haveAccount: t.auth.haveAccount,

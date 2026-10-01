@@ -17,6 +17,11 @@ export type RegisterCopy = {
   password: string;
   passwordHint: string;
   passwordToggle: PasswordCopy;
+  interest: string;
+  interestHint: string;
+  interestUnit1: string;
+  interestUnit2: string;
+  interestBoth: string;
   register: string;
   registering: string;
   haveAccount: string;
@@ -36,7 +41,15 @@ function Submit({ label, pendingLabel }: { label: string; pendingLabel: string }
   );
 }
 
-export function RegisterForm({ next, copy }: { next: string; copy: RegisterCopy }) {
+export function RegisterForm({
+  next,
+  copy,
+  interesPorDefecto,
+}: {
+  next: string;
+  copy: RegisterCopy;
+  interesPorDefecto: "ACOMPANAMIENTO" | "DISENOS" | "AMBAS";
+}) {
   const [state, action] = useActionState(registerAction, {});
 
   return (
@@ -64,6 +77,36 @@ export function RegisterForm({ next, copy }: { next: string; copy: RegisterCopy 
       <Field label={copy.password} hint={copy.passwordHint}>
         <PasswordInput autoComplete="new-password" minLength={6} copy={copy.passwordToggle} />
       </Field>
+
+      {/* Karen trabaja dos unidades y quiere saber por cuál viene cada persona.
+          Viene marcada la puerta por la que entró, y se puede cambiar. */}
+      <fieldset className="block">
+        <legend className="mb-1.5 block text-sm font-semibold text-ink">{copy.interest}</legend>
+        <span className="mb-2 block text-xs text-muted">{copy.interestHint}</span>
+        <div className="grid grid-cols-3 gap-2">
+          {(
+            [
+              ["ACOMPANAMIENTO", copy.interestUnit1],
+              ["DISENOS", copy.interestUnit2],
+              ["AMBAS", copy.interestBoth],
+            ] as const
+          ).map(([valor, etiqueta]) => (
+            <label
+              key={valor}
+              className="cursor-pointer rounded-xl border border-line bg-white px-3 py-2.5 text-center text-[0.8125rem] text-ink-soft transition-colors has-[:checked]:border-ink has-[:checked]:bg-ink has-[:checked]:text-cream"
+            >
+              <input
+                type="radio"
+                name="interest"
+                value={valor}
+                defaultChecked={interesPorDefecto === valor}
+                className="sr-only"
+              />
+              {etiqueta}
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
       {state.error ? (
         <p className="rounded-xl border border-rose/40 bg-rose-soft px-4 py-3 text-sm text-rose-deep">
