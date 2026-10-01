@@ -18,7 +18,10 @@ export default async function MiEspacioLayout({ children }: { children: React.Re
     db.appointment.count({ where: { userId: user.id, status: { in: ["PENDIENTE", "CONFIRMADA"] } } }),
     db.designRequest.count({ where: { userId: user.id, NOT: { status: "CANCELADA" } } }),
     db.designRequest.count({ where: { userId: user.id, status: { in: ORDER_STATUSES } } }),
-    db.deliverable.count({ where: { request: { userId: user.id } } }),
+    // El número de «Mis archivos» es lo que Karen le mandó y aún no abre.
+    db.archivo.count({
+      where: { userId: user.id, tipo: { in: ["COMPARTIDO", "ENTREGABLE"] }, vistoAt: null },
+    }),
     db.favorite.count({ where: { userId: user.id } }),
   ]);
 

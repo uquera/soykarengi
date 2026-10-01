@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { shortDate } from "@/lib/format";
@@ -82,7 +83,11 @@ export default async function AdminClientesPage({
       ) : (
         <div className="card-soft divide-y divide-line">
           {filtered.map((u) => (
-            <div key={u.id} className="flex flex-wrap items-center justify-between gap-4 px-6 py-5">
+            <Link
+              key={u.id}
+              href={`/admin/clientes/${u.id}`}
+              className="flex flex-wrap items-center justify-between gap-4 px-6 py-5 transition-colors hover:bg-shell/50"
+            >
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-semibold">{u.name}</span>
@@ -116,7 +121,7 @@ export default async function AdminClientesPage({
                   <p className="text-[0.8125rem] font-semibold">{shortDate(u.createdAt)}</p>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}

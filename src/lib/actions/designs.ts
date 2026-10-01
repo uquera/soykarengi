@@ -76,7 +76,7 @@ export async function createDesignRequestAction(_prev: FormState, formData: Form
     },
   });
 
-  // Las referencias se registran por nombre; la subida real llega en Fase 2.
+  // Enlaces que anotó (Pinterest, Drive…). Las fotos van aparte, como Archivo.
   const files = (d.files ?? "")
     .split("\n")
     .map((f) => f.trim())
@@ -88,6 +88,23 @@ export async function createDesignRequestAction(_prev: FormState, formData: Form
       data: files.map((name) => ({ requestId: request.id, name })),
     });
   }
+
+  // Las fotos ya se subieron mientras llenaba el paso 4; aquí se atan a la
+  // solicitud. Solo las suyas, sueltas y de tipo referencia.
+  const archivoIds = formData.getAll("archivoIds").map(String).filter(Boolean).slice(0, 30);
+  const vinculadas =
+    archivoIds.length > 0
+      ? await db.archivo.updateMany({
+          where: {
+            id: { in: archivoIds },
+            userId: user.id,
+            subidoPorId: user.id,
+            tipo: "REFERENCIA",
+            requestId: null,
+          },
+          data: { requestId: request.id },
+        })
+      : { count: 0 };
 
   // Antes del redirect: redirect() lanza y corta lo que venga después.
   const [quien, base] = await Promise.all([
@@ -113,6 +130,7 @@ export async function createDesignRequestAction(_prev: FormState, formData: Form
         idea: d.idea,
         cantidad: d.quantity,
         formato: d.format,
+        fotos: vinculadas.count,
       }),
     ]);
   }

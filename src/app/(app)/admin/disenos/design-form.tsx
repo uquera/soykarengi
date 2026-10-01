@@ -1,10 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { saveDesignAction } from "@/lib/actions/admin";
 import { PALETTES, INTENTS } from "@/lib/domain";
 import { Field, inputClass } from "@/components/ui";
+import { FileUploader } from "@/components/file-uploader";
+import { urlArchivo } from "@/lib/archivos";
 
 type Design = {
   id: string;
@@ -49,6 +51,7 @@ export function DesignForm({
   categories: { id: string; name: string; group: string }[];
 }) {
   const [state, action] = useActionState(saveDesignAction, {});
+  const [imagen, setImagen] = useState(design?.image ?? "");
 
   return (
     <form action={action} className="space-y-6">
@@ -110,18 +113,48 @@ export function DesignForm({
           </select>
         </Field>
 
+        {/* Karen sube la foto aquí mismo; antes había que escribir una ruta
+            dentro de /public, cosa que solo podía hacer un desarrollador. */}
         <div className="sm:col-span-2">
-          <Field
-            label="Foto de la pieza"
-            hint="Ruta dentro de /public, por ejemplo /producto-tote.jpg. Si la dejas vacía se dibuja una portada generada."
-          >
-            <input
-              name="image"
-              defaultValue={design?.image ?? ""}
-              className={inputClass}
-              placeholder="/producto-tote.jpg"
-            />
-          </Field>
+          <p className="mb-1.5 block text-sm font-semibold text-ink">Foto de la pieza</p>
+          <p className="mb-3 text-xs text-muted">
+            JPG, PNG o WebP, idealmente cuadrada. Si no subes ninguna, se dibuja una portada con la paleta elegida.
+          </p>
+
+          <div className="grid gap-4 sm:grid-cols-[9rem_1fr] sm:items-start">
+            <div className="aspect-square w-36 overflow-hidden rounded-2xl border border-line bg-shell">
+              {imagen ? (
+                <img src={imagen} alt="Foto actual de la pieza" className="h-full w-full object-cover" />
+              ) : (
+                <span className="flex h-full items-center justify-center px-3 text-center text-[0.75rem] text-muted">
+                  Sin foto
+                </span>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <FileUploader
+                tipo="VITRINA"
+                soloImagenes
+                multiple={false}
+                compacto
+                onSubidos={(subidos) => {
+                  if (subidos[0]) setImagen(urlArchivo(subidos[0].id));
+                }}
+              />
+              {imagen ? (
+                <button
+                  type="button"
+                  onClick={() => setImagen("")}
+                  className="text-[0.8125rem] font-semibold text-muted hover:text-rose-deep"
+                >
+                  Quitar la foto
+                </button>
+              ) : null}
+              <p className="text-[0.75rem] text-muted">El cambio se guarda al pulsar «Guardar cambios».</p>
+            </div>
+          </div>
+          <input type="hidden" name="image" value={imagen} />
         </div>
 
         <div className="sm:col-span-2">

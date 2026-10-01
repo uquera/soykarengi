@@ -360,6 +360,52 @@ export function correoEntrega(
   });
 }
 
+// ─── Archivos ─────────────────────────────────────────────────────────────────
+
+const listaArchivos = (nombres: string[]) =>
+  nombres.map((n) => `<p style="margin:0 0 6px;color:#5B4636;font-size:14px;">📎 ${esc(n)}</p>`).join("");
+
+export function correoArchivosCompartidos(
+  email: string,
+  nombre: string,
+  datos: { archivos: string[]; nota?: string | null },
+) {
+  const varios = datos.archivos.length > 1;
+  return enviar({
+    to: email,
+    subject: varios ? "Karen compartió archivos contigo" : `Karen compartió un archivo contigo: ${datos.archivos[0]}`,
+    html: plantilla(`
+      ${h2(varios ? "Tienes archivos nuevos" : "Tienes un archivo nuevo")}
+      ${sub("Karen los dejó en tu espacio")}
+      ${p(`Hola <strong>${esc(nombre)}</strong>,`)}
+      ${p(`Karen compartió contigo ${varios ? "estos archivos" : "este archivo"}. Por privacidad no van adjuntos al correo: los abres desde tu espacio, con tu cuenta.`)}
+      ${caja(listaArchivos(datos.archivos))}
+      ${datos.nota ? caja(`<p style="margin:0;color:#5B4636;font-size:14px;line-height:1.6;">${esc(datos.nota)}</p>`, MOSS, "#EDF3ED") : ""}
+      ${boton("Ver mis archivos", `${APP_URL}/mi-espacio/archivos`)}
+    `),
+  });
+}
+
+export function avisoArchivosDeClienta(datos: {
+  cliente: string;
+  email: string;
+  archivos: string[];
+  nota?: string | null;
+}) {
+  return enviar({
+    to: ADMIN_EMAIL,
+    subject: `${datos.cliente} te envió ${datos.archivos.length > 1 ? `${datos.archivos.length} archivos` : "un archivo"}`,
+    html: plantilla(`
+      ${h2("Te enviaron archivos")}
+      ${sub("Están en la ficha de la clienta")}
+      ${p(`<strong>${esc(datos.cliente)}</strong> (${esc(datos.email)}) subió a su espacio:`)}
+      ${caja(listaArchivos(datos.archivos))}
+      ${datos.nota ? caja(`<p style="margin:0;color:#5B4636;font-size:14px;line-height:1.6;">${esc(datos.nota)}</p>`, MOSS, "#EDF3ED") : ""}
+      ${boton("Abrir clientes", `${APP_URL}/admin/clientes`)}
+    `),
+  });
+}
+
 // ─── Avisos para Karen ────────────────────────────────────────────────────────
 
 export function avisoNuevaReserva(datos: {
@@ -420,6 +466,7 @@ export function avisoNuevaSolicitud(datos: {
   idea: string;
   cantidad: number;
   formato: string;
+  fotos?: number;
 }) {
   return enviar({
     to: ADMIN_EMAIL,
@@ -436,6 +483,7 @@ export function avisoNuevaSolicitud(datos: {
         ${fila("Correo", datos.email)}
         ${fila("Teléfono", datos.telefono)}
         ${fila("Código", datos.codigo)}
+        ${datos.fotos ? fila("Fotos de referencia", `${datos.fotos} (están en la solicitud)`) : ""}
       `)}
       ${caja(
         `<p style="margin:0 0 6px;color:${MUTED};font-size:12px;letter-spacing:.1em;text-transform:uppercase;">Su idea, en sus palabras</p>

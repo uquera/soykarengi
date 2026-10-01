@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { iconoArchivo, urlArchivo } from "@/lib/archivos";
+import { ArchivoList } from "@/components/archivo-list";
+import { FileUploader } from "@/components/file-uploader";
 import { money, shortDate } from "@/lib/format";
 import { REQUEST_FLOW, REQUEST_LABEL } from "@/lib/domain";
 import {
@@ -42,7 +45,13 @@ export default async function AdminSolicitudesPage({
   const requests = await db.designRequest.findMany({
     where,
     orderBy: { createdAt: "desc" },
-    include: { user: true, design: true, attachments: true, deliverables: true },
+    include: {
+      user: true,
+      design: true,
+      attachments: true,
+      deliverables: true,
+      archivos: { orderBy: { createdAt: "asc" } },
+    },
     take: 100,
   });
 
@@ -135,11 +144,34 @@ export default async function AdminSolicitudesPage({
                   {r.attachments.length > 0 ? (
                     <div>
                       <p className="text-[0.6875rem] font-semibold tracking-wide text-muted uppercase">
-                        Referencias del cliente
+                        Referencias anotadas
                       </p>
                       <p className="mt-1 text-sm text-ink-soft">
                         {r.attachments.map((a) => a.name).join(", ")}
                       </p>
+                    </div>
+                  ) : null}
+                  {r.archivos.some((a) => a.tipo === "REFERENCIA") ? (
+                    <div>
+                      <p className="text-[0.6875rem] font-semibold tracking-wide text-muted uppercase">
+                        Fotos y referencias que subió
+                      </p>
+                      <ul className="mt-2 flex flex-wrap gap-2">
+                        {r.archivos
+                          .filter((a) => a.tipo === "REFERENCIA")
+                          .map((a) => (
+                            <li key={a.id}>
+                              <a
+                                href={urlArchivo(a.id)}
+                                target="_blank"
+                                rel="noopener"
+                                className="inline-flex rounded-full border border-moss/40 bg-moss-soft px-3.5 py-1.5 text-[0.75rem] font-semibold text-moss-deep"
+                              >
+                                {iconoArchivo(a.mime)} {a.nombre}
+                              </a>
+                            </li>
+                          ))}
+                      </ul>
                     </div>
                   ) : null}
                 </div>
@@ -200,8 +232,18 @@ export default async function AdminSolicitudesPage({
                 <p className="text-[0.6875rem] font-semibold tracking-wide text-muted uppercase">
                   Archivos entregados
                 </p>
+                {r.archivos.some((a) => a.tipo === "ENTREGABLE") ? (
+                  <div className="mt-3">
+                    <ArchivoList archivos={r.archivos.filter((a) => a.tipo === "ENTREGABLE")} puedeBorrar estadoVisto />
+                  </div>
+                ) : null}
+
+                <div className="mt-4">
+                  <FileUploader tipo="ENTREGABLE" requestId={r.id} compacto conNota />
+                </div>
+
                 {r.deliverables.length > 0 ? (
-                  <ul className="mt-2 flex flex-wrap gap-2">
+                  <ul className="mt-4 flex flex-wrap gap-2">
                     {r.deliverables.map((d) => (
                       <li key={d.id}>
                         <a
@@ -217,7 +259,10 @@ export default async function AdminSolicitudesPage({
                   </ul>
                 ) : null}
 
-                <form action={addDeliverableAction} className="mt-3 grid gap-2 sm:grid-cols-[1fr_1.5fr_auto]">
+                <p className="mt-4 text-[0.75rem] text-muted">
+                  ¿El archivo es muy pesado o está en Drive? Pega el enlace:
+                </p>
+                <form action={addDeliverableAction} className="mt-2 grid gap-2 sm:grid-cols-[1fr_1.5fr_auto]">
                   <input type="hidden" name="requestId" value={r.id} />
                   <input name="name" placeholder="Nombre del archivo" className={inputClass} />
                   <input name="url" placeholder="https://enlace-al-archivo" className={inputClass} />
@@ -225,7 +270,7 @@ export default async function AdminSolicitudesPage({
                     type="submit"
                     className="rounded-full border border-line px-5 py-2.5 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:border-ink/40"
                   >
-                    Adjuntar
+                    Adjuntar enlace
                   </button>
                 </form>
               </div>

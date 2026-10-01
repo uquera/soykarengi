@@ -28,6 +28,8 @@ model User {
   appointments   Appointment[]
   designRequests DesignRequest[]
   favorites      Favorite[]
+  archivos       Archivo[] @relation("CarpetaDeCliente")
+  subidos        Archivo[] @relation("SubidoPor")
 
   @@index([role])
 }
@@ -184,6 +186,7 @@ model DesignRequest {
   design       Design?       @relation(fields: [designId], references: [id])
   attachments  Attachment[]
   deliverables Deliverable[]
+  archivos     Archivo[]
 
   @@index([userId])
   @@index([status])
@@ -197,6 +200,38 @@ model Attachment {
   createdAt DateTime @default(now())
 
   request DesignRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+}
+
+/// Archivos reales guardados en el servidor, fuera de /public: solo se
+/// descargan por /api/archivos/[id], que comprueba de quién son.
+model Archivo {
+  id     String @id @default(cuid())
+  nombre String // nombre original, saneado, el que ve la gente
+  mime   String
+  tamano Int // bytes
+  ruta   String @unique // nombre en disco (uuid.ext) dentro de UPLOADS_DIR
+
+  /// COMPARTIDO  Karen → clienta (materiales, documentos)
+  /// DE_CLIENTA  clienta → Karen
+  /// REFERENCIA  fotos y referencias del configurador
+  /// ENTREGABLE  archivos finales de una solicitud de diseño
+  /// VITRINA     fotos de las piezas de la vitrina (públicas)
+  tipo String
+  nota String @default("")
+
+  /// Carpeta de la clienta a la que pertenece. Null en VITRINA.
+  userId      String?
+  requestId   String?
+  subidoPorId String
+  vistoAt     DateTime? // la primera vez que la destinataria lo abrió
+  createdAt   DateTime  @default(now())
+
+  user      User?          @relation("CarpetaDeCliente", fields: [userId], references: [id], onDelete: Cascade)
+  request   DesignRequest? @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  subidoPor User           @relation("SubidoPor", fields: [subidoPorId], references: [id])
+
+  @@index([userId, tipo])
+  @@index([requestId])
 }
 
 model Deliverable {

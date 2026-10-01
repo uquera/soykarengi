@@ -6,6 +6,8 @@ import { createDesignRequestAction } from "@/lib/actions/designs";
 import { EMOTIONS, FORMATS, PURPOSES } from "@/lib/domain";
 import { Field, inputClass } from "@/components/ui";
 import { money, type FmtLocale } from "@/lib/format";
+import { iconoArchivo, tamanoLegible } from "@/lib/archivos";
+import { FileUploader, type Subido, type UploaderCopy } from "@/components/file-uploader";
 
 type DesignOption = { id: string; name: string; basePrice: number; categoryName: string };
 
@@ -35,6 +37,11 @@ export type ConfiguratorCopy = {
   detailsPlaceholder: string;
   filesLabel: string;
   filesHint: string;
+  filesUploaded: string;
+  filesRemove: string;
+  linksLabel: string;
+  linksHint: string;
+  uploader: UploaderCopy;
   q5: string;
   q5Lead: string;
   ideaPlaceholder: string;
@@ -89,6 +96,14 @@ export function Configurator({
   const [emotions, setEmotions] = useState<string[]>([]);
   const [idea, setIdea] = useState("");
   const [designId, setDesignId] = useState(initialDesignId);
+  // Las fotos se suben en cuanto se eligen y la solicitud se lleva sus ids:
+  // así el envío final no carga megas de golpe.
+  const [referencias, setReferencias] = useState<Subido[]>([]);
+
+  async function quitarReferencia(id: string) {
+    setReferencias((prev) => prev.filter((r) => r.id !== id));
+    await fetch(`/api/archivos/${id}`, { method: "DELETE" });
+  }
 
   const canAdvance = [
     purpose !== "",
@@ -247,13 +262,49 @@ export function Configurator({
           </div>
 
           <div className="sm:col-span-2">
-            <Field label={copy.filesLabel} hint={copy.filesHint}>
-              <textarea
-                name="files"
-                rows={3}
-                className={inputClass}
-                placeholder={"foto-mama-1990.jpg\nreferencia-pinterest.png"}
-              />
+            <p className="mb-1.5 block text-sm font-semibold text-ink">{copy.filesLabel}</p>
+            <p className="mb-3 text-xs text-muted">{copy.filesHint}</p>
+            <FileUploader
+              tipo="REFERENCIA"
+              copy={copy.uploader}
+              compacto
+              onSubidos={(nuevos) => setReferencias((prev) => [...prev, ...nuevos])}
+            />
+
+            {referencias.length > 0 ? (
+              <div className="mt-4">
+                <p className="mb-2 text-[0.8125rem] font-semibold text-ink-soft">
+                  {copy.filesUploaded} · {referencias.length}
+                </p>
+                <ul className="divide-y divide-line rounded-2xl border border-line bg-white">
+                  {referencias.map((r) => (
+                    <li key={r.id} className="flex items-center justify-between gap-3 px-4 py-2.5 text-sm">
+                      <span className="min-w-0 truncate">
+                        {iconoArchivo(r.mime)} {r.nombre}
+                      </span>
+                      <span className="flex shrink-0 items-center gap-3 text-[0.8125rem] text-muted">
+                        {tamanoLegible(r.tamano)}
+                        <button
+                          type="button"
+                          onClick={() => quitarReferencia(r.id)}
+                          className="font-semibold hover:text-rose-deep"
+                        >
+                          {copy.filesRemove}
+                        </button>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+            {referencias.map((r) => (
+              <input key={r.id} type="hidden" name="archivoIds" value={r.id} />
+            ))}
+          </div>
+
+          <div className="sm:col-span-2">
+            <Field label={copy.linksLabel} hint={copy.linksHint}>
+              <textarea name="files" rows={2} className={inputClass} placeholder="https://pinterest.com/…" />
             </Field>
           </div>
         </div>
