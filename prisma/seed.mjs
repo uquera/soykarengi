@@ -913,7 +913,7 @@ const sembrar = (modelo, where, data) =>
 async function main() {
   console.log(`Sembrando SoyKarengi… ${DEMO ? "(con datos de demostración)" : ""}`);
 
-  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? "karen@soykarengi.com";
+  const adminEmail = process.env.SEED_ADMIN_EMAIL || "soykarengi@gmail.com";
   const { randomBytes } = await import("node:crypto");
   const adminPassword =
     process.env.SEED_ADMIN_PASSWORD || (ES_DESARROLLO ? "karengi2026" : randomBytes(24).toString("hex"));
