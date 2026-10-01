@@ -92,7 +92,7 @@ export async function getFinanceSummary(from: Date, to: Date): Promise<FinanceSu
     // Una sesión realizada es dinero cobrado.
     db.appointment.findMany({
       where: { status: "COMPLETADA" },
-      select: { startsAt: true, service: { select: { price: true } } },
+      select: { startsAt: true, price: true, service: { select: { price: true } } },
     }),
     // Un pedido con fecha de pago es dinero cobrado.
     db.designRequest.findMany({
@@ -103,7 +103,8 @@ export async function getFinanceSummary(from: Date, to: Date): Promise<FinanceSu
   ]);
 
   const income: Entry[] = [
-    ...appointments.map((a) => ({ at: a.startsAt, amount: a.service.price, source: "SESIONES" })),
+    // El precio congelado al reservar; las citas antiguas no lo tienen y usan el actual.
+    ...appointments.map((a) => ({ at: a.startsAt, amount: a.price ?? a.service.price, source: "SESIONES" })),
     ...orders.map((o) => ({ at: o.paidAt as Date, amount: o.quoteAmount ?? 0, source: "DISENOS" })),
     ...movements
       .filter((m) => m.kind === "INGRESO")
@@ -126,8 +127,13 @@ export async function getFinanceSummary(from: Date, to: Date): Promise<FinanceSu
     list.filter((e) => keyOf(e.at) === key).reduce((s, e) => s + e.amount, 0);
 
   if (bucketMode === "dia") {
-    for (let t = start.getTime(); t <= end.getTime(); t += DAY_MS) {
-      const d = new Date(t);
+    // Se avanza por calendario y no sumando 24 h: el día del cambio de hora
+    // dura 23 o 25 horas, y sumando milisegundos ese día salía repetido.
+    for (
+      let d = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      d <= end;
+      d = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1)
+    ) {
       const key = isoDay(d);
       const i = sum(incomeRange, isoDay, key);
       const g = sum(expenseRange, isoDay, key);

@@ -185,7 +185,7 @@ export function correoReservaRecibida(
 export function correoCitaConfirmada(
   email: string,
   nombre: string,
-  datos: { servicio: string; fecha: Date; modalidad: string; codigo: string },
+  datos: { servicio: string; fecha: Date; modalidad: string; codigo: string; enlace?: string | null },
 ) {
   return enviar({
     to: email,
@@ -201,10 +201,12 @@ export function correoCitaConfirmada(
         ${fila("Servicio", datos.servicio)}
         ${fila("Modalidad", datos.modalidad)}
         ${fila("Código", datos.codigo)}
+        ${datos.enlace ? `<p style="margin:10px 0 0;font-size:14px;"><a href="${esc(datos.enlace)}" style="color:${MOSS};font-weight:600;">Enlace de la videollamada →</a></p>` : ""}
       `,
         MOSS,
         "#EDF3ED",
       )}
+      ${datos.enlace || datos.modalidad !== "Online" ? "" : p("El enlace de la videollamada te llega antes de la sesión y queda en tu espacio.")}
       ${p("Si algo cambia, avísale a Karen con tiempo. Nos vemos pronto.")}
       ${boton("Ver el detalle", `${APP_URL}/mi-espacio/citas`, MOSS)}
     `,
@@ -228,6 +230,80 @@ export function correoCitaCancelada(
       ${p(`Tu sesión de <strong>${esc(datos.servicio)}</strong> del ${cuando(datos.fecha)} quedó cancelada.`)}
       ${p("Puedes reservar otro horario cuando quieras; la agenda muestra los bloques que siguen libres.")}
       ${boton("Agendar otra sesión", `${APP_URL}/acompanamiento/agenda`)}
+    `),
+  });
+}
+
+export function correoCitaReprogramada(
+  email: string,
+  nombre: string,
+  datos: { servicio: string; antes: Date; ahora: Date; codigo: string },
+) {
+  return enviar({
+    to: email,
+    subject: `Tu sesión cambió de horario — ${longDate(datos.ahora)}`,
+    html: plantilla(`
+      ${h2("Tu sesión cambió de horario")}
+      ${sub("Revisa la nueva fecha")}
+      ${p(`Hola <strong>${esc(nombre)}</strong>,`)}
+      ${p(`Karen movió tu sesión de <strong>${esc(datos.servicio)}</strong>.`)}
+      ${caja(`
+        <p style="margin:0 0 6px;color:${MUTED};font-size:14px;text-decoration:line-through;">${cuando(datos.antes)}</p>
+        <p style="margin:0;color:${INK};font-size:16px;font-weight:700;">${cuando(datos.ahora)}</p>
+        <p style="margin:8px 0 0;color:${MUTED};font-size:13px;">Código ${esc(datos.codigo)}</p>
+      `)}
+      ${p("Si el nuevo horario no te sirve, escríbele a Karen y lo ven juntas.")}
+      ${boton("Ver mis citas", `${APP_URL}/mi-espacio/citas`)}
+    `),
+  });
+}
+
+export function correoEnlaceSesion(email: string, nombre: string, datos: { servicio: string; fecha: Date; enlace: string }) {
+  return enviar({
+    to: email,
+    subject: `Enlace para tu sesión del ${longDate(datos.fecha)}`,
+    html: plantilla(
+      `
+      ${h2("Tu enlace para la sesión")}
+      ${sub(cuando(datos.fecha))}
+      ${p(`Hola <strong>${esc(nombre)}</strong>,`)}
+      ${p(`Este es el enlace de la videollamada para tu sesión de <strong>${esc(datos.servicio)}</strong>. También queda guardado en tu espacio.`)}
+      ${boton("Entrar a la videollamada", esc(datos.enlace), MOSS)}
+      ${p("Conéctate desde un lugar tranquilo y privado unos minutos antes.")}
+    `,
+      MOSS,
+    ),
+  });
+}
+
+// ─── Contraseña ───────────────────────────────────────────────────────────────
+
+export function correoRecuperacion(email: string, nombre: string, enlace: string) {
+  return enviar({
+    to: email,
+    subject: "Elige una contraseña nueva para SoyKarengi",
+    html: plantilla(`
+      ${h2("Elige una contraseña nueva")}
+      ${sub("Pediste recuperar tu acceso")}
+      ${p(`Hola <strong>${esc(nombre)}</strong>,`)}
+      ${p("Usa este botón para elegir una contraseña nueva. El enlace sirve una sola vez y vence en una hora.")}
+      ${boton("Elegir contraseña", enlace)}
+      ${p(`<span style="color:${MUTED};font-size:13px;">Si no fuiste tú, ignora este correo: tu contraseña actual sigue funcionando.</span>`)}
+    `),
+  });
+}
+
+export function correoActivacion(email: string, nombre: string, enlace: string) {
+  return enviar({
+    to: email,
+    subject: "Karen te creó un espacio en SoyKarengi",
+    html: plantilla(`
+      ${h2("Tu espacio en SoyKarengi")}
+      ${sub("Solo falta que elijas tu contraseña")}
+      ${p(`Hola <strong>${esc(nombre)}</strong>,`)}
+      ${p("Karen agendó una sesión contigo y te creó una cuenta para que veas tus citas, recibas materiales y le envíes archivos. Para entrar, elige tu contraseña con este botón.")}
+      ${boton("Activar mi cuenta", enlace)}
+      ${p(`<span style="color:${MUTED};font-size:13px;">El enlace vence en 7 días. Si vence, usa «¿Olvidaste tu contraseña?» en la página de ingreso con este mismo correo.</span>`)}
     `),
   });
 }
@@ -408,14 +484,16 @@ export function avisoArchivosDeClienta(datos: {
 
 // ─── Avisos para Karen ────────────────────────────────────────────────────────
 
+/**
+ * Sin el motivo de consulta a propósito: es un dato clínico y el correo deja
+ * copias fuera de la plataforma (en la casilla que envía y en la que recibe).
+ * Karen lo lee en el panel.
+ */
 export function avisoNuevaReserva(datos: {
   cliente: string;
-  email: string;
-  telefono?: string | null;
   servicio: string;
   fecha: Date;
   modalidad: string;
-  motivo: string;
   primeraVez: boolean;
 }) {
   return enviar({
@@ -428,16 +506,9 @@ export function avisoNuevaReserva(datos: {
       ${caja(`
         ${fila("Servicio", datos.servicio)}
         ${fila("Modalidad", datos.modalidad)}
-        ${fila("Correo", datos.email)}
-        ${fila("Teléfono", datos.telefono)}
         ${datos.primeraVez ? `<p style="margin:6px 0 0;color:${MUTED};font-size:13px;">Es su primera vez en un proceso así.</p>` : ""}
       `)}
-      ${caja(
-        `<p style="margin:0 0 6px;color:${MUTED};font-size:12px;letter-spacing:.1em;text-transform:uppercase;">Formulario previo</p>
-         <p style="margin:0;color:#5B4636;font-size:14px;line-height:1.6;">${esc(datos.motivo)}</p>`,
-        MOSS,
-        "#EDF3ED",
-      )}
+      ${p("Lo que escribió en el formulario previo está en la agenda, junto a la cita.")}
       ${boton("Abrir la agenda", `${APP_URL}/admin/agenda`)}
     `),
   });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -60,9 +60,26 @@ const STATUS_COLOR: Record<string, string> = {
 
 const LOCKED = ["COMPLETADA", "CANCELADA"];
 
+/**
+ * Valor para un <input type="datetime-local"> en la hora de Karen, no en la del
+ * navegador: el servidor interpreta ese texto como hora del Este, así que si
+ * Karen abría el panel de viaje, el bloqueo quedaba corrido.
+ */
 function toLocalInput(date: Date) {
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  const partes = Object.fromEntries(
+    new Intl.DateTimeFormat("en-CA", {
+      timeZone: BUSINESS_TZ,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23",
+    })
+      .formatToParts(date)
+      .map((p) => [p.type, p.value]),
+  );
+  return `${partes.year}-${partes.month}-${partes.day}T${partes.hour}:${partes.minute}`;
 }
 
 function fullDate(value: string | Date) {
@@ -95,8 +112,22 @@ export function AgendaCalendar({
 
   const [detail, setDetail] = useState<CalendarAppointment | null>(null);
   const [blocked, setBlocked] = useState<CalendarBlackout | null>(null);
-  const [slot, setSlot] = useState<{ start: Date; end: Date } | null>(null);
+  const [slot, setSlot] = useState<{ start: Date; end: Date; allDay: boolean } | null>(null);
   const [slotMode, setSlotMode] = useState<"cita" | "bloqueo">("cita");
+  const [aviso, setAviso] = useState<string | null>(null);
+
+  // Escape cierra cualquier ventana abierta, como se espera de un modal.
+  useEffect(() => {
+    function alTeclear(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      setDetail(null);
+      setBlocked(null);
+      setSlot(null);
+      setAviso(null);
+    }
+    window.addEventListener("keydown", alTeclear);
+    return () => window.removeEventListener("keydown", alTeclear);
+  }, []);
 
   const events = [
     ...appointments.map((a) => ({
@@ -124,10 +155,21 @@ export function AgendaCalendar({
     })),
   ];
 
-  function run(action: (fd: FormData) => Promise<unknown>, fd: FormData, after?: () => void) {
+  /**
+   * Las acciones devuelven { error } cuando algo no se pudo hacer (horario
+   * ocupado, datos incompletos). Antes se ignoraba y el modal se cerraba igual,
+   * así que Karen creía que la cita había quedado agendada.
+   */
+  function run(action: (fd: FormData) => Promise<unknown>, fd: FormData, after?: () => void, onError?: () => void) {
     startTransition(async () => {
-      await action(fd);
+      const r = (await action(fd)) as { error?: string } | undefined;
       router.refresh();
+      if (r && typeof r === "object" && r.error) {
+        setAviso(r.error);
+        onError?.();
+        return;
+      }
+      setAviso(null);
       after?.();
     });
   }
@@ -148,17 +190,31 @@ export function AgendaCalendar({
     const fd = new FormData();
     fd.set("id", props.data.id);
     fd.set("startsAt", info.event.start.toISOString());
-    run(rescheduleAppointmentAction, fd);
+    // Si el horario está ocupado, la cita vuelve a su lugar en el calendario.
+    run(rescheduleAppointmentAction, fd, undefined, () => info.revert());
   }
 
   function handleSelect(info: DateSelectArg) {
-    setSlot({ start: info.start, end: info.end });
-    setSlotMode("cita");
+    setSlot({ start: info.start, end: info.end, allDay: info.allDay });
+    // En la vista Mes no hay hora: ahí solo tiene sentido bloquear días.
+    setSlotMode(info.allDay ? "bloqueo" : "cita");
     calendarRef.current?.getApi().unselect();
   }
 
   return (
     <>
+      {aviso ? (
+        <div
+          role="alert"
+          className="fixed inset-x-4 top-24 z-[60] mx-auto flex max-w-lg items-start justify-between gap-3 rounded-2xl border border-rose/40 bg-rose-soft px-5 py-4 text-sm text-rose-deep shadow-lg"
+        >
+          <span>{aviso}</span>
+          <button type="button" onClick={() => setAviso(null)} className="font-semibold" aria-label="Cerrar aviso">
+            ✕
+          </button>
+        </div>
+      ) : null}
+
       <div className="card-soft agenda-calendar overflow-hidden p-4 sm:p-6">
         <FullCalendar
           ref={calendarRef}
@@ -315,8 +371,10 @@ export function AgendaCalendar({
               <button
                 key={mode}
                 type="button"
+                disabled={mode === "cita" && slot.allDay}
+                title={mode === "cita" && slot.allDay ? "Para agendar una cita usa la vista Semana o Día" : undefined}
                 onClick={() => setSlotMode(mode)}
-                className={`flex-1 rounded-full px-4 py-2 text-[0.8125rem] font-semibold transition-colors ${
+                className={`flex-1 rounded-full px-4 py-2 text-[0.8125rem] font-semibold transition-colors disabled:opacity-40 ${
                   slotMode === mode ? "bg-ink text-cream" : "bg-shell text-ink-soft hover:bg-line"
                 }`}
               >
@@ -354,7 +412,7 @@ export function AgendaCalendar({
                 </label>
                 <label className="block">
                   <span className="mb-1.5 block text-sm font-semibold">Teléfono</span>
-                  <input name="phone" className={inputClass} placeholder="+1 (305) 555-0123" />
+                  <input name="phone" className={inputClass} placeholder="+1 …" />
                 </label>
                 <label className="block">
                   <span className="mb-1.5 block text-sm font-semibold">Modalidad</span>

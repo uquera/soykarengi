@@ -4,6 +4,7 @@ import { shortDate } from "@/lib/format";
 import { getDict, getLocale } from "@/lib/i18n";
 import { logoutAction } from "@/lib/actions/auth";
 import { ProfileForm } from "./profile-form";
+import { ClaveForm } from "./clave-form";
 
 export const dynamic = "force-dynamic";
 
@@ -31,12 +32,26 @@ export default async function MisDatosPage() {
           email: t.space.profile.email,
           emailHint: t.space.profile.emailHint,
           phone: t.space.profile.phone,
-          phonePlaceholder: "+1 (305) 555-0123",
+          phonePlaceholder: "+1 …",
           city: t.space.profile.city,
-          cityPlaceholder: "Miami, FL",
+          cityPlaceholder: locale === "en" ? "City, State" : "Ciudad",
           save: t.space.profile.save,
           saving: t.space.profile.saving,
           saved: t.space.profile.saved,
+        }}
+      />
+
+      <ClaveForm
+        copy={{
+          title: t.space.profile.passwordTitle,
+          actual: t.space.profile.passwordCurrent,
+          nueva: t.space.profile.passwordNew,
+          confirmar: t.space.profile.passwordConfirm,
+          hint: t.auth.passwordHint,
+          save: t.space.profile.passwordSave,
+          saving: t.space.profile.passwordSaving,
+          saved: t.space.profile.passwordSaved,
+          toggle: { show: t.auth.showPassword, hide: t.auth.hidePassword },
         }}
       />
 

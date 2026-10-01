@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
+import { rutaInterna } from "@/lib/next-url";
 import { getDict } from "@/lib/i18n";
 import { getUnidad, interesDesdeUnidad } from "@/lib/unidad";
 import { RegisterForm } from "./register-form";
@@ -17,11 +18,13 @@ export default async function RegistroPage({
 }: {
   searchParams: Promise<{ next?: string }>;
 }) {
-  const session = await getSession();
-  if (session) redirect(session.role === "ADMIN" ? "/admin" : "/mi-espacio");
+  // Con la base y no solo con el token: una cookie de una cuenta borrada
+  // mandaba de /ingresar a /mi-espacio y de vuelta, sin fin.
+  const user = await getCurrentUser();
+  if (user) redirect(user.role === "ADMIN" ? "/admin" : "/mi-espacio");
 
   const [{ next }, t, unidad] = await Promise.all([searchParams, getDict(), getUnidad()]);
-  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "";
+  const safeNext = rutaInterna(next);
 
   return (
     <>
@@ -38,7 +41,7 @@ export default async function RegistroPage({
           email: t.auth.email,
           phone: t.auth.phone,
           phoneHint: t.auth.phoneHint,
-          phonePlaceholder: "+1 (305) 555-0123",
+          phonePlaceholder: "+1 …",
           password: t.auth.password,
           passwordHint: t.auth.passwordHint,
           passwordToggle: { show: t.auth.showPassword, hide: t.auth.hidePassword },
@@ -47,6 +50,9 @@ export default async function RegistroPage({
           interestUnit1: t.auth.interestUnit1,
           interestUnit2: t.auth.interestUnit2,
           interestBoth: t.auth.interestBoth,
+          acceptLegal: t.auth.acceptLegal,
+          privacyLink: t.auth.privacyLink,
+          termsLink: t.auth.termsLink,
           register: t.auth.register,
           registering: t.auth.registering,
           haveAccount: t.auth.haveAccount,

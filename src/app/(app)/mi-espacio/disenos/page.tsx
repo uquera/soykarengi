@@ -5,6 +5,9 @@ import { money, shortDate } from "@/lib/format";
 import { getDict, getLocale } from "@/lib/i18n";
 import { designName } from "@/lib/content";
 import { approveQuoteAction, cancelRequestAction } from "@/lib/actions/designs";
+import { FormAccion } from "@/components/form-accion";
+import { getConfig } from "@/lib/config";
+import { urlArchivo } from "@/lib/archivos";
 import { ButtonLink, EmptyState, Badge } from "@/components/ui";
 import { RequestTimeline, StatusPill } from "@/components/request-timeline";
 
@@ -17,17 +20,23 @@ export default async function MisDisenosPage({
 }: {
   searchParams: Promise<{ nueva?: string }>;
 }) {
-  const [user, locale, t, { nueva }] = await Promise.all([
+  const [user, locale, t, { nueva }, config] = await Promise.all([
     requireUser(),
     getLocale(),
     getDict(),
     searchParams,
+    getConfig(),
   ]);
 
   const requests = await db.designRequest.findMany({
     where: { userId: user.id },
     orderBy: { createdAt: "desc" },
-    include: { design: true, attachments: true, deliverables: true },
+    include: {
+      design: true,
+      attachments: true,
+      deliverables: true,
+      archivos: { where: { tipo: "ENTREGABLE" }, orderBy: { createdAt: "asc" } },
+    },
   });
 
   return (
@@ -148,7 +157,7 @@ export default async function MisDisenosPage({
                     <p className="mt-2 text-sm leading-relaxed text-ink-soft">{r.quoteNotes}</p>
                   ) : null}
                   <div className="mt-5 flex flex-wrap gap-3">
-                    <form action={approveQuoteAction}>
+                    <FormAccion action={approveQuoteAction}>
                       <input type="hidden" name="id" value={r.id} />
                       <button
                         type="submit"
@@ -156,8 +165,8 @@ export default async function MisDisenosPage({
                       >
                         {t.space.designs.approve}
                       </button>
-                    </form>
-                    <form action={cancelRequestAction}>
+                    </FormAccion>
+                    <FormAccion action={cancelRequestAction} confirmar={t.space.designs.declineConfirm}>
                       <input type="hidden" name="id" value={r.id} />
                       <button
                         type="submit"
@@ -165,8 +174,38 @@ export default async function MisDisenosPage({
                       >
                         {t.space.designs.decline}
                       </button>
-                    </form>
+                    </FormAccion>
                   </div>
+                </div>
+              ) : null}
+
+              {r.status === "APROBADA" ? (
+                <div className="mt-6 rounded-2xl border border-moss/40 bg-moss-soft p-5">
+                  <p className="font-semibold text-moss-deep">{t.space.designs.approvedTitle}</p>
+                  <p className="mt-3 text-[0.6875rem] font-semibold tracking-wide text-muted uppercase">
+                    {t.space.designs.payTitle}
+                  </p>
+                  <p className="mt-1 text-sm leading-relaxed whitespace-pre-line text-ink-soft">
+                    {config.instruccionesPago || t.space.designs.payDefault}
+                  </p>
+                </div>
+              ) : null}
+
+              {r.archivos.length > 0 ? (
+                <div className="mt-6 rounded-2xl border border-orchid/30 bg-orchid-soft/60 p-5">
+                  <p className="font-semibold text-orchid-deep">{t.space.designs.deliveredFiles}</p>
+                  <ul className="mt-3 space-y-2">
+                    {r.archivos.map((a) => (
+                      <li key={a.id}>
+                        <a
+                          href={`${urlArchivo(a.id)}?descargar=1`}
+                          className="text-sm font-medium text-orchid-deep underline underline-offset-2"
+                        >
+                          ↓ {a.nombre}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               ) : null}
 

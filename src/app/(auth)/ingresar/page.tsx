@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { getSession } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
+import { rutaInterna } from "@/lib/next-url";
 import { getDict } from "@/lib/i18n";
 import { LoginForm } from "./login-form";
 
@@ -16,11 +17,13 @@ export default async function IngresarPage({
 }: {
   searchParams: Promise<{ next?: string }>;
 }) {
-  const session = await getSession();
-  if (session) redirect(session.role === "ADMIN" ? "/admin" : "/mi-espacio");
+  // Con la base y no solo con el token: una cookie de una cuenta borrada
+  // mandaba de /ingresar a /mi-espacio y de vuelta, sin fin.
+  const user = await getCurrentUser();
+  if (user) redirect(user.role === "ADMIN" ? "/admin" : "/mi-espacio");
 
   const [{ next }, t] = await Promise.all([searchParams, getDict()]);
-  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : "";
+  const safeNext = rutaInterna(next);
 
   return (
     <>
@@ -38,6 +41,7 @@ export default async function IngresarPage({
           loggingIn: t.auth.loggingIn,
           noAccount: t.auth.noAccount,
           createHere: t.auth.createHere,
+          forgot: t.auth.forgot,
         }}
       />
     </>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
+import { FormAccion } from "@/components/form-accion";
 import { money, shortDate } from "@/lib/format";
 import { ORDER_STATUSES, REQUEST_FLOW, REQUEST_LABEL } from "@/lib/domain";
 import { advanceRequestAction } from "@/lib/actions/designs";
@@ -75,7 +76,7 @@ export default async function AdminPedidosPage() {
 
               <div className="flex flex-wrap items-center gap-3">
                 <span className="font-[family-name:var(--font-display)] text-xl">{money(o.quoteAmount)}</span>
-                <form action={advanceRequestAction} className="flex items-center gap-2">
+                <FormAccion action={advanceRequestAction} className="flex flex-wrap items-center gap-2">
                   <input type="hidden" name="id" value={o.id} />
                   <select name="status" defaultValue={o.status} className={`${inputClass} w-auto py-2`}>
                     {REQUEST_FLOW.filter((s) => ORDER_STATUSES.includes(s)).map((s) => (
@@ -90,7 +91,7 @@ export default async function AdminPedidosPage() {
                   >
                     Actualizar
                   </button>
-                </form>
+                </FormAccion>
               </div>
             </div>
           ))}

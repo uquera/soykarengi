@@ -1,7 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
+import { useAccionSinReset } from "@/components/use-accion-sin-reset";
 import { sendContactAction } from "@/lib/actions/contact";
 import { Field, inputClass } from "@/components/ui";
 
@@ -24,8 +23,7 @@ export type ContactCopy = {
   phonePlaceholder: string;
 };
 
-function Submit({ label, pendingLabel }: { label: string; pendingLabel: string }) {
-  const { pending } = useFormStatus();
+function Submit({ label, pendingLabel, pending }: { label: string; pendingLabel: string; pending: boolean }) {
   return (
     <button
       type="submit"
@@ -38,7 +36,7 @@ function Submit({ label, pendingLabel }: { label: string; pendingLabel: string }
 }
 
 export function ContactForm({ copy }: { copy: ContactCopy }) {
-  const [state, action] = useActionState(sendContactAction, {});
+  const { state, onSubmit, pending } = useAccionSinReset(sendContactAction, {});
 
   if (state.ok) {
     return (
@@ -50,7 +48,7 @@ export function ContactForm({ copy }: { copy: ContactCopy }) {
   }
 
   return (
-    <form action={action} className="card-soft space-y-5 p-7">
+    <form onSubmit={onSubmit} className="card-soft space-y-5 p-7">
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label={copy.name}>
           <input name="name" required className={inputClass} placeholder={copy.namePlaceholder} />
@@ -89,7 +87,7 @@ export function ContactForm({ copy }: { copy: ContactCopy }) {
         </p>
       ) : null}
 
-      <Submit label={copy.send} pendingLabel={copy.sending} />
+      <Submit label={copy.send} pendingLabel={copy.sending} pending={pending} />
     </form>
   );
 }

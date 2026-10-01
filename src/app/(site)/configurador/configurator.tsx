@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useAccionSinReset } from "@/components/use-accion-sin-reset";
+import { useState } from "react";
 import { createDesignRequestAction } from "@/lib/actions/designs";
 import { EMOTIONS, FORMATS, PURPOSES } from "@/lib/domain";
 import { Field, inputClass } from "@/components/ui";
@@ -64,8 +64,7 @@ export type ConfiguratorCopy = {
   formatLabels: Record<string, string>;
 };
 
-function Submit({ label, pendingLabel }: { label: string; pendingLabel: string }) {
-  const { pending } = useFormStatus();
+function Submit({ label, pendingLabel, pending }: { label: string; pendingLabel: string; pending: boolean }) {
   return (
     <button
       type="submit"
@@ -88,7 +87,7 @@ export function Configurator({
   locale: FmtLocale;
   copy: ConfiguratorCopy;
 }) {
-  const [state, action] = useActionState(createDesignRequestAction, {});
+  const { state, onSubmit, pending } = useAccionSinReset(createDesignRequestAction, {});
 
   const [step, setStep] = useState(0);
   const [purpose, setPurpose] = useState("");
@@ -117,7 +116,7 @@ export function Configurator({
     setEmotions((prev) => (prev.includes(e) ? prev.filter((x) => x !== e) : [...prev, e]));
 
   return (
-    <form action={action}>
+    <form onSubmit={onSubmit}>
       {/* Progreso */}
       <ol className="mb-10 flex flex-wrap gap-1.5">
         {copy.steps.map((label, i) => (
@@ -360,7 +359,7 @@ export function Configurator({
             </div>
           </dl>
           <div className="mt-6">
-            <Submit label={copy.submit} pendingLabel={copy.sending} />
+            <Submit label={copy.submit} pendingLabel={copy.sending} pending={pending} />
           </div>
           <p className="mt-3 text-xs leading-relaxed text-muted">{copy.submitNote}</p>
         </div>

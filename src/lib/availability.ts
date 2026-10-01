@@ -1,60 +1,42 @@
 import { db } from "./db";
+import { getConfig, horarioEnPalabras, rangosCalendario } from "./config";
 
 /**
- * Agenda de Karen. Bloques de una hora, lunes a viernes 10:00–19:00 y
- * sábado 10:00–14:00. Domingo cerrado. Un bloque deja de ofrecerse si ya
- * tiene una cita activa o si cae dentro de un bloqueo del panel.
+ * Agenda de Karen. El horario sale de /admin/configuracion (bloques que
+ * empiezan a la hora en punto) y cada cita ocupa lo que dura su servicio:
+ * una mentoría de 75 minutos a las 10:00 también tapa el bloque de las 11:00.
+ * Un bloque deja de ofrecerse si choca con una cita activa o con un bloqueo.
+ *
+ * Las fechas se arman con la hora local del proceso, que en el VPS es
+ * America/New_York (TZ del ecosistema PM2; ver src/lib/timezone.ts).
  */
-const WEEK = [
-  [], // domingo
-  [10, 11, 12, 15, 16, 17, 18], // lunes
-  [10, 11, 12, 15, 16, 17, 18],
-  [10, 11, 12, 15, 16, 17, 18],
-  [10, 11, 12, 15, 16, 17, 18],
-  [10, 11, 12, 15, 16, 17],
-  [10, 11, 12, 13], // sábado
-];
+
+const ACTIVAS = ["PENDIENTE", "CONFIRMADA"];
+const MIN = 60 * 1000;
+/** La sesión más larga posible: sirve para acotar la búsqueda de choques. */
+const MAX_DURACION_MIN = 8 * 60;
 
 /** Ventana que dibuja el calendario del panel, un poco más ancha que la de atención. */
-export const CALENDAR_WINDOW = { min: "08:00:00", max: "21:00:00" };
+export const CALENDAR_WINDOW = { min: "07:00:00", max: "22:00:00" };
 
-export function businessHoursLabel(locale: "es" | "en" = "es") {
-  return locale === "en"
-    ? "Mon to Fri 10:00–19:00 · Sat 10:00–14:00"
-    : "Lun a Vie 10:00–19:00 · Sáb 10:00–14:00";
+export async function businessHoursLabel(locale: "es" | "en" = "es") {
+  const { semana } = await getConfig();
+  return horarioEnPalabras(semana, locale);
 }
 
 /** Horario de atención en el formato que entiende FullCalendar. */
-export function businessHoursRanges() {
-  return WEEK.flatMap((hours, weekday) => {
-    if (hours.length === 0) return [];
-    // Los bloques del día pueden venir cortados (mañana y tarde); los agrupamos.
-    const ranges: { daysOfWeek: number[]; startTime: string; endTime: string }[] = [];
-    let start = hours[0];
-    let prev = hours[0];
-
-    for (const h of hours.slice(1)) {
-      if (h !== prev + 1) {
-        ranges.push({ daysOfWeek: [weekday], startTime: hh(start), endTime: hh(prev + 1) });
-        start = h;
-      }
-      prev = h;
-    }
-    ranges.push({ daysOfWeek: [weekday], startTime: hh(start), endTime: hh(prev + 1) });
-    return ranges;
-  });
+export async function businessHoursRanges() {
+  const { semana } = await getConfig();
+  return rangosCalendario(semana);
 }
 
-function hh(hour: number) {
-  return `${String(hour).padStart(2, "0")}:00:00`;
-}
-
-/** "2026-09-15" → Date local a las 00:00, sin sorpresas de zona horaria. */
+/** "2026-09-15" → Date local a las 00:00. Rechaza fechas imposibles (31-feb). */
 export function parseDay(iso: string) {
   const [y, m, d] = iso.split("-").map(Number);
   if (!y || !m || !d) return null;
   const date = new Date(y, m - 1, d, 0, 0, 0, 0);
-  return Number.isNaN(date.getTime()) ? null : date;
+  if (Number.isNaN(date.getTime()) || date.getMonth() !== m - 1 || date.getDate() !== d) return null;
+  return date;
 }
 
 export function toISODay(date: Date) {
@@ -64,64 +46,95 @@ export function toISODay(date: Date) {
   return `${y}-${m}-${d}`;
 }
 
-export function slotsForDay(day: Date) {
-  return WEEK[day.getDay()] ?? [];
+export async function slotsForDay(day: Date) {
+  const { semana } = await getConfig();
+  return semana[day.getDay()] ?? [];
 }
 
-/** ¿Este bloque de una hora choca con algún bloqueo del panel? */
-export async function isBlocked(at: Date) {
-  const end = new Date(at);
-  end.setHours(end.getHours() + 1);
+/**
+ * ¿Una cita de `duracionMin` que empieza en `inicio` choca con algo?
+ * Devuelve qué la bloquea, o null si el hueco está libre.
+ */
+export async function conflicto(
+  inicio: Date,
+  duracionMin: number,
+  excluirId?: string,
+): Promise<"cita" | "bloqueo" | null> {
+  const fin = new Date(inicio.getTime() + duracionMin * MIN);
 
-  const clash = await db.blackout.findFirst({
-    where: { startsAt: { lt: end }, endsAt: { gt: at } },
-    select: { id: true },
+  const [citas, bloqueo] = await Promise.all([
+    db.appointment.findMany({
+      where: {
+        status: { in: ACTIVAS },
+        startsAt: { lt: fin, gt: new Date(inicio.getTime() - MAX_DURACION_MIN * MIN) },
+        ...(excluirId ? { id: { not: excluirId } } : {}),
+      },
+      select: { startsAt: true, service: { select: { durationMin: true } } },
+    }),
+    db.blackout.findFirst({
+      where: { startsAt: { lt: fin }, endsAt: { gt: inicio } },
+      select: { id: true },
+    }),
+  ]);
+
+  const chocaCita = citas.some((c) => {
+    const finCita = new Date(c.startsAt.getTime() + c.service.durationMin * MIN);
+    return c.startsAt < fin && finCita > inicio;
   });
 
-  return clash !== null;
+  if (chocaCita) return "cita";
+  if (bloqueo) return "bloqueo";
+  return null;
 }
 
-export async function availableSlots(isoDay: string) {
+export async function availableSlots(isoDay: string, duracionMin = 60) {
   const day = parseDay(isoDay);
   if (!day) return [];
 
-  const hours = slotsForDay(day);
+  const hours = await slotsForDay(day);
   if (hours.length === 0) return [];
 
   const next = new Date(day);
   next.setDate(next.getDate() + 1);
+  const duracion = Math.max(15, Math.min(duracionMin, MAX_DURACION_MIN));
 
-  const [taken, blackouts] = await Promise.all([
+  const [citas, blackouts] = await Promise.all([
     db.appointment.findMany({
-      where: { startsAt: { gte: day, lt: next }, status: { in: ["PENDIENTE", "CONFIRMADA"] } },
-      select: { startsAt: true },
+      where: {
+        status: { in: ACTIVAS },
+        startsAt: { lt: new Date(next.getTime() + MAX_DURACION_MIN * MIN), gt: new Date(day.getTime() - MAX_DURACION_MIN * MIN) },
+      },
+      select: { startsAt: true, service: { select: { durationMin: true } } },
     }),
     db.blackout.findMany({
-      where: { startsAt: { lt: next }, endsAt: { gt: day } },
+      where: { startsAt: { lt: new Date(next.getTime() + MAX_DURACION_MIN * MIN) }, endsAt: { gt: day } },
       select: { startsAt: true, endsAt: true },
     }),
   ]);
 
-  const takenHours = new Set(taken.map((a) => new Date(a.startsAt).getHours()));
-  const now = new Date();
+  const ocupado = citas.map((c) => ({
+    desde: c.startsAt.getTime(),
+    hasta: c.startsAt.getTime() + c.service.durationMin * MIN,
+  }));
+  const now = Date.now();
 
   return hours
     .map((h) => {
       const at = new Date(day);
       at.setHours(h, 0, 0, 0);
-      const end = new Date(at);
-      end.setHours(h + 1);
-      return { hour: h, at, end, label: `${String(h).padStart(2, "0")}:00` };
+      return { hour: h, desde: at.getTime(), hasta: at.getTime() + duracion * MIN };
     })
     .filter((slot) => {
-      if (takenHours.has(slot.hour) || slot.at <= now) return false;
-      return !blackouts.some((b) => new Date(b.startsAt) < slot.end && new Date(b.endsAt) > slot.at);
+      if (slot.desde <= now) return false;
+      if (ocupado.some((o) => o.desde < slot.hasta && o.hasta > slot.desde)) return false;
+      return !blackouts.some((b) => b.startsAt.getTime() < slot.hasta && b.endsAt.getTime() > slot.desde);
     })
-    .map((slot) => ({ hour: slot.hour, label: slot.label }));
+    .map((slot) => ({ hour: slot.hour, label: `${String(slot.hour).padStart(2, "0")}:00` }));
 }
 
-/** Próximos días con al menos un bloque libre, para sugerir en la agenda. */
-export function upcomingDays(count = 14, locale: "es" | "en" = "es") {
+/** Próximos días para elegir en la agenda; los que no tienen horario salen cerrados. */
+export async function upcomingDays(count = 14, locale: "es" | "en" = "es") {
+  const { semana } = await getConfig();
   const intl = locale === "en" ? "en-US" : "es-US";
   const out: { iso: string; label: string; weekday: string; open: boolean }[] = [];
   const cursor = new Date();
@@ -133,7 +146,7 @@ export function upcomingDays(count = 14, locale: "es" | "en" = "es") {
       iso: toISODay(cursor),
       label: cursor.toLocaleDateString(intl, { month: "short", day: "numeric" }),
       weekday: cursor.toLocaleDateString(intl, { weekday: "short" }),
-      open: slotsForDay(cursor).length > 0,
+      open: (semana[cursor.getDay()] ?? []).length > 0,
     });
     cursor.setDate(cursor.getDate() + 1);
   }

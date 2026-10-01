@@ -1,8 +1,7 @@
 "use client";
 
+import { useAccionSinReset } from "@/components/use-accion-sin-reset";
 import Link from "next/link";
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
 import { loginAction } from "@/lib/actions/auth";
 import { Field, inputClass } from "@/components/ui";
 import { PasswordInput, type PasswordCopy } from "@/components/password-input";
@@ -15,10 +14,10 @@ export type LoginCopy = {
   loggingIn: string;
   noAccount: string;
   createHere: string;
+  forgot: string;
 };
 
-function Submit({ label, pendingLabel }: { label: string; pendingLabel: string }) {
-  const { pending } = useFormStatus();
+function Submit({ label, pendingLabel, pending }: { label: string; pendingLabel: string; pending: boolean }) {
   return (
     <button
       type="submit"
@@ -31,10 +30,10 @@ function Submit({ label, pendingLabel }: { label: string; pendingLabel: string }
 }
 
 export function LoginForm({ next, copy }: { next: string; copy: LoginCopy }) {
-  const [state, action] = useActionState(loginAction, {});
+  const { state, onSubmit, pending } = useAccionSinReset(loginAction, {});
 
   return (
-    <form action={action} className="space-y-5">
+    <form onSubmit={onSubmit} className="space-y-5">
       <input type="hidden" name="next" value={next} />
 
       <Field label={copy.email}>
@@ -44,6 +43,11 @@ export function LoginForm({ next, copy }: { next: string; copy: LoginCopy }) {
       <Field label={copy.password}>
         <PasswordInput autoComplete="current-password" copy={copy.passwordToggle} />
       </Field>
+      <p className="-mt-2 text-right text-[0.8125rem]">
+        <Link href="/olvide-clave" className="text-muted underline underline-offset-2 hover:text-ink">
+          {copy.forgot}
+        </Link>
+      </p>
 
       {state.error ? (
         <p className="rounded-xl border border-rose/40 bg-rose-soft px-4 py-3 text-sm text-rose-deep">
@@ -51,7 +55,7 @@ export function LoginForm({ next, copy }: { next: string; copy: LoginCopy }) {
         </p>
       ) : null}
 
-      <Submit label={copy.login} pendingLabel={copy.loggingIn} />
+      <Submit label={copy.login} pendingLabel={copy.loggingIn} pending={pending} />
 
       <p className="text-center text-sm text-muted">
         {copy.noAccount}{" "}

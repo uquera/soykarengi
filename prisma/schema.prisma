@@ -30,6 +30,8 @@ model User {
   favorites      Favorite[]
   archivos       Archivo[] @relation("CarpetaDeCliente")
   subidos        Archivo[] @relation("SubidoPor")
+  aceptaciones   Aceptacion[]
+  tokens         TokenClave[]
 
   @@index([role])
 }
@@ -79,6 +81,11 @@ model Appointment {
   reason    String // motivo de consulta (formulario previo)
   firstTime Boolean  @default(true)
   notes     String? // notas internas de Karen
+  /// Enlace de la videollamada (Zoom, Meet…). Lo pone Karen y lo ve la clienta.
+  meetingUrl String?
+  /// Precio del servicio al reservar: si Karen cambia la tarifa después, las
+  /// sesiones ya agendadas no cambian de valor en Finanzas.
+  price      Int?
   createdAt DateTime @default(now())
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -350,4 +357,72 @@ model PagoLicencia {
 
   @@index([fechaPago])
   @@map("pagos_licencia")
+}
+
+// ──────────────────── CONFIGURACIÓN Y DOCUMENTOS LEGALES ────────────────────
+
+/// Lo que Karen edita desde /admin/configuracion. Una sola fila ("general").
+/// Los campos vacíos caen a los valores por defecto de src/lib/config.ts.
+model Configuracion {
+  id                String   @id @default("general")
+  contactoEmail     String   @default("")
+  whatsapp          String   @default("")
+  instagram         String   @default("")
+  /// Dirección de la consulta presencial. Vacía = solo online.
+  direccion         String   @default("")
+  /// JSON {"1":[10,11,12],...} con las horas de inicio por día (0 = domingo).
+  horario           String   @default("")
+  /// Antelación mínima para que una clienta cancele sola desde su espacio.
+  cancelacionHoras  Int      @default(24)
+  cancelacionTexto  String   @default("")
+  instruccionesPago String   @default("")
+  avisoCrisis       String   @default("")
+  updatedAt         DateTime @updatedAt
+}
+
+/// Privacidad, términos y consentimiento informado, con versiones: cada
+/// cambio publicado es una versión nueva y las anteriores quedan intactas,
+/// porque una aceptación tiene que poder mostrar el texto exacto que se aceptó.
+model DocumentoLegal {
+  id        String   @id @default(cuid())
+  tipo      String // PRIVACIDAD | TERMINOS | CONSENTIMIENTO
+  version   Int
+  titulo    String
+  contenido String
+  createdAt DateTime @default(now())
+
+  aceptaciones Aceptacion[]
+
+  @@unique([tipo, version])
+}
+
+model Aceptacion {
+  id          String   @id @default(cuid())
+  userId      String
+  documentoId String
+  aceptadoAt  DateTime @default(now())
+  ip          String?
+  userAgent   String?
+
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documento DocumentoLegal @relation(fields: [documentoId], references: [id])
+
+  @@unique([userId, documentoId])
+}
+
+/// Enlaces de un solo uso para recuperar la contraseña o activar una cuenta
+/// creada por Karen. Se guarda la huella SHA-256, nunca el token: quien lea la
+/// base no puede usar los enlaces pendientes.
+model TokenClave {
+  id        String    @id @default(cuid())
+  userId    String
+  hash      String    @unique
+  proposito String // RECUPERAR | ACTIVAR
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

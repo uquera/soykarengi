@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
+import { getFinanceSummary } from "@/lib/finance";
 import { requireAdmin } from "@/lib/auth";
 import { dateTime, money, shortDate } from "@/lib/format";
 import { APPOINTMENT_LABEL, ORDER_STATUSES } from "@/lib/domain";
@@ -64,11 +65,12 @@ export default async function AdminPage() {
     db.designRequest.count({ where: { status: { in: ORDER_STATUSES, notIn: ["ENTREGADA"] } } }),
     db.designRequest.count({ where: { status: "ENTREGADA" } }),
     db.contactMessage.count({ where: { handled: false } }),
-    db.designRequest.aggregate({
-      _sum: { quoteAmount: true },
-      where: { paidAt: { gte: startOfMonth } },
+    // La misma cuenta que Finanzas: sesiones realizadas, pedidos pagados y
+    // ventas registradas a mano. Antes aquí solo sumaban los pedidos.
+    getFinanceSummary(startOfMonth, new Date()),
+    db.appointment.count({
+      where: { startsAt: { gte: startOfMonth, lte: new Date() }, status: "COMPLETADA" },
     }),
-    db.appointment.count({ where: { startsAt: { gte: startOfMonth }, status: { not: "CANCELADA" } } }),
   ]);
 
   return (
@@ -87,8 +89,13 @@ export default async function AdminPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Stat label="Ingresos del mes" value={money(ingresosMes._sum.quoteAmount ?? 0)} hint="Pedidos pagados" />
-        <Stat label="Sesiones del mes" value={citasMes} hint="Citas no canceladas" />
+        <Stat
+          label="Ingresos del mes"
+          value={money(ingresosMes.kpis.income)}
+          hint="Sesiones, pedidos y ventas · igual que Finanzas"
+          href="/admin/finanzas"
+        />
+        <Stat label="Sesiones realizadas" value={citasMes} hint="Este mes, marcadas como realizadas" />
         <Stat label="Proyectos entregados" value={entregadas} hint="Histórico" />
       </div>
 

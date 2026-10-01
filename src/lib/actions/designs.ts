@@ -5,8 +5,10 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
+import { getLicenciaStatus } from "@/lib/licencia";
 import { makeCode } from "@/lib/format";
-import { REQUEST_FLOW } from "@/lib/domain";
+import { ORDER_STATUSES, REQUEST_FLOW } from "@/lib/domain";
+import { urlArchivo } from "@/lib/archivos";
 import {
   avisoNuevaSolicitud,
   avisoRespuestaCotizacion,
@@ -37,6 +39,7 @@ const schema = z.object({
 export async function createDesignRequestAction(_prev: FormState, formData: FormData): Promise<FormState> {
   const user = await getCurrentUser();
   if (!user) return { error: "Necesitas una cuenta para enviar tu solicitud. Ingresa o regístrate." };
+  if ((await getLicenciaStatus()).bloqueada) return { error: "El configurador no está disponible en este momento." };
 
   const parsed = schema.safeParse({
     purpose: formData.get("purpose"),
@@ -157,13 +160,19 @@ export async function toggleFavoriteAction(formData: FormData) {
 }
 
 /** Cliente aprueba la cotización que Karen le envió. */
-export async function approveQuoteAction(formData: FormData) {
+type Resultado = { ok?: boolean; error?: string };
+
+/** Antes del pago una solicitud se puede cotizar, aprobar o cancelar. */
+const ANTES_DEL_PAGO = ["SOLICITUD", "COTIZADA", "APROBADA"];
+
+export async function approveQuoteAction(formData: FormData): Promise<Resultado> {
   const user = await getCurrentUser();
   if (!user) redirect("/ingresar");
 
   const id = String(formData.get("id") ?? "");
   const request = await db.designRequest.findUnique({ where: { id }, include: { design: true } });
-  if (!request || request.userId !== user.id || request.status !== "COTIZADA") return;
+  if (!request || request.userId !== user.id) return { error: "Esa solicitud no es tuya." };
+  if (request.status !== "COTIZADA") return { error: "Esta cotización ya no está esperando respuesta." };
 
   await db.designRequest.update({ where: { id }, data: { status: "APROBADA" } });
 
@@ -175,23 +184,36 @@ export async function approveQuoteAction(formData: FormData) {
     aprobada: true,
   });
 
-  revalidatePath("/mi-espacio/disenos");
-  revalidatePath("/admin/solicitudes");
+  revalidatePath("/mi-espacio", "layout");
+  revalidatePath("/admin", "layout");
+  return { ok: true };
 }
 
-export async function cancelRequestAction(formData: FormData) {
+/**
+ * La clienta puede bajarse mientras no haya pagado. Karen puede cancelar en
+ * cualquier momento salvo un pedido ya entregado.
+ */
+export async function cancelRequestAction(formData: FormData): Promise<Resultado> {
   const user = await getCurrentUser();
   if (!user) redirect("/ingresar");
 
   const id = String(formData.get("id") ?? "");
   const request = await db.designRequest.findUnique({ where: { id }, include: { design: true } });
-  if (!request) return;
-  if (request.userId !== user.id && user.role !== "ADMIN") return;
+  if (!request) return { error: "Esa solicitud ya no existe." };
+
+  const esAdmin = user.role === "ADMIN";
+  if (request.userId !== user.id && !esAdmin) return { error: "Esa solicitud no es tuya." };
+  if (!esAdmin && !ANTES_DEL_PAGO.includes(request.status)) {
+    return { error: "Tu pedido ya está en producción. Para cambiar algo, escríbele a Karen." };
+  }
+  if (request.status === "ENTREGADA" || request.status === "CANCELADA") {
+    return { error: "Esta solicitud ya está cerrada." };
+  }
 
   await db.designRequest.update({ where: { id }, data: { status: "CANCELADA" } });
 
   // Si la clienta es quien se baja, Karen necesita enterarse.
-  if (request.userId === user.id && user.role !== "ADMIN") {
+  if (request.userId === user.id && !esAdmin) {
     await avisoRespuestaCotizacion({
       cliente: user.name,
       codigo: request.code,
@@ -200,20 +222,31 @@ export async function cancelRequestAction(formData: FormData) {
       aprobada: false,
     });
   }
-  revalidatePath("/mi-espacio/disenos");
-  revalidatePath("/admin/solicitudes");
+  revalidatePath("/mi-espacio", "layout");
+  revalidatePath("/admin", "layout");
+  return { ok: true };
 }
 
-/** Karen cotiza: monto + notas, y la solicitud pasa a COTIZADA. */
-export async function quoteRequestAction(formData: FormData) {
+/**
+ * Karen cotiza: monto + notas, y la solicitud pasa a COTIZADA. Solo antes de
+ * que la clienta apruebe: «Actualizar cotización» sobre un pedido pagado lo
+ * devolvía a COTIZADA y el ingreso desaparecía de Finanzas.
+ */
+export async function quoteRequestAction(formData: FormData): Promise<Resultado> {
   const user = await getCurrentUser();
   if (!user || user.role !== "ADMIN") redirect("/ingresar");
 
   const id = String(formData.get("id") ?? "");
   const amount = Number(formData.get("quoteAmount"));
-  if (!Number.isFinite(amount) || amount <= 0) return;
+  if (!Number.isFinite(amount) || amount <= 0) return { error: "Escribe un monto mayor que cero." };
 
-  const notas = String(formData.get("quoteNotes") ?? "").trim() || null;
+  const actual = await db.designRequest.findUnique({ where: { id } });
+  if (!actual) return { error: "Esa solicitud ya no existe." };
+  if (actual.status !== "SOLICITUD" && actual.status !== "COTIZADA") {
+    return { error: "Esta solicitud ya fue aprobada; su cotización no se puede cambiar." };
+  }
+
+  const notas = String(formData.get("quoteNotes") ?? "").trim().slice(0, 2000) || null;
   const request = await db.designRequest.update({
     where: { id },
     data: {
@@ -232,52 +265,68 @@ export async function quoteRequestAction(formData: FormData) {
     notas,
   });
 
-  revalidatePath("/admin/solicitudes");
-  revalidatePath("/mi-espacio/disenos");
+  revalidatePath("/admin", "layout");
+  revalidatePath("/mi-espacio", "layout");
+  return { ok: true };
 }
 
-export async function advanceRequestAction(formData: FormData) {
+export async function advanceRequestAction(formData: FormData): Promise<Resultado> {
   const user = await getCurrentUser();
   if (!user || user.role !== "ADMIN") redirect("/ingresar");
 
   const id = String(formData.get("id") ?? "");
   const status = String(formData.get("status") ?? "");
-  if (!REQUEST_FLOW.includes(status as (typeof REQUEST_FLOW)[number]) && status !== "CANCELADA") return;
+  if (!REQUEST_FLOW.includes(status as (typeof REQUEST_FLOW)[number]) && status !== "CANCELADA") {
+    return { error: "Estado desconocido." };
+  }
 
   const antes = await db.designRequest.findUnique({ where: { id } });
-  if (!antes) return;
+  if (!antes) return { error: "Esa solicitud ya no existe." };
+  if (status === antes.status) return { ok: true };
+
+  const pagadaAntes = ORDER_STATUSES.includes(antes.status);
+  const pagadaDespues = ORDER_STATUSES.includes(status);
+
+  if (pagadaDespues && !antes.quoteAmount) {
+    return { error: "Primero envía una cotización: sin monto, el pago no puede registrarse." };
+  }
+  // Un pedido pagado no vuelve a ser solicitud: el ingreso ya está en Finanzas.
+  if (pagadaAntes && !pagadaDespues && status !== "CANCELADA") {
+    return { error: "Este pedido ya está pagado; no puede volver a una etapa anterior al pago." };
+  }
 
   const request = await db.designRequest.update({
     where: { id },
     data: {
       status,
-      ...(status === "PAGADA" ? { paidAt: new Date() } : {}),
-      ...(status === "ENTREGADA" ? { deliveredAt: new Date() } : {}),
+      // Las fechas se fijan la primera vez y no se pisan al volver a guardar.
+      ...(pagadaDespues && !antes.paidAt ? { paidAt: new Date() } : {}),
+      ...(status === "ENTREGADA" && !antes.deliveredAt ? { deliveredAt: new Date() } : {}),
     },
-    include: { user: true, design: true, deliverables: true },
+    include: { user: true, design: true, deliverables: true, archivos: { where: { tipo: "ENTREGABLE" } } },
   });
 
   // Tres momentos valen un correo; el resto del avance se ve en Mi espacio.
-  if (status !== antes.status) {
-    const datos = { codigo: request.code, pieza: nombrePieza(request.design?.name) };
-    const { email, name } = request.user;
+  const datos = { codigo: request.code, pieza: nombrePieza(request.design?.name) };
+  const { email, name } = request.user;
 
-    if (status === "PAGADA") {
-      await correoPagoConfirmado(email, name, { ...datos, monto: request.quoteAmount });
-    } else if (status === "REVISION") {
-      await correoPropuestaLista(email, name, datos);
-    } else if (status === "ENTREGADA") {
-      await correoEntrega(email, name, {
-        ...datos,
-        archivos: request.deliverables.map((d) => ({ name: d.name, url: d.url })),
-      });
-    }
+  if (status === "PAGADA") {
+    await correoPagoConfirmado(email, name, { ...datos, monto: request.quoteAmount });
+  } else if (status === "REVISION") {
+    await correoPropuestaLista(email, name, datos);
+  } else if (status === "ENTREGADA") {
+    await correoEntrega(email, name, {
+      ...datos,
+      archivos: [
+        ...request.archivos.map((a) => ({ name: a.nombre, url: `${process.env.APP_URL ?? ""}${urlArchivo(a.id)}` })),
+        ...request.deliverables.map((d) => ({ name: d.name, url: d.url })),
+      ],
+    });
   }
 
-  revalidatePath("/admin/solicitudes");
-  revalidatePath("/admin/pedidos");
-  revalidatePath("/mi-espacio/disenos");
-  revalidatePath("/mi-espacio/pedidos");
+  revalidatePath("/admin", "layout");
+  revalidatePath("/mi-espacio", "layout");
+  return { ok: true };
 }
 
 export async function addDeliverableAction(formData: FormData) {

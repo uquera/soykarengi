@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
+import { useAccionSinReset } from "@/components/use-accion-sin-reset";
+import { useState } from "react";
 import { saveDesignAction } from "@/lib/actions/admin";
 import { PALETTES, INTENTS } from "@/lib/domain";
 import { Field, inputClass } from "@/components/ui";
@@ -30,8 +30,7 @@ type Design = {
   customFieldsEn: string | null;
 };
 
-function Submit({ isNew }: { isNew: boolean }) {
-  const { pending } = useFormStatus();
+function Submit({ isNew, pending }: { isNew: boolean; pending: boolean }) {
   return (
     <button
       type="submit"
@@ -50,11 +49,11 @@ export function DesignForm({
   design?: Design;
   categories: { id: string; name: string; group: string }[];
 }) {
-  const [state, action] = useActionState(saveDesignAction, {});
+  const { state, onSubmit, pending } = useAccionSinReset(saveDesignAction, {});
   const [imagen, setImagen] = useState(design?.image ?? "");
 
   return (
-    <form action={action} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6">
       {design ? <input type="hidden" name="id" value={design.id} /> : null}
 
       <div className="card-soft space-y-5 p-7">
@@ -264,7 +263,7 @@ export function DesignForm({
         </p>
       ) : null}
 
-      <Submit isNew={!design} />
+      <Submit isNew={!design} pending={pending} />
     </form>
   );
 }

@@ -57,14 +57,14 @@ export default async function AdminClientesPage({
       </header>
 
       <div className="flex flex-wrap gap-2">
-        <a
+        <Link
           href="/admin/clientes"
           className={`rounded-full border px-4 py-2 text-[0.8125rem] font-medium transition-colors ${
             !s ? "border-ink bg-ink text-cream" : "border-line bg-white hover:border-ink/40"
           }`}
         >
           Todos · {enriched.length}
-        </a>
+        </Link>
         {(Object.keys(tally) as (keyof typeof tally)[]).map((key) => (
           <a
             key={key}

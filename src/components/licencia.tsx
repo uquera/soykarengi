@@ -100,3 +100,36 @@ export function LicenciaBloqueada({ licencia }: { licencia: LicenciaStatus }) {
     </div>
   );
 }
+
+/** Lo que ve una clienta mientras la plataforma está pausada. */
+export function PlataformaEnPausa({ contacto, avisoCrisis }: { contacto: string; avisoCrisis: string }) {
+  return (
+    <div className="grid min-h-dvh place-items-center bg-cream px-5 py-16">
+      <div className="card-soft w-full max-w-md p-9 text-center">
+        <div className="flex justify-center">
+          <BrandMark size={56} />
+        </div>
+        <h1 className="mt-6 font-[family-name:var(--font-display)] text-2xl">Tu espacio está en pausa</h1>
+        <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+          Estamos haciendo un mantenimiento y tu espacio no está disponible por el momento. Tus citas, archivos y
+          datos están guardados y vuelven tal como los dejaste.
+        </p>
+        {contacto ? (
+          <p className="mt-4 text-sm text-ink-soft">
+            Si necesitas algo, escribe a{" "}
+            <a href={`mailto:${contacto}`} className="font-semibold text-ink underline underline-offset-2">
+              {contacto}
+            </a>
+            .
+          </p>
+        ) : null}
+        <p className="mt-6 rounded-xl bg-rose-soft px-4 py-3 text-left text-[0.8125rem] leading-relaxed text-rose-deep">
+          {avisoCrisis}
+        </p>
+        <Link href="/" className="mt-6 inline-block text-sm text-muted underline underline-offset-2 hover:text-ink">
+          Ir al sitio
+        </Link>
+      </div>
+    </div>
+  );
+}

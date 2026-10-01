@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/auth";
 import { dateTime, money, shortDate } from "@/lib/format";
 import { APPOINTMENT_LABEL, SEGMENT_LABEL, segmentOf } from "@/lib/domain";
 import { INTERES_LABEL, parseInteres } from "@/lib/unidad";
+import { LEGAL_META, type TipoLegal } from "@/lib/legal";
 import { Badge } from "@/components/ui";
 import { StatusPill } from "@/components/request-timeline";
 import { FileUploader } from "@/components/file-uploader";
@@ -33,6 +34,7 @@ export default async function FichaClientePage({ params }: { params: Promise<{ i
       appointments: { orderBy: { startsAt: "desc" }, include: { service: true } },
       designRequests: { orderBy: { createdAt: "desc" }, include: { design: true } },
       archivos: { orderBy: { createdAt: "desc" } },
+      aceptaciones: { orderBy: { aceptadoAt: "desc" }, include: { documento: true } },
     },
   });
   if (!cliente || cliente.role === "ADMIN") notFound();
@@ -92,6 +94,31 @@ export default async function FichaClientePage({ params }: { params: Promise<{ i
           <div className="mt-5">
             <ArchivoList archivos={recibidos} puedeBorrar />
           </div>
+        )}
+      </section>
+
+      {/* ── Documentos aceptados ───────────────────────────────────────── */}
+      <section className="card-soft p-6">
+        <p className="eyebrow text-muted">Documentos aceptados</p>
+        {cliente.aceptaciones.length === 0 ? (
+          <p className="mt-3 text-sm text-muted">
+            Todavía no aceptó ningún documento. Se le pedirá al entrar a su espacio y antes de su próxima reserva.
+          </p>
+        ) : (
+          <ul className="mt-4 divide-y divide-line">
+            {cliente.aceptaciones.map((a) => (
+              <li key={a.id} className="flex flex-wrap items-center justify-between gap-2 py-2.5 text-sm first:pt-0 last:pb-0">
+                <span>
+                  <span className="font-semibold">{LEGAL_META[a.documento.tipo as TipoLegal]?.titulo ?? a.documento.tipo}</span>{" "}
+                  <span className="text-muted">· versión {a.documento.version}</span>
+                </span>
+                <span className="text-[0.8125rem] text-muted">
+                  {dateTime(a.aceptadoAt)}
+                  {a.ip ? ` · IP ${a.ip}` : ""}
+                </span>
+              </li>
+            ))}
+          </ul>
         )}
       </section>
 

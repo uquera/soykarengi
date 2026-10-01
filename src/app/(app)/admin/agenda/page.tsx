@@ -3,8 +3,14 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { dateTime, money, shortDate } from "@/lib/format";
 import { APPOINTMENT_LABEL, APPOINTMENT_STATUSES } from "@/lib/domain";
+import Link from "next/link";
 import { businessHoursRanges, CALENDAR_WINDOW } from "@/lib/availability";
-import { setAppointmentStatusAction, saveAppointmentNotesAction } from "@/lib/actions/booking";
+import { FormAccion } from "@/components/form-accion";
+import {
+  guardarEnlaceAction,
+  saveAppointmentNotesAction,
+  setAppointmentStatusAction,
+} from "@/lib/actions/booking";
 import { deleteBlackoutAction } from "@/lib/actions/booking";
 import { Badge, EmptyState, inputClass } from "@/components/ui";
 import { AgendaCalendar } from "@/components/admin/agenda-calendar";
@@ -102,7 +108,7 @@ export default async function AdminAgendaPage({
           allDay: b.allDay,
           reason: b.reason,
         }))}
-        businessHours={businessHoursRanges()}
+        businessHours={await businessHoursRanges()}
         services={services.map((s) => ({
           id: s.id,
           name: s.name,
@@ -126,7 +132,7 @@ export default async function AdminAgendaPage({
                       : `${dateTime(b.startsAt)} → ${new Date(b.endsAt).toLocaleTimeString("es-US", { timeZone: BUSINESS_TZ, hour: "numeric", minute: "2-digit" })}`}
                   </p>
                 </div>
-                <form action={deleteBlackoutAction}>
+                <FormAccion action={deleteBlackoutAction} confirmar="¿Liberar este horario? Volverá a ofrecerse en la agenda.">
                   <input type="hidden" name="id" value={b.id} />
                   <button
                     type="submit"
@@ -134,7 +140,7 @@ export default async function AdminAgendaPage({
                   >
                     Liberar
                   </button>
-                </form>
+                </FormAccion>
               </li>
             ))}
           </ul>
@@ -184,11 +190,15 @@ export default async function AdminAgendaPage({
                       {a.firstTime ? <Badge tone="rose">Primera vez</Badge> : null}
                     </div>
 
-                    <p className="mt-3 font-[family-name:var(--font-display)] text-2xl leading-snug">
+                    <Link
+                      href={`/admin/clientes/${a.user.id}`}
+                      className="mt-3 block font-[family-name:var(--font-display)] text-2xl leading-snug hover:underline"
+                    >
                       {a.user.name}
-                    </p>
+                    </Link>
                     <p className="mt-1 text-sm text-ink-soft">
-                      {a.service.name} · {dateTime(a.startsAt)} · {money(a.service.price)}
+                      {a.service.name} · {dateTime(a.startsAt)}
+                      {(a.price ?? a.service.price) > 0 ? ` · ${money(a.price ?? a.service.price)}` : ""}
                     </p>
                     <p className="mt-1 text-xs text-muted">
                       {a.user.email}
@@ -196,7 +206,7 @@ export default async function AdminAgendaPage({
                     </p>
                   </div>
 
-                  <form action={setAppointmentStatusAction} className="flex items-center gap-2">
+                  <FormAccion action={setAppointmentStatusAction} className="flex flex-wrap items-center gap-2">
                     <input type="hidden" name="id" value={a.id} />
                     <select name="status" defaultValue={a.status} className={`${inputClass} w-auto py-2`}>
                       {APPOINTMENT_STATUSES.map((s) => (
@@ -211,7 +221,7 @@ export default async function AdminAgendaPage({
                     >
                       Guardar
                     </button>
-                  </form>
+                  </FormAccion>
                 </div>
 
                 <div className="mt-5 rounded-xl bg-shell/70 px-4 py-3">
@@ -221,21 +231,53 @@ export default async function AdminAgendaPage({
                   <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{a.reason}</p>
                 </div>
 
-                <form action={saveAppointmentNotesAction} className="mt-4 flex flex-col gap-2 sm:flex-row">
+                {a.modality === "Online" && (a.status === "PENDIENTE" || a.status === "CONFIRMADA") ? (
+                  <FormAccion
+                    action={guardarEnlaceAction}
+                    okMensaje="Enlace guardado. Si la cita está confirmada, le llegó por correo."
+                    className="mt-4 flex flex-wrap items-center gap-2"
+                  >
+                    <input type="hidden" name="id" value={a.id} />
+                    <label className="sr-only" htmlFor={`enlace-${a.id}`}>
+                      Enlace de la videollamada
+                    </label>
+                    <input
+                      id={`enlace-${a.id}`}
+                      name="meetingUrl"
+                      type="url"
+                      defaultValue={a.meetingUrl ?? ""}
+                      placeholder="Enlace de la videollamada (https://meet.google.com/…)"
+                      className={`${inputClass} min-w-0 flex-1`}
+                    />
+                    <button
+                      type="submit"
+                      className="shrink-0 rounded-full border border-line px-5 py-2.5 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:border-ink/40"
+                    >
+                      Guardar enlace
+                    </button>
+                  </FormAccion>
+                ) : null}
+
+                <FormAccion action={saveAppointmentNotesAction} okMensaje="Nota guardada." className="mt-4 space-y-2">
                   <input type="hidden" name="id" value={a.id} />
-                  <input
+                  <label htmlFor={`nota-${a.id}`} className="block text-[0.6875rem] font-semibold tracking-wide text-muted uppercase">
+                    Notas privadas · solo tú las ves
+                  </label>
+                  <textarea
+                    id={`nota-${a.id}`}
                     name="notes"
+                    rows={3}
                     defaultValue={a.notes ?? ""}
-                    placeholder="Notas internas de la sesión…"
+                    placeholder="Lo que quieras recordar de esta sesión…"
                     className={inputClass}
                   />
                   <button
                     type="submit"
-                    className="shrink-0 rounded-full border border-line px-5 py-2.5 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:border-ink/40"
+                    className="rounded-full border border-line px-5 py-2.5 text-[0.8125rem] font-semibold text-ink-soft transition-colors hover:border-ink/40"
                   >
                     Guardar nota
                   </button>
-                </form>
+                </FormAccion>
               </article>
             ))}
           </div>

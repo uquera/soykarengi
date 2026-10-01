@@ -890,11 +890,33 @@ const POSTS = [
   },
 ];
 
+/*
+ * Reglas de la semilla:
+ *   - Los datos de demostración (clienta, cita, solicitud y movimientos de
+ *     ejemplo) solo se crean en la base local de desarrollo, o con SEED_DEMO=1.
+ *     En producción aparecían como datos reales en el panel y en Finanzas.
+ *   - Servicios, categorías, diseños y entradas solo se CREAN si no existen:
+ *     volver a correr la semilla no pisa lo que Karen editó en el panel.
+ *     SEED_ACTUALIZAR=1 fuerza a reescribirlos con los valores de este archivo.
+ *   - La clave del admin solo se usa al crearlo. En producción no hay clave
+ *     por defecto: sin SEED_ADMIN_PASSWORD se crea con una clave aleatoria y
+ *     Karen entra con «¿Olvidaste tu contraseña?».
+ */
+const ES_DESARROLLO = /dev\.db/.test(process.env.DATABASE_URL ?? "");
+const DEMO = process.env.SEED_DEMO === "1" || ES_DESARROLLO;
+const ACTUALIZAR = process.env.SEED_ACTUALIZAR === "1";
+
+/** upsert que, salvo SEED_ACTUALIZAR=1, solo crea. */
+const sembrar = (modelo, where, data) =>
+  modelo.upsert({ where, update: ACTUALIZAR ? data : {}, create: data });
+
 async function main() {
-  console.log("Sembrando SoyKarengi…");
+  console.log(`Sembrando SoyKarengi… ${DEMO ? "(con datos de demostración)" : ""}`);
 
   const adminEmail = process.env.SEED_ADMIN_EMAIL ?? "karen@soykarengi.com";
-  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? "karengi2026";
+  const { randomBytes } = await import("node:crypto");
+  const adminPassword =
+    process.env.SEED_ADMIN_PASSWORD || (ES_DESARROLLO ? "karengi2026" : randomBytes(24).toString("hex"));
 
   await db.user.upsert({
     where: { email: adminEmail },
@@ -907,20 +929,22 @@ async function main() {
     },
   });
 
-  const demo = await db.user.upsert({
-    where: { email: "demo@soykarengi.com" },
-    update: {},
-    create: {
-      email: "demo@soykarengi.com",
-      name: "Valentina Soto",
-      phone: "+1 (305) 555-0148",
-      city: "Miami, FL",
-      passwordHash: await bcrypt.hash("demo1234", 10),
-    },
-  });
+  const demo = DEMO
+    ? await db.user.upsert({
+        where: { email: "demo@soykarengi.com" },
+        update: {},
+        create: {
+          email: "demo@soykarengi.com",
+          name: "Valentina Soto",
+          phone: "+1 (305) 555-0148",
+          city: "Miami, FL",
+          passwordHash: await bcrypt.hash("demo1234", 10),
+        },
+      })
+    : null;
 
   for (const s of SERVICES) {
-    await db.service.upsert({ where: { slug: s.slug }, update: s, create: s });
+    await sembrar(db.service, { slug: s.slug }, s);
   }
 
   for (const slug of SERVICIOS_RETIRADOS) {
@@ -928,7 +952,7 @@ async function main() {
   }
 
   for (const c of CATEGORIES) {
-    await db.designCategory.upsert({ where: { slug: c.slug }, update: c, create: c });
+    await sembrar(db.designCategory, { slug: c.slug }, c);
   }
 
   for (const d of DESIGNS) {
@@ -941,16 +965,16 @@ async function main() {
       delivery: DELIVERY_ES,
       deliveryEn: DELIVERY_EN,
     };
-    await db.design.upsert({ where: { slug: d.slug }, update: data, create: data });
+    await sembrar(db.design, { slug: d.slug }, data);
   }
 
   for (const p of POSTS) {
-    await db.post.upsert({ where: { slug: p.slug }, update: p, create: p });
+    await sembrar(db.post, { slug: p.slug }, p);
   }
 
   // Un poco de actividad, para que el panel no arranque en blanco.
   const existingActivity = await db.designRequest.count();
-  if (existingActivity === 0) {
+  if (demo && existingActivity === 0) {
     const homenaje = await db.design.findUnique({ where: { slug: "un-recuerdo-que-permanece" } });
     const primera = await db.service.findUnique({ where: { slug: "primera-conversacion" } });
 
@@ -999,7 +1023,7 @@ async function main() {
 
   // Unos movimientos de muestra. Se reparten entre este mes y los dos anteriores
   // para que cualquier rango del panel tenga algo que mostrar el primer día.
-  if ((await db.movement.count()) === 0) {
+  if (DEMO && (await db.movement.count()) === 0) {
     const hoy = new Date();
 
     // Un día de este mes, sin pasarse de hoy.

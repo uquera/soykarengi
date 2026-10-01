@@ -10,8 +10,19 @@ export type SessionPayload = {
 export const SESSION_COOKIE = "karengi_session";
 const MAX_AGE = 60 * 60 * 24 * 30; // 30 días
 
+/**
+ * En producción no hay valor por defecto: si AUTH_SECRET falta o es corto, la
+ * app falla al firmar en vez de usar un secreto que está escrito en el repo
+ * (con él cualquiera podría fabricarse una sesión de administradora).
+ */
 function secret() {
-  const value = process.env.AUTH_SECRET || "karengi-desarrollo-secreto-cambiar-en-produccion";
+  const value = process.env.AUTH_SECRET;
+  if (!value || value.length < 32) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("AUTH_SECRET falta o tiene menos de 32 caracteres.");
+    }
+    return new TextEncoder().encode("karengi-solo-para-desarrollo-local-no-usar-en-produccion");
+  }
   return new TextEncoder().encode(value);
 }
 

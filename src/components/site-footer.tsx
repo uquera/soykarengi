@@ -1,9 +1,11 @@
 import Link from "next/link";
-import { getDict } from "@/lib/i18n";
+import { getDict, getLocale } from "@/lib/i18n";
 import { BrandMark } from "@/components/brand";
+import { getConfig } from "@/lib/config";
 
 export async function SiteFooter() {
-  const t = await getDict();
+  const [t, config, locale] = await Promise.all([getDict(), getConfig(), getLocale()]);
+  const whatsapp = config.whatsapp.replace(/[^\d]/g, "");
 
   /* El menú se redujo a cinco entradas; el pie recoge lo que salió de arriba,
      incluidas las páginas por especialidad y por categoría que existen por SEO. */
@@ -54,6 +56,36 @@ export async function SiteFooter() {
             {t.brand.tagline}
           </p>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-ink-soft">{t.brand.quote}</p>
+
+          {/* Datos de contacto: los edita Karen en Configuración. */}
+          <ul className="mt-5 space-y-1.5 text-sm">
+            {config.contactoEmail ? (
+              <li>
+                <a href={`mailto:${config.contactoEmail}`} className="text-ink-soft hover:text-ink">
+                  {config.contactoEmail}
+                </a>
+              </li>
+            ) : null}
+            {whatsapp ? (
+              <li>
+                <a href={`https://wa.me/${whatsapp}`} target="_blank" rel="noopener" className="text-ink-soft hover:text-ink">
+                  WhatsApp {config.whatsapp}
+                </a>
+              </li>
+            ) : null}
+            {config.instagram ? (
+              <li>
+                <a
+                  href={`https://instagram.com/${config.instagram}`}
+                  target="_blank"
+                  rel="noopener"
+                  className="text-ink-soft hover:text-ink"
+                >
+                  @{config.instagram}
+                </a>
+              </li>
+            ) : null}
+          </ul>
         </div>
 
         {columns.map((col) => (
@@ -77,9 +109,19 @@ export async function SiteFooter() {
           <p>
             © {new Date().getFullYear()} {t.brand.name} · Karen Ramos. {t.footer.rights}
           </p>
+          <nav className="flex flex-wrap gap-x-4 gap-y-1">
+            <Link href="/privacidad" className="hover:text-ink">
+              {locale === "en" ? "Privacy" : "Privacidad"}
+            </Link>
+            <Link href="/terminos" className="hover:text-ink">
+              {locale === "en" ? "Terms" : "Términos"}
+            </Link>
+            <Link href="/consentimiento" className="hover:text-ink">
+              {locale === "en" ? "Informed consent" : "Consentimiento informado"}
+            </Link>
+          </nav>
           <p>
-            {t.footer.builtBy} <span className="font-semibold text-ink-soft">HYPNOS</span> ·
-            hypnosapps@gmail.com
+            {t.footer.builtBy} <span className="font-semibold text-ink-soft">HYPNOS</span>
           </p>
         </div>
       </div>

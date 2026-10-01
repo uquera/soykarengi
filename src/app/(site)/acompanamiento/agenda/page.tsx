@@ -1,14 +1,17 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
-import { getSession } from "@/lib/auth";
+import { getCurrentUser } from "@/lib/auth";
+import { aceptoVigente } from "@/lib/legal";
+import { diasCerrados, getConfig, textoCancelacion } from "@/lib/config";
+import { AvisoCrisis } from "@/components/aviso-crisis";
 import { upcomingDays, businessHoursLabel } from "@/lib/availability";
 import { timezoneLabel } from "@/lib/timezone";
 import { getDict, getLocale } from "@/lib/i18n";
 import { serviceView } from "@/lib/content";
 import { Eyebrow, ButtonLink } from "@/components/ui";
 import { NeedFinder } from "@/components/need-finder";
-import { money, duration } from "@/lib/format";
+import { duration } from "@/lib/format";
 import { BookingForm } from "./booking-form";
 
 export const dynamic = "force-dynamic";
@@ -24,12 +27,21 @@ export default async function AgendaPage({
   searchParams: Promise<{ servicio?: string }>;
 }) {
   const { servicio } = await searchParams;
-  const [session, locale, t, servicesRaw] = await Promise.all([
-    getSession(),
+  const [user, locale, t, servicesRaw, config] = await Promise.all([
+    getCurrentUser(),
     getLocale(),
     getDict(),
     db.service.findMany({ where: { active: true }, orderBy: { order: "asc" } }),
+    getConfig(),
   ]);
+
+  // El consentimiento se pide antes de la primera reserva y cuando hay versión nueva.
+  const consentimiento = user ? await aceptoVigente(user.id, "CONSENTIMIENTO") : null;
+  const politica =
+    locale === "en" && config.cancelacionTexto === textoCancelacion(config.cancelacionHoras)
+      ? textoCancelacion(config.cancelacionHoras, "en")
+      : config.cancelacionTexto;
+  const cerrados = diasCerrados(config.semana, locale);
 
   const services = servicesRaw.map((s) => serviceView(s, locale));
   const preselected = servicio ? (services.find((s) => s.slug === servicio)?.id ?? "") : "";
@@ -78,7 +90,7 @@ export default async function AgendaPage({
         ) : null}
 
         <div className="mt-10">
-          {session ? (
+          {user ? (
             <BookingForm
               services={services.map((s) => ({
                 id: s.id,
@@ -87,10 +99,16 @@ export default async function AgendaPage({
                 modality: s.modality,
                 modalityLabel: s.modalityLabel,
                 durationMin: s.durationMin,
-                price: s.price,
+                priceLabel: s.priceLabel,
                 accentEmoji: s.accentEmoji,
               }))}
-              days={upcomingDays(14, locale)}
+              days={await upcomingDays(14, locale)}
+              consentimiento={
+                consentimiento && !consentimiento.aceptada
+                  ? { id: consentimiento.doc.id, version: consentimiento.doc.version }
+                  : null
+              }
+              politica={politica}
               initialServiceId={preselected}
               locale={locale}
               copy={{
@@ -119,6 +137,12 @@ export default async function AgendaPage({
                 confirm: t.agenda.confirm,
                 sending: t.agenda.sending,
                 confirmNote: t.agenda.confirmNote,
+                pickHour: t.agenda.pickHour,
+                consentTitle: t.agenda.consentTitle,
+                consentLead: t.agenda.consentLead,
+                consentRead: t.agenda.consentRead,
+                consentAccept: t.agenda.consentAccept,
+                policyTitle: t.agenda.policyTitle,
               }}
             />
           ) : (
@@ -143,9 +167,13 @@ export default async function AgendaPage({
       <aside className="space-y-4 lg:sticky lg:top-28">
         <div className="card-soft p-6">
           <p className="eyebrow text-muted">{t.agenda.hoursTitle}</p>
-          <p className="mt-3 text-sm leading-relaxed text-ink-soft">{businessHoursLabel(locale)}</p>
+          <p className="mt-3 text-sm leading-relaxed text-ink-soft">{await businessHoursLabel(locale)}</p>
           <p className="mt-1 text-xs text-muted">{timezoneLabel(locale)}</p>
-          <p className="mt-3 text-sm leading-relaxed text-ink-soft">{t.agenda.hoursNote}</p>
+          {cerrados.length > 0 ? (
+            <p className="mt-3 text-sm leading-relaxed text-ink-soft">
+              {t.agenda.hoursNote.replace("{dias}", cerrados.join(", "))}
+            </p>
+          ) : null}
         </div>
 
         <div className="card-soft p-6">
@@ -166,6 +194,8 @@ export default async function AgendaPage({
           </Link>{" "}
           {t.agenda.andWeSee}
         </div>
+
+        <AvisoCrisis compacto />
       </aside>
     </div>
   );

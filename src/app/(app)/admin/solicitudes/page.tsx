@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { requireAdmin } from "@/lib/auth";
 import { iconoArchivo, urlArchivo } from "@/lib/archivos";
 import { ArchivoList } from "@/components/archivo-list";
+import { FormAccion } from "@/components/form-accion";
 import { FileUploader } from "@/components/file-uploader";
 import { money, shortDate } from "@/lib/format";
 import { REQUEST_FLOW, REQUEST_LABEL } from "@/lib/domain";
@@ -184,8 +185,13 @@ export default async function AdminSolicitudesPage({
                 </div>
               </div>
 
-              {/* Cotizar */}
-              <form action={quoteRequestAction} className="mt-6 grid gap-3 border-t border-line pt-5 sm:grid-cols-[10rem_1fr_auto]">
+              {/* Cotizar: solo antes de que la clienta apruebe */}
+              {r.status === "SOLICITUD" || r.status === "COTIZADA" ? (
+              <FormAccion
+                action={quoteRequestAction}
+                okMensaje="Cotización enviada. A la clienta le llegó un aviso."
+                className="mt-6 grid gap-3 border-t border-line pt-5 sm:grid-cols-[10rem_1fr_auto]"
+              >
                 <input type="hidden" name="id" value={r.id} />
                 <input
                   name="quoteAmount"
@@ -195,8 +201,9 @@ export default async function AdminSolicitudesPage({
                   placeholder="Monto"
                   className={inputClass}
                 />
-                <input
+                <textarea
                   name="quoteNotes"
+                  rows={2}
                   defaultValue={r.quoteNotes ?? ""}
                   placeholder="Qué incluye la cotización…"
                   className={inputClass}
@@ -207,10 +214,11 @@ export default async function AdminSolicitudesPage({
                 >
                   {r.quoteAmount ? "Actualizar cotización" : "Enviar cotización"}
                 </button>
-              </form>
+              </FormAccion>
+              ) : null}
 
               {/* Avanzar el pipeline */}
-              <form action={advanceRequestAction} className="mt-3 flex flex-wrap items-center gap-2">
+              <FormAccion action={advanceRequestAction} className="mt-3 flex flex-wrap items-center gap-2">
                 <input type="hidden" name="id" value={r.id} />
                 <select name="status" defaultValue={r.status} className={`${inputClass} w-auto py-2`}>
                   {[...REQUEST_FLOW, "CANCELADA"].map((s) => (
@@ -225,7 +233,7 @@ export default async function AdminSolicitudesPage({
                 >
                   Cambiar estado
                 </button>
-              </form>
+              </FormAccion>
 
               {/* Entregables */}
               <div className="mt-5 border-t border-line pt-5">

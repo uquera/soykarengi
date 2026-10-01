@@ -8,8 +8,14 @@ export const dynamic = "force-dynamic";
 /** Excel abre CSV, pero necesita el BOM para no romper los acentos. */
 const BOM = "﻿";
 
+/**
+ * Los textos que escriben las clientas (nombre, concepto) pueden empezar con
+ * = + - @: Excel los ejecutaría como fórmula. Se anteponen con un apóstrofo.
+ * Los números se dejan tal cual para que sigan sumando.
+ */
 function cell(value: string | number) {
-  const s = String(value);
+  let s = String(value);
+  if (typeof value === "string" && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
   return /[",;\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 

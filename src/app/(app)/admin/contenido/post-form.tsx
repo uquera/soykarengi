@@ -1,7 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
+import { useAccionSinReset } from "@/components/use-accion-sin-reset";
 import { savePostAction } from "@/lib/actions/admin";
 import { Field, inputClass } from "@/components/ui";
 
@@ -20,8 +19,7 @@ type Post = {
   tagEn: string | null;
 };
 
-function Submit({ isNew }: { isNew: boolean }) {
-  const { pending } = useFormStatus();
+function Submit({ isNew, pending }: { isNew: boolean; pending: boolean }) {
   return (
     <button
       type="submit"
@@ -34,10 +32,10 @@ function Submit({ isNew }: { isNew: boolean }) {
 }
 
 export function PostForm({ post }: { post?: Post }) {
-  const [state, action] = useActionState(savePostAction, {});
+  const { state, onSubmit, pending } = useAccionSinReset(savePostAction, {});
 
   return (
-    <form action={action} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6">
       {post ? <input type="hidden" name="id" value={post.id} /> : null}
 
       <div className="card-soft space-y-5 p-7">
@@ -120,7 +118,7 @@ export function PostForm({ post }: { post?: Post }) {
         </p>
       ) : null}
 
-      <Submit isNew={!post} />
+      <Submit isNew={!post} pending={pending} />
     </form>
   );
 }

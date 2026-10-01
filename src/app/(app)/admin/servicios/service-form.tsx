@@ -1,9 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
-import { useFormStatus } from "react-dom";
+import { useAccionSinReset } from "@/components/use-accion-sin-reset";
 import { saveServiceAction } from "@/lib/actions/admin";
 import { Field, inputClass } from "@/components/ui";
+import { SPECIALTY_PAGES } from "@/lib/domain";
 
 type Service = {
   id: string;
@@ -30,8 +30,7 @@ type Service = {
   modalityEn: string | null;
 };
 
-function Submit({ isNew }: { isNew: boolean }) {
-  const { pending } = useFormStatus();
+function Submit({ isNew, pending }: { isNew: boolean; pending: boolean }) {
   return (
     <button
       type="submit"
@@ -44,10 +43,10 @@ function Submit({ isNew }: { isNew: boolean }) {
 }
 
 export function ServiceForm({ service }: { service?: Service }) {
-  const [state, action] = useActionState(saveServiceAction, {});
+  const { state, onSubmit, pending } = useAccionSinReset(saveServiceAction, {});
 
   return (
-    <form action={action} className="space-y-6">
+    <form onSubmit={onSubmit} className="space-y-6">
       {service ? <input type="hidden" name="id" value={service.id} /> : null}
 
       <div className="card-soft space-y-5 p-7">
@@ -86,8 +85,19 @@ export function ServiceForm({ service }: { service?: Service }) {
       </div>
 
       <div className="card-soft grid gap-5 p-7 sm:grid-cols-2">
-        <Field label="Especialidad">
-          <input name="specialty" defaultValue={service?.specialty ?? "Acompañamiento"} required className={inputClass} />
+        {/* Lista cerrada: un texto libre con una tilde distinta dejaba el servicio
+            fuera de su página de especialidad y del orientador. */}
+        <Field label="Especialidad" hint="Define en qué página de especialidad aparece.">
+          <select name="specialty" defaultValue={service?.specialty ?? "Psicología"} required className={inputClass}>
+            {SPECIALTY_PAGES.map((p) => (
+              <option key={p.slug} value={p.specialty}>
+                {p.specialty}
+              </option>
+            ))}
+            {service && !SPECIALTY_PAGES.some((p) => p.specialty === service.specialty) ? (
+              <option value={service.specialty}>{service.specialty} (actual)</option>
+            ) : null}
+          </select>
         </Field>
 
         <Field label="Modalidad">
@@ -206,7 +216,7 @@ export function ServiceForm({ service }: { service?: Service }) {
         </p>
       ) : null}
 
-      <Submit isNew={!service} />
+      <Submit isNew={!service} pending={pending} />
     </form>
   );
 }

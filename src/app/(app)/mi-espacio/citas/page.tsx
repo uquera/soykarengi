@@ -5,6 +5,9 @@ import { dateTime, duration, money } from "@/lib/format";
 import { getDict, getLocale } from "@/lib/i18n";
 import { serviceView } from "@/lib/content";
 import { cancelAppointmentAction } from "@/lib/actions/booking";
+import { FormAccion } from "@/components/form-accion";
+import { AvisoCrisis } from "@/components/aviso-crisis";
+import { getConfig, textoCancelacion } from "@/lib/config";
 import { ButtonLink, EmptyState, Badge } from "@/components/ui";
 
 export const dynamic = "force-dynamic";
@@ -16,12 +19,18 @@ export default async function MisCitasPage({
 }: {
   searchParams: Promise<{ nueva?: string }>;
 }) {
-  const [user, locale, t, { nueva }] = await Promise.all([
+  const [user, locale, t, { nueva }, config] = await Promise.all([
     requireUser(),
     getLocale(),
     getDict(),
     searchParams,
+    getConfig(),
   ]);
+  // El texto propio de Karen está en español; en inglés, si no lo cambió, va el de por defecto.
+  const politica =
+    locale === "en" && config.cancelacionTexto === textoCancelacion(config.cancelacionHoras)
+      ? textoCancelacion(config.cancelacionHoras, "en")
+      : config.cancelacionTexto;
 
   const appointments = await db.appointment.findMany({
     where: { userId: user.id },
@@ -91,12 +100,16 @@ export default async function MisCitasPage({
                           </p>
                           <p className="mt-2 text-sm text-ink-soft">{dateTime(a.startsAt, locale)}</p>
                           <p className="mt-1 text-sm text-muted">
-                            {duration(service.durationMin, locale)} · {money(service.price, locale)} ·{" "}
+                            {duration(service.durationMin, locale)} · {service.priceLabel} ·{" "}
                             {t.space.code} {a.code}
                           </p>
                         </div>
 
-                        <form action={cancelAppointmentAction}>
+                        <FormAccion
+                          action={cancelAppointmentAction}
+                          confirmar={t.space.appointments.cancelConfirm}
+                          className="max-w-xs text-right"
+                        >
                           <input type="hidden" name="id" value={a.id} />
                           <button
                             type="submit"
@@ -104,8 +117,23 @@ export default async function MisCitasPage({
                           >
                             {t.space.appointments.cancel}
                           </button>
-                        </form>
+                        </FormAccion>
                       </div>
+
+                      {a.modality === "Online" ? (
+                        a.meetingUrl ? (
+                          <a
+                            href={a.meetingUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-5 inline-flex rounded-full bg-moss-deep px-5 py-2.5 text-[0.8125rem] font-semibold text-cream transition-colors hover:bg-moss-deep/85"
+                          >
+                            {t.space.appointments.joinCall} →
+                          </a>
+                        ) : (
+                          <p className="mt-4 text-[0.8125rem] text-muted">{t.space.appointments.linkPending}</p>
+                        )
+                      ) : null}
 
                       <div className="mt-5 rounded-xl bg-shell/70 px-4 py-3">
                         <p className="text-[0.6875rem] font-semibold tracking-wide text-muted uppercase">
@@ -142,6 +170,21 @@ export default async function MisCitasPage({
           ) : null}
         </>
       )}
+
+      <section className="grid gap-4 sm:grid-cols-2">
+        <div className="card-soft p-5">
+          <p className="eyebrow text-muted">{t.space.appointments.policyTitle}</p>
+          <p className="mt-2 text-sm leading-relaxed text-ink-soft">{politica}</p>
+        </div>
+        {config.instruccionesPago ? (
+          <div className="card-soft p-5">
+            <p className="eyebrow text-muted">{t.space.appointments.payTitle}</p>
+            <p className="mt-2 text-sm leading-relaxed whitespace-pre-line text-ink-soft">{config.instruccionesPago}</p>
+          </div>
+        ) : null}
+      </section>
+
+      <AvisoCrisis compacto />
     </div>
   );
 }

@@ -38,7 +38,7 @@ const SIN_LICENCIA: LicenciaStatus = {
 const DIA_MS = 86_400_000;
 
 /** Umbral de aviso, en días, antes del vencimiento. */
-export const AVISO_DIAS = 7;
+export const AVISO_DIAS = 3; // estándar Hypnos: aviso los últimos 3 días
 
 export const getLicenciaStatus = cache(async (): Promise<LicenciaStatus> => {
   // Una consulta que falle no puede tumbar la plataforma: sin dato, no se
@@ -62,4 +62,4 @@ export const getLicenciaStatus = cache(async (): Promise<LicenciaStatus> => {
 
 /** Correo al que se pide la renovación. Se muestra en el banner y en el bloqueo. */
 export const CONTACTO_SOPORTE =
-  process.env.NEXT_PUBLIC_GOBERNANZA_CONTACTO ?? "hypnosapps@gmail.com";
+  process.env.NEXT_PUBLIC_GOBERNANZA_CONTACTO ?? "contacto@hypnosapps.com";
