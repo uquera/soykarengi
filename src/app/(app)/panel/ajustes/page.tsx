@@ -57,6 +57,12 @@ export default async function AjustesPage() {
         </div>
       </Seccion>
 
+      <Seccion titulo="Cómo usar este panel">
+        <a href="/manuales/guia-panel-karen.pdf" target="_blank" rel="noopener" className={`${BTN.secundario} flex-none`}>
+          Ver la guía de 5 pasos (PDF)
+        </a>
+      </Seccion>
+
       <Seccion titulo="Tu cuenta">
         <div className="flex flex-wrap gap-3">
           <Link href="/mi-espacio/datos" className={BTN.secundario}>
