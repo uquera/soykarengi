@@ -124,6 +124,7 @@ export async function createDesignRequestAction(_prev: FormState, formData: Form
         destinatario: d.recipient,
       }),
       avisoNuevaSolicitud({
+        requestId: request.id,
         cliente: quien.name,
         email: quien.email,
         telefono: quien.phone,
@@ -177,6 +178,7 @@ export async function approveQuoteAction(formData: FormData): Promise<Resultado>
   await db.designRequest.update({ where: { id }, data: { status: "APROBADA" } });
 
   await avisoRespuestaCotizacion({
+    requestId: request.id,
     cliente: user.name,
     codigo: request.code,
     pieza: nombrePieza(request.design?.name),
@@ -186,6 +188,7 @@ export async function approveQuoteAction(formData: FormData): Promise<Resultado>
 
   revalidatePath("/mi-espacio", "layout");
   revalidatePath("/admin", "layout");
+  revalidatePath("/panel", "layout");
   return { ok: true };
 }
 
@@ -215,6 +218,7 @@ export async function cancelRequestAction(formData: FormData): Promise<Resultado
   // Si la clienta es quien se baja, Karen necesita enterarse.
   if (request.userId === user.id && !esAdmin) {
     await avisoRespuestaCotizacion({
+      requestId: request.id,
       cliente: user.name,
       codigo: request.code,
       pieza: nombrePieza(request.design?.name),
@@ -224,6 +228,7 @@ export async function cancelRequestAction(formData: FormData): Promise<Resultado
   }
   revalidatePath("/mi-espacio", "layout");
   revalidatePath("/admin", "layout");
+  revalidatePath("/panel", "layout");
   return { ok: true };
 }
 
@@ -266,6 +271,8 @@ export async function quoteRequestAction(formData: FormData): Promise<Resultado>
   });
 
   revalidatePath("/admin", "layout");
+
+  revalidatePath("/panel", "layout");
   revalidatePath("/mi-espacio", "layout");
   return { ok: true };
 }
@@ -325,6 +332,8 @@ export async function advanceRequestAction(formData: FormData): Promise<Resultad
   }
 
   revalidatePath("/admin", "layout");
+
+  revalidatePath("/panel", "layout");
   revalidatePath("/mi-espacio", "layout");
   return { ok: true };
 }

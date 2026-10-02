@@ -6,11 +6,12 @@ import { ORDER_STATUSES } from "@/lib/domain";
 import { PanelNav } from "@/components/panel-nav";
 import { getLicenciaStatus } from "@/lib/licencia";
 import { LicenciaBanner } from "@/components/licencia";
+import { cambiarPanelAction } from "@/lib/actions/panel";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
-  await requireAdmin();
+  const user = await requireAdmin();
 
   // Con el servicio cortado /admin/licencia sigue abierta: es la pantalla que
   // explica qué pasó y a quién escribirle. El resto del panel se bloquea.
@@ -19,6 +20,11 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     headers().then((h) => h.get("x-pathname") ?? ""),
   ]);
   if (licencia.bloqueada && !ruta.startsWith("/admin/licencia")) redirect("/suspendido");
+
+  // Karen entra por el panel sencillo: «/admin» la lleva ahí. Las páginas
+  // interiores (blog, calendario completo) siguen abiertas para cuando las
+  // enlaza el panel sencillo.
+  if (user.panelSimple && (ruta === "/admin" || ruta === "/admin/")) redirect("/panel");
 
   const [pendientes, solicitudes, pedidos, mensajes] = await Promise.all([
     db.appointment.count({ where: { status: "PENDIENTE" } }),
@@ -66,6 +72,16 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             },
           ]}
         />
+          {/* Quien prefiere el panel sencillo vuelve a él con un toque. */}
+          <form action={cambiarPanelAction} className="mt-6 px-3">
+            <input type="hidden" name="modo" value="sencillo" />
+            <button
+              type="submit"
+              className="w-full rounded-xl border border-line bg-white px-4 py-2.5 text-[0.8125rem] font-semibold text-ink-soft hover:border-ink/40"
+            >
+              ← Panel sencillo
+            </button>
+          </form>
         </aside>
 
         <div className="min-w-0">{children}</div>

@@ -18,7 +18,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
           <div className="flex items-center gap-3">
             <span className="hidden text-sm text-ink-soft sm:inline">{user.name}</span>
-            <LanguageToggle locale={locale} />
+            {/* El panel sencillo de Karen es solo en español: el selector sobra. */}
+            {user.panelSimple ? null : <LanguageToggle locale={locale} />}
             {/* Karen trabaja en los dos lados: administra desde /admin y también
                 usa su propio espacio de clienta, así que los dos están a un clic. */}
             {user.role === "ADMIN" ? (

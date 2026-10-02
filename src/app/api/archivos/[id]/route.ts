@@ -41,8 +41,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       return new Response("La plataforma no está disponible en este momento.", { status: 403 });
     }
 
-    // La primera vez que la destinataria abre lo que Karen le mandó.
-    if (!esAdmin && !archivo.vistoAt && (archivo.tipo === "COMPARTIDO" || archivo.tipo === "ENTREGABLE")) {
+    // La primera vez que la destinataria abre lo que le mandaron: la clienta lo
+    // de Karen, y Karen lo que le envió la clienta (así sale de «Hoy»).
+    const paraLaClienta = archivo.tipo === "COMPARTIDO" || archivo.tipo === "ENTREGABLE";
+    const paraKaren = archivo.tipo === "DE_CLIENTA" || archivo.tipo === "REFERENCIA";
+    if (!archivo.vistoAt && ((!esAdmin && paraLaClienta) || (esAdmin && paraKaren))) {
       await db.archivo.update({ where: { id }, data: { vistoAt: new Date() } });
     }
   }

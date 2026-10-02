@@ -124,7 +124,7 @@ export async function POST(request: Request) {
       }
     }
     if (tipo === "DE_CLIENTA") {
-      await avisoArchivosDeClienta({ cliente: user.name, email: user.email, archivos: nombres, nota });
+      await avisoArchivosDeClienta({ clienteId: user.id, cliente: user.name, email: user.email, archivos: nombres, nota });
     }
 
     revalidatePath("/mi-espacio", "layout");

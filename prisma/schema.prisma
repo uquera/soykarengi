@@ -23,6 +23,9 @@ model User {
   // Lo que la persona dijo que venía a buscar al crear su cuenta:
   // ACOMPANAMIENTO | DISENOS | AMBAS. El segmento real se calcula aparte.
   interest     String?
+  /// Karen usa el panel sencillo (/panel): solo las tareas del día. Hypnos
+  /// usa el panel completo (/admin). Se cambia desde Ajustes.
+  panelSimple  Boolean  @default(false)
   createdAt    DateTime @default(now())
 
   appointments   Appointment[]
@@ -425,4 +428,20 @@ model TokenClave {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+/// Botones de los correos que Karen puede usar sin entrar al panel (por
+/// ahora: confirmar una cita). Un solo uso, vencen, y se guarda la huella.
+/// El enlace abre una pantalla con un «Sí» explícito: algunos correos abren
+/// los enlaces solos para revisarlos, y eso no puede confirmar nada.
+model AccionCorreo {
+  id        String    @id @default(cuid())
+  hash      String    @unique
+  tipo      String // CONFIRMAR_CITA
+  refId     String
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([refId])
 }

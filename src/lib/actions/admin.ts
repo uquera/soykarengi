@@ -254,4 +254,5 @@ export async function toggleMessageAction(formData: FormData) {
   if (!message) return;
   await db.contactMessage.update({ where: { id }, data: { handled: !message.handled } });
   revalidatePath("/admin/mensajes");
+  revalidatePath("/panel", "layout");
 }

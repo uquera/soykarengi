@@ -463,6 +463,7 @@ export function correoArchivosCompartidos(
 }
 
 export function avisoArchivosDeClienta(datos: {
+  clienteId: string;
   cliente: string;
   email: string;
   archivos: string[];
@@ -477,7 +478,7 @@ export function avisoArchivosDeClienta(datos: {
       ${p(`<strong>${esc(datos.cliente)}</strong> (${esc(datos.email)}) subió a su espacio:`)}
       ${caja(listaArchivos(datos.archivos))}
       ${datos.nota ? caja(`<p style="margin:0;color:#5B4636;font-size:14px;line-height:1.6;">${esc(datos.nota)}</p>`, MOSS, "#EDF3ED") : ""}
-      ${boton("Abrir clientes", `${APP_URL}/admin/clientes`)}
+      ${boton("Verlos", `${APP_URL}/panel/clientas/${datos.clienteId}`)}
     `),
   });
 }
@@ -490,6 +491,8 @@ export function avisoArchivosDeClienta(datos: {
  * Karen lo lee en el panel.
  */
 export function avisoNuevaReserva(datos: {
+  citaId: string;
+  enlaceConfirmar: string;
   cliente: string;
   servicio: string;
   fecha: Date;
@@ -508,8 +511,9 @@ export function avisoNuevaReserva(datos: {
         ${fila("Modalidad", datos.modalidad)}
         ${datos.primeraVez ? `<p style="margin:6px 0 0;color:${MUTED};font-size:13px;">Es su primera vez en un proceso así.</p>` : ""}
       `)}
-      ${p("Lo que escribió en el formulario previo está en la agenda, junto a la cita.")}
-      ${boton("Abrir la agenda", `${APP_URL}/admin/agenda`)}
+      ${boton("Confirmar cita", datos.enlaceConfirmar, MOSS)}
+      <p style="margin:0 0 6px;text-align:center;color:${MUTED};font-size:13px;">Se abre una pantalla con «Sí, confirmar». A la clienta le llega el aviso.</p>
+      <p style="margin:18px 0 0;text-align:center;font-size:14px;"><a href="${APP_URL}/panel/cita/${datos.citaId}" style="color:${ORCHID};">Ver la cita o cambiar la hora</a></p>
     `),
   });
 }
@@ -522,12 +526,13 @@ export function avisoCitaCancelada(datos: { cliente: string; servicio: string; f
       ${h2("Una clienta canceló")}
       ${sub("Ese bloque quedó libre")}
       ${p(`<strong>${esc(datos.cliente)}</strong> canceló su sesión de <strong>${esc(datos.servicio)}</strong> del ${cuando(datos.fecha)}.`)}
-      ${boton("Abrir la agenda", `${APP_URL}/admin/agenda`)}
+      ${boton("Ver mi agenda", `${APP_URL}/panel/agenda`)}
     `),
   });
 }
 
 export function avisoNuevaSolicitud(datos: {
+  requestId: string;
   cliente: string;
   email: string;
   telefono?: string | null;
@@ -562,12 +567,13 @@ export function avisoNuevaSolicitud(datos: {
         MOSS,
         "#EDF3ED",
       )}
-      ${boton("Cotizar la solicitud", `${APP_URL}/admin/solicitudes`)}
+      ${boton("Ponerle precio", `${APP_URL}/panel/pedido/${datos.requestId}`)}
     `),
   });
 }
 
 export function avisoRespuestaCotizacion(datos: {
+  requestId: string;
   cliente: string;
   codigo: string;
   pieza: string;
@@ -590,7 +596,7 @@ export function avisoRespuestaCotizacion(datos: {
           : `<strong>${esc(datos.cliente)}</strong> decidió no seguir con <strong>${esc(datos.pieza)}</strong>.`,
       )}
       ${caja(fila("Código", datos.codigo), acento, datos.aprobada ? "#EDF3ED" : "#FAEBEE")}
-      ${boton("Abrir solicitudes", `${APP_URL}/admin/solicitudes`, acento)}
+      ${boton(datos.aprobada ? "Marcar cuando te pague" : "Ver el pedido", `${APP_URL}/panel/pedido/${datos.requestId}`, acento)}
     `,
       acento,
     ),
@@ -617,7 +623,7 @@ export function avisoMensajeContacto(datos: {
         ${fila("Escribe sobre", datos.unidad)}
       `)}
       <p style="margin:0 0 14px;color:#5B4636;font-size:15px;line-height:1.65;white-space:pre-line;">${esc(datos.mensaje)}</p>
-      ${boton("Abrir mensajes", `${APP_URL}/admin/mensajes`)}
+      ${boton("Leer y responder", `${APP_URL}/panel/mensajes`)}
     `),
   });
 }

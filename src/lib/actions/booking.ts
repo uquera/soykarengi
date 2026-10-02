@@ -12,6 +12,7 @@ import { getConfig } from "@/lib/config";
 import { getLicenciaStatus } from "@/lib/licencia";
 import { aceptoVigente, registrarAceptaciones } from "@/lib/legal";
 import { enviarActivacion } from "@/lib/password-reset";
+import { enlaceAccion } from "@/lib/acciones-correo";
 import {
   avisoCitaCancelada,
   avisoNuevaReserva,
@@ -117,6 +118,8 @@ export async function createAppointmentAction(_prev: FormState, formData: FormDa
     // El aviso a Karen no lleva el motivo de consulta: es un dato clínico y el
     // correo deja copias fuera de la plataforma. Lo lee en el panel.
     avisoNuevaReserva({
+      citaId: appointment.id,
+      enlaceConfirmar: await enlaceAccion("CONFIRMAR_CITA", appointment.id),
       cliente: user.name,
       servicio: service.name,
       fecha: startsAt,
@@ -127,6 +130,7 @@ export async function createAppointmentAction(_prev: FormState, formData: FormDa
 
   revalidatePath("/mi-espacio", "layout");
   revalidatePath("/admin", "layout");
+  revalidatePath("/panel", "layout");
   redirect(`/mi-espacio/citas?nueva=${appointment.code}`);
 }
 
@@ -172,6 +176,7 @@ export async function cancelAppointmentAction(formData: FormData): Promise<Accio
 
   revalidatePath("/mi-espacio", "layout");
   revalidatePath("/admin", "layout");
+  revalidatePath("/panel", "layout");
   return { ok: true };
 }
 
@@ -208,9 +213,13 @@ export async function setAppointmentStatusAction(formData: FormData): Promise<Ac
     enlace: antes.meetingUrl,
   };
   if (status === "CONFIRMADA") await correoCitaConfirmada(antes.user.email, antes.user.name, datos);
-  if (status === "CANCELADA") await correoCitaCancelada(antes.user.email, antes.user.name, datos);
+  // Una sesión que ya pasó y no se hizo no merece un «tu sesión fue cancelada».
+  if (status === "CANCELADA" && antes.startsAt > new Date()) {
+    await correoCitaCancelada(antes.user.email, antes.user.name, datos);
+  }
 
   revalidatePath("/admin", "layout");
+  revalidatePath("/panel", "layout");
   revalidatePath("/mi-espacio", "layout");
   return { ok: true };
 }
@@ -290,6 +299,8 @@ export async function rescheduleAppointmentAction(formData: FormData): Promise<A
   });
 
   revalidatePath("/admin", "layout");
+
+  revalidatePath("/panel", "layout");
   revalidatePath("/mi-espacio", "layout");
   return { ok: true };
 }
@@ -397,6 +408,8 @@ export async function adminCreateAppointmentAction(formData: FormData): Promise<
   if (cuentaNueva) await enviarActivacion(user);
 
   revalidatePath("/admin", "layout");
+
+  revalidatePath("/panel", "layout");
   revalidatePath("/mi-espacio", "layout");
   return { ok: true };
 }
